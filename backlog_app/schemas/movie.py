@@ -5,7 +5,7 @@ class MovieBase(BaseModel):
     title: str
     description: str
     year: int
-    rating: float
+    rating: int
     original_link: str | None = None
     kp_id: int | None = None
 
@@ -24,13 +24,12 @@ class MovieUpdate(MovieBase):
     rating: int | None = Field(default=None, ge=1, le=10)
 
 
-class MovieRead(BaseModel):
+class MovieRead(MovieBase):
     id: int
-    title: str
     description: str | None
     year: int | None
     watched: bool
-    rating: int | None
+    kp_id: int | None = None
     created_at: datetime
 
     model_config = {"from_attributes": True}

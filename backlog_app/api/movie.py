@@ -17,10 +17,18 @@ async def add_movie(movie_create: MovieCreate, db: AsyncSession = Depends(get_se
 async def list_movies(db: AsyncSession = Depends(get_session)):
     return await movie.get_movies(db)
 
-@router.put("/", response_model=MovieRead)
-async def update_movie(movie_update: MovieUpdate, db: AsyncSession = Depends(get_session)):
-    return await movie.update_movie(db, movie_update)
+@router.get("/{movie_id}", response_model=MovieRead)
+async def get_movie_by_id(movie_id: int, db: AsyncSession = Depends(get_session)):
+    return await movie.get_movie_by_id(db, movie_id)
 
-@router.delete("/{id}", response_model=MovieRead)
+@router.put("/{movie_id}", response_model=MovieRead)
+async def update_movie(movie_id: int,movie_update: MovieUpdate, db: AsyncSession = Depends(get_session)):
+    return await movie.update_movie(db, movie_id, movie_update)
+
+@router.patch("/{movie_id}", response_model=MovieRead)
+async def partial_update_movie(movie_id: int, movie_update: MovieUpdate, db: AsyncSession = Depends(get_session)):
+    return await movie.partial_update_movie(db, movie_id, movie_update)
+
+@router.delete("/{movie_id}", response_model=MovieRead)
 async def delete_movie(movie_id: int, db: AsyncSession = Depends(get_session)):
     return await movie.delete_movie(db, movie_id)
