@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, Request
 from datetime import datetime
-from backlog_app.api import movie
+from api import movie
 
 app = FastAPI(title="Backlog API")
 app_launch_time = datetime.now()

@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import String, Boolean, Integer, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backlog_app.core.database import Base
+from core.database import Base
 
 
 class Movie(Base):
