@@ -13,5 +13,5 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     pass
 
     @classmethod
-    def get_db(cls, session: AsyncSession):
-        return SQLAlchemyUserDatabase(session, User)
+    def get_db(cls, session: "AsyncSession"):
+        return SQLAlchemyUserDatabase(session, cls)
