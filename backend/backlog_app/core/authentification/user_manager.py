@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Optional
 from config import settings
 from fastapi_users import BaseUserManager, UUIDIDMixin
 from models import User
-from mailing.tasks.email_task import send_verification_email, send_email_confirmed
+from tasks.email_task import send_verification_email, send_email_confirmed
 
 if TYPE_CHECKING:
     from fastapi import Request

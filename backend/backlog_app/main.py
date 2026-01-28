@@ -4,8 +4,9 @@ import uvicorn
 from api import router as api_router
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from backend.backlog_app.app_lifespan import lifespan
 
-app = FastAPI(title="Backlog API")
+app = FastAPI(title="Backlog API", lifespan=lifespan)
 app_launch_time = datetime.now()
 
 app.add_middleware(

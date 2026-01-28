@@ -1,8 +1,7 @@
 from textwrap import dedent
 
 from jinja2_templates import templates
-from models import User
-from backend.backlog_app.mailing.tasks.taskiq_broker import broker
+from taskiq_broker import broker
 from mailing.send_email import send_email
 
 
@@ -25,7 +24,7 @@ async def send_verification_email(
         Your site admin,
         2025
 """)
-    template = templates.get_template("email-verify/verification_email.html")
+    template = templates.get_template("email-verify/verification-request.html")
     context = {
         "user_id": user_id,
         "verification_link": verification_link,
