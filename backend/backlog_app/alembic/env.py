@@ -12,7 +12,7 @@ from alembic import context
 
 # Импорт настроек из FastAPI
 from config import settings
-from core.database import Base
+from models.base import Base
 
 # Этот объект конфигурации Alembic
 config = context.config

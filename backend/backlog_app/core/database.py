@@ -3,14 +3,8 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     AsyncSession,
 )
-from sqlalchemy.orm import DeclarativeBase
 
 from config import settings
-
-
-class Base(DeclarativeBase):
-    pass
-
 
 engine = create_async_engine(
     settings.db.connection.database_url_asyncpg,
