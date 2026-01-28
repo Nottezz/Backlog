@@ -1,10 +1,18 @@
 import uvicorn
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
-from backlog_app.api import movie
+from api import movie
 
 app = FastAPI(title="Backlog API")
 app_launch_time = datetime.now()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Vue dev
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/", include_in_schema=False)
 async def root(request: Request):

@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
-from backlog_app.schemas.movie import MovieCreate, MovieRead
-from backlog_app.crud import movie
-from backlog_app.core.database import get_session
+from schemas.movie import MovieCreate, MovieRead
+from crud import movie
+from core.database import get_session
 from schemas.movie import MovieUpdate
 
 router = APIRouter(prefix="/movies", tags=["Movies"])

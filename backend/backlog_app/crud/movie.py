@@ -2,8 +2,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from starlette.exceptions import HTTPException
 
-from backlog_app.models.movie import Movie
-from backlog_app.schemas.movie import MovieCreate, MovieUpdate
+from models.movie import Movie
+from schemas.movie import MovieCreate, MovieUpdate
 
 
 async def create_movie(db: AsyncSession, movie_in: MovieCreate) -> Movie:

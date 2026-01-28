@@ -11,9 +11,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncConnection
 from alembic import context
 
 # Импорт настроек из FastAPI
-from backlog_app.config import settings
-from backlog_app.core.database import Base
-import backlog_app.models  # обязательно импортируем все модели, чтобы Alembic их видел
+from config import settings
+from core.database import Base
 
 # Этот объект конфигурации Alembic
 config = context.config
