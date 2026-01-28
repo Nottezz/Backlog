@@ -30,4 +30,4 @@ async def send_email(
         )
         message.attach(html_message)
 
-    await aiosmtplib.send(message, hostname="maildev", port=1025)
+    await aiosmtplib.send(message, hostname="127.0.0.1", port=1025)
