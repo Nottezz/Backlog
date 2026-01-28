@@ -24,6 +24,9 @@ class LoggingConfig(BaseModel):
     def log_level(self) -> int:
         return logging.getLevelNamesMapping()[self.log_level_name]
 
+class AccessToken(BaseModel):
+    lifetime_seconds: int = 3600
+
 class DataBaseConnection(BaseModel):
     host: str
     port: int
@@ -87,6 +90,7 @@ class Settings(BaseSettings):
 
     db: DataBase
     logging: LoggingConfig = LoggingConfig()
+    access_token_db: AccessToken = AccessToken()
 
 
 settings = Settings()
