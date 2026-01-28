@@ -1,4 +1,4 @@
-{% extends 'email-mailing/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}
   Email verification request
@@ -6,7 +6,7 @@
 
 {% block main %}
   <p>
-    Dear, {{ user.email }},
+    Dear, {{ user_email }},
   </p>
   <p>
     To verify your email address, please follow the link:
