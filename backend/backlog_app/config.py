@@ -26,6 +26,8 @@ class LoggingConfig(BaseModel):
 
 class AccessToken(BaseModel):
     lifetime_seconds: int = 3600
+    reset_password_token_secret: str
+    verification_token_secret: str
 
 class DataBaseConnection(BaseModel):
     host: str
@@ -90,7 +92,7 @@ class Settings(BaseSettings):
 
     db: DataBase
     logging: LoggingConfig = LoggingConfig()
-    access_token_db: AccessToken = AccessToken()
+    access_token_db: AccessToken
 
 
 settings = Settings()
