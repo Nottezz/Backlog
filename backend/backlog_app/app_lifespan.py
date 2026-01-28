@@ -13,7 +13,9 @@ from core.database import engine
 async def lifespan(
     app: FastAPI,  # noqa: ARG001
 ) -> AsyncIterator[None]:
-    await broker.startup()
+    if not broker.is_worker_process():
+        await broker.startup()
     yield
     await engine.dispose()
-    await broker.shutdown()
+    if not broker.is_worker_process():
+        await broker.shutdown()
