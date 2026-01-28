@@ -1,8 +1,9 @@
+from datetime import datetime
+
 import uvicorn
+from api import router as api_router
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime
-from api import router as api_router
 
 app = FastAPI(title="Backlog API")
 app_launch_time = datetime.now()
@@ -13,6 +14,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get("/", include_in_schema=False)
 async def root(request: Request):
@@ -28,7 +30,8 @@ async def root(request: Request):
         "docs_url": str(docs_url),
     }
 
+
 app.include_router(api_router)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

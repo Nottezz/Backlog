@@ -1,18 +1,18 @@
-import sys
 import os
+import sys
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 
 import asyncio
 from logging.config import fileConfig
 
-from sqlalchemy import pool
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncConnection
 from alembic import context
-
 # Импорт настроек из FastAPI
 from config import settings
 from models.base import Base
+from sqlalchemy import pool
+from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
 
 # Этот объект конфигурации Alembic
 config = context.config
@@ -23,6 +23,7 @@ if config.config_file_name is not None:
 
 # Метаинформация для autogenerate
 target_metadata = Base.metadata
+
 
 # Функция для синхронного режима (можно оставить для sync)
 def run_migrations_offline():
@@ -37,6 +38,7 @@ def run_migrations_offline():
     with context.begin_transaction():
         context.run_migrations()
 
+
 # Основная функция для async миграций
 async def run_migrations_online():
     connectable = create_async_engine(
@@ -49,6 +51,7 @@ async def run_migrations_online():
 
     await connectable.dispose()
 
+
 def do_run_migrations(connection: AsyncConnection):
     context.configure(
         connection=connection,
@@ -57,6 +60,7 @@ def do_run_migrations(connection: AsyncConnection):
 
     with context.begin_transaction():
         context.run_migrations()
+
 
 # Запуск миграций
 if context.is_offline_mode():

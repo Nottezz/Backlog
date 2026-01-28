@@ -1,5 +1,7 @@
-from pydantic import BaseModel, Field, AnyHttpUrl
 from datetime import datetime
+
+from pydantic import AnyHttpUrl, BaseModel, Field
+
 
 class MovieBase(BaseModel):
     title: str
@@ -8,6 +10,7 @@ class MovieBase(BaseModel):
     rating: int
     original_link: str | None = None
     kp_id: int | None = None
+
 
 class MovieCreate(MovieBase):
     title: str

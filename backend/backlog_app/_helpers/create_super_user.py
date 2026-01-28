@@ -1,16 +1,15 @@
-import contextlib
 import asyncio
-
-from fastapi_users import password
+import contextlib
 
 from config import settings
 from core.authentification.user_manager import UserManager
 from core.database import get_async_session
+from dependencies.authentification.user_manager import get_user_manager
 from dependencies.authentification.users import get_user_db
+from fastapi_users import password
+from fastapi_users.exceptions import UserAlreadyExists
 from models import User
 from schemas.user import UserCreate
-from dependencies.authentification.user_manager import get_user_manager
-from fastapi_users.exceptions import UserAlreadyExists
 
 get_async_session_context = contextlib.asynccontextmanager(get_async_session)
 get_user_db_context = contextlib.asynccontextmanager(get_user_db)
@@ -24,14 +23,15 @@ default_is_verified = True
 
 
 async def create_user(
-        user_manager: UserManager,
-        user_create: UserCreate,
+    user_manager: UserManager,
+    user_create: UserCreate,
 ) -> User:
     user = await user_manager.create(
         user_create=user_create,
         safe=False,
     )
     return user
+
 
 async def create_super_user(
     email: str = default_email,
@@ -56,5 +56,6 @@ async def create_super_user(
                     user_create=user_create,
                 )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     asyncio.run(create_super_user())
