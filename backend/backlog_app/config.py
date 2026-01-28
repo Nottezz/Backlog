@@ -29,6 +29,10 @@ class AccessToken(BaseModel):
     reset_password_token_secret: str
     verification_token_secret: str
 
+class SuperUser(BaseModel):
+    email: str
+    password: str
+
 class DataBaseConnection(BaseModel):
     host: str
     port: int
@@ -93,6 +97,7 @@ class Settings(BaseSettings):
     db: DataBase
     logging: LoggingConfig = LoggingConfig()
     access_token_db: AccessToken
+    superuser: SuperUser
 
 
 settings = Settings()
