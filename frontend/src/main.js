@@ -1,5 +1,14 @@
 import { createApp } from 'vue'
-import './style.css'
 import App from './App.vue'
+import router from './router'
+import authService from './services/auth'
+import './style.css'
 
-createApp(App).mount('#app')
+// Настроить axios interceptor для автоматической авторизации
+authService.setupAxiosInterceptor()
+
+const app = createApp(App)
+
+app.use(router)
+
+app.mount('#app')
