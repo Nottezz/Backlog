@@ -56,6 +56,7 @@ Your site admin,
     template = templates.get_template("email-verify/email-verified.html")
     context = {
         "user_id": user_id,
+        "user_email": user_email,
     }
     html_content = template.render(context=context)
 

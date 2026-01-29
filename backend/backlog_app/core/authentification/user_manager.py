@@ -43,7 +43,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         )
 
     async def on_after_verify(self, user: User, request: Optional["Request"] = None):
-        logger.warning("User $s has been verified", user.id)
+        logger.warning("User %s has been verified", user.id)
 
         await send_email_confirmed.kiq(
             user_id=str(user.id),

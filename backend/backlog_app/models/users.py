@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
-from fastapi_users.db import (SQLAlchemyBaseUserTableUUID,
-                              SQLAlchemyUserDatabase)
+from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase, SQLAlchemyBaseUserTableUUID
 from models.base import Base
 
 if TYPE_CHECKING:
