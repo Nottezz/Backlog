@@ -1,14 +1,10 @@
+import logging
 from pathlib import Path
 from typing import Literal
-import logging
 
-from pydantic_settings import (
-    BaseSettings,
-    PydanticBaseSettingsSource,
-    SettingsConfigDict,
-    YamlConfigSettingsSource,
-)
 from pydantic import BaseModel
+from pydantic_settings import (BaseSettings, PydanticBaseSettingsSource,
+                               SettingsConfigDict, YamlConfigSettingsSource)
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -24,6 +20,18 @@ class LoggingConfig(BaseModel):
     def log_level(self) -> int:
         return logging.getLevelNamesMapping()[self.log_level_name]
 
+
+class AccessToken(BaseModel):
+    lifetime_seconds: int = 3600
+    reset_password_token_secret: str
+    verification_token_secret: str
+
+
+class SuperUser(BaseModel):
+    email: str
+    password: str
+
+
 class DataBaseConnection(BaseModel):
     host: str
     port: int
@@ -38,6 +46,7 @@ class DataBaseConnection(BaseModel):
 
 class DataBase(BaseModel):
     connection: DataBaseConnection
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -87,6 +96,8 @@ class Settings(BaseSettings):
 
     db: DataBase
     logging: LoggingConfig = LoggingConfig()
+    access_token_db: AccessToken
+    superuser: SuperUser
 
 
 settings = Settings()

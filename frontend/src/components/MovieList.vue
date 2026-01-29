@@ -82,7 +82,7 @@ export default {
       this.error = null
 
       try {
-        const res = await axios.get('http://127.0.0.1:8000/movies/')
+        const res = await axios.get('http://127.0.0.1:8000/api/movies/')
         this.movies = res.data
       } catch (error) {
         console.error('Error fetching movies:', error)
