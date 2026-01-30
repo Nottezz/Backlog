@@ -57,15 +57,15 @@
       <!-- Rating (Optional) -->
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">
-          Rating <span class="text-gray-400 text-xs">(optional, 1-10)</span>
+          Rating <span class="text-gray-400 text-xs">(optional, 1.0-10.0)</span>
         </label>
         <input
           v-model.number="rating"
           placeholder="e.g. 8.5"
           type="number"
           step="0.1"
-          min="1"
-          max="10"
+          min="1.0"
+          max="10.0"
           class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
           :class="{ 'border-red-500': errors.rating }"
           @input="errors.rating = ''"
@@ -87,6 +87,22 @@
           @input="errors.original_link = ''"
         />
         <p v-if="errors.original_link" class="text-red-500 text-sm mt-1">{{ errors.original_link }}</p>
+      </div>
+
+      <!-- Watch Link (Optional) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Watch Link <span class="text-gray-400 text-xs">(optional)</span>
+        </label>
+        <input
+          v-model="watch_link"
+          placeholder="https://example.com/movie"
+          type="url"
+          class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
+          :class="{ 'border-red-500': errors.watch_link }"
+          @input="errors.watch_link = ''"
+        />
+        <p v-if="errors.watch_link" class="text-red-500 text-sm mt-1">{{ errors.watch_link }}</p>
       </div>
 
       <!-- Kinopoisk ID (Optional) -->
@@ -165,6 +181,7 @@ export default {
       year: null,
       rating: null,
       original_link: '',
+      watch_link: '',
       kp_id: null,
       watched: false,
       editingId: null,
@@ -194,6 +211,7 @@ export default {
         year: '',
         rating: '',
         original_link: '',
+        watch_link: '',
         kp_id: ''
       }
       let isValid = true
@@ -234,6 +252,16 @@ export default {
         }
       }
 
+      // URL validation (optional, but if provided must be valid)
+      if (this.watch_link && this.watch_link.trim() !== '') {
+        try {
+          new URL(this.watch_link)
+        } catch (e) {
+          this.errors.watch_link = 'Please enter a valid URL (e.g., https://example.com)'
+          isValid = false
+        }
+      }
+
       // KP ID validation (optional, but if provided must be positive)
       if (this.kp_id !== null && this.kp_id !== '' && this.kp_id < 0) {
         this.errors.kp_id = 'Kinopoisk ID must be a positive number'
@@ -257,6 +285,7 @@ export default {
           year: this.year || null,
           rating: this.rating || null,
           original_link: this.original_link.trim() || null,
+          watch_link: this.watch_link.trim() || null,
           kp_id: this.kp_id || null,
           watched: this.watched
         }
@@ -292,6 +321,7 @@ export default {
           year: this.year || null,
           rating: this.rating || null,
           original_link: this.original_link.trim() || null,
+          watch_link: this.watch_link.trim() || null,
           kp_id: this.kp_id || null,
           watched: this.watched
         }
@@ -318,6 +348,7 @@ export default {
       this.year = null
       this.rating = null
       this.original_link = ''
+      this.watch_link = ''
       this.kp_id = null
       this.watched = false
       this.editingId = null
@@ -338,6 +369,7 @@ export default {
       this.year = movie.year || null
       this.rating = movie.rating || null
       this.original_link = movie.original_link || ''
+      this.watch_link = movie.watch_link || ''
       this.kp_id = movie.kp_id || null
       this.watched = movie.watched || false
       this.editingId = movie.id

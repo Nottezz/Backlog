@@ -49,7 +49,18 @@
               target="_blank"
               class="text-indigo-600 hover:text-indigo-800 underline truncate max-w-[200px]"
             >
-              Link
+              Resource
+            </a>
+          </div>
+
+          <div v-if="movie.watch_link" class="flex items-center gap-1 text-gray-500">
+            <span>🔗</span>
+            <a
+              :href="movie.watch_link"
+              target="_blank"
+              class="text-indigo-600 hover:text-indigo-800 underline truncate max-w-[200px]"
+            >
+              Watch link
             </a>
           </div>
         </div>
