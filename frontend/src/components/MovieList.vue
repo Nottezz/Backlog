@@ -4,6 +4,33 @@
       <h2 class="text-xl font-semibold text-gray-700">
         Your Movies ({{ movies.length }})
       </h2>
+
+      <div class="flex items-center gap-3">
+        <!-- Toggle Switch for "Only my movies" -->
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-gray-700 font-medium">All movies</span>
+
+          <!-- Toggle Switch -->
+          <button
+            @click="onlyMine = !onlyMine; fetchMovies()"
+            type="button"
+            :class="[
+              'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2',
+              onlyMine ? 'bg-indigo-600' : 'bg-gray-300'
+            ]"
+          >
+            <span
+              :class="[
+                'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+                onlyMine ? 'translate-x-6' : 'translate-x-1'
+              ]"
+            ></span>
+          </button>
+
+          <span class="text-sm text-gray-700 font-medium">Only mine</span>
+        </div>
+      </div>
+
       <button
         @click="fetchMovies"
         :disabled="loading"
@@ -59,7 +86,8 @@ export default {
     return {
       movies: [],
       loading: false,
-      error: null
+      error: null,
+      onlyMine: false
     }
   },
   computed: {
@@ -82,7 +110,10 @@ export default {
       this.error = null
 
       try {
-        const res = await axios.get('http://127.0.0.1:8000/api/movies/')
+        const params = {
+          only_mine: this.onlyMine
+        }
+        const res = await axios.get('http://127.0.0.1:8000/api/movies/', { params })
         this.movies = res.data
       } catch (error) {
         console.error('Error fetching movies:', error)
