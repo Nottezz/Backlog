@@ -1,8 +1,8 @@
 from textwrap import dedent
 
 from jinja2_templates import templates
-from taskiq_broker import broker
 from mailing.send_email import send_email
+from taskiq_broker import broker
 
 
 @broker.task
@@ -38,7 +38,6 @@ async def send_verification_email(
         plain_content=plain_content,
         html_content=html_content,
     )
-
 
 
 @broker.task

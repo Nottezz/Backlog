@@ -1,13 +1,14 @@
 from typing import Annotated, List
 
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.database import get_async_session
 from crud import movie
 from dependencies.authentification.fastapi_users_routers import \
     current_active_user
-from fastapi import APIRouter, Depends
 from models.users import User
 from schemas.movie import MovieCreate, MovieRead, MovieUpdate
-from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/movies", tags=["Movies"])
 
@@ -18,7 +19,7 @@ async def add_movie(
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await movie.create_movie(db, movie_create)
+    return await movie.create_movie(db, movie_create, user=user)
 
 
 @router.get("/", response_model=List[MovieRead])

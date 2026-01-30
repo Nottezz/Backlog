@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from core.database import engine
+
 from .taskiq_broker import broker
 
 

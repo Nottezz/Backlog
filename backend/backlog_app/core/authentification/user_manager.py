@@ -2,10 +2,11 @@ import logging
 import uuid
 from typing import TYPE_CHECKING, Optional
 
-from config import settings
 from fastapi_users import BaseUserManager, UUIDIDMixin
+
+from config import settings
 from models import User
-from tasks.email_task import send_verification_email, send_email_confirmed
+from tasks.email_task import send_email_confirmed, send_verification_email
 
 if TYPE_CHECKING:
     from fastapi import Request
@@ -34,7 +35,9 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             "Verification requested for user %s. Verification token: %s", user.id, token
         )
 
-        verification_link = "http://127.0.0.1:8000/docs#/Auth/verify_verify_api_auth_verify_post"
+        verification_link = (
+            "http://127.0.0.1:8000/docs#/Auth/verify_verify_api_auth_verify_post"
+        )
         await send_verification_email.kiq(
             user_id=str(user.id),
             user_email=user.email,
