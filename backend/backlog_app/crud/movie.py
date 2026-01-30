@@ -5,6 +5,9 @@ from schemas.movie import MovieCreate, MovieRead, MovieUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 async def create_movie(
@@ -14,6 +17,8 @@ async def create_movie(
     db.add(movie)
     await db.commit()
     await db.refresh(movie)
+
+    logger.info("Movie has been created.")
 
     return MovieRead(
         id=movie.id,
@@ -70,6 +75,8 @@ async def get_movie_by_id(
     if not movie:
         raise HTTPException(status_code=404, detail="Movie not found")
 
+    logger.info("Movie has been found.")
+
     return MovieRead(
         id=movie.id,
         title=movie.title,
@@ -106,6 +113,8 @@ async def update_movie(
 
     await db.commit()
     await db.refresh(movie)
+
+    logger.info("Movie has been updated.")
 
     return MovieRead(
         id=movie.id,
@@ -152,11 +161,15 @@ async def delete_movie(
 
     await db.delete(movie)
     await db.commit()
+
+    logger.info("Movie has been deleted.")
+
     return movie
 
 
 def check_movie_ownership(movie: Movie, user: User) -> None:
     """Проверяет, может ли пользователь изменять фильм"""
+    logger.debug("Checking movie ownership for user %s", user.id)
     if not user.is_superuser and movie.user_id != user.id:
         raise HTTPException(
             status_code=403, detail="You don't have access to this action"

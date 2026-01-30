@@ -1,13 +1,20 @@
+import logging
 from datetime import datetime
 
 import uvicorn
-from api import router as api_router
-from api.main_view import router as main_router
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from api import router as api_router
+from api.main_view import router as main_router
 from backend.backlog_app.app_lifespan import lifespan
+from config import settings
 
+logging.basicConfig(
+    format=settings.logging.log_format,
+    level=settings.logging.log_level,
+    datefmt=settings.logging.log_date_format,
+)
 app = FastAPI(title="Backlog API", lifespan=lifespan)
 app_launch_time = datetime.now()
 
