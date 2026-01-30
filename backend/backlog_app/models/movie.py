@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from models.base import Base
-from sqlalchemy import Boolean, DateTime, Integer, String, func
+from sqlalchemy import Boolean, DateTime, Integer, String, func, Float
 from sqlalchemy.orm import Mapped, mapped_column
 
 
@@ -33,12 +33,17 @@ class Movie(Base):
         nullable=False,
     )
 
-    rating: Mapped[int | None] = mapped_column(
-        Integer,
+    rating: Mapped[float | None] = mapped_column(
+        Float,
         nullable=True,
     )
 
     original_link: Mapped[str] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+
+    watch_link: Mapped[str | None] = mapped_column(
         String(255),
         nullable=True,
     )
