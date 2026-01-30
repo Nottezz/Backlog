@@ -1,14 +1,15 @@
 from datetime import datetime
 
-from pydantic import AnyHttpUrl, BaseModel, Field
+from pydantic import BaseModel, Field, UUID4
 
 
 class MovieBase(BaseModel):
     title: str
     description: str
     year: int
-    rating: int
+    rating: float
     original_link: str | None = None
+    watch_link: str | None = None
     kp_id: int | None = None
 
 
@@ -16,7 +17,7 @@ class MovieCreate(MovieBase):
     title: str
     description: str | None = None
     year: int | None = None
-    rating: int | None = Field(default=None, ge=1, le=10)
+    rating: float | None = Field(default=None, ge=1.0, le=10.0)
 
 
 class MovieUpdate(MovieBase):
@@ -24,11 +25,12 @@ class MovieUpdate(MovieBase):
     description: str | None = None
     year: int | None = None
     watched: bool | None = None
-    rating: int | None = Field(default=None, ge=1, le=10)
+    rating: float | None = Field(default=None, ge=1.0, le=10.0)
 
 
 class MovieRead(MovieBase):
     id: int
+    user_id: UUID4
     description: str | None
     year: int | None
     watched: bool

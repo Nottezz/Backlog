@@ -1,8 +1,15 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
+
+from sqlalchemy import Boolean, DateTime, Integer, String, func, Float, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
 from models.base import Base
-from sqlalchemy import Boolean, DateTime, Integer, String, func, Float
-from sqlalchemy.orm import Mapped, mapped_column
+
+if TYPE_CHECKING:
+    from .users import User
 
 
 class Movie(Base):
@@ -58,3 +65,10 @@ class Movie(Base):
         server_default=func.now(),
         nullable=False,
     )
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("user.id"),
+        nullable=False
+    )
+    user: Mapped["User"] = relationship("User", back_populates="movies")

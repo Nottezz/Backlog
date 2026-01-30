@@ -1,3 +1,5 @@
+import uuid
+
 from models.movie import Movie
 from schemas.movie import MovieCreate, MovieUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -5,8 +7,8 @@ from sqlalchemy.future import select
 from starlette.exceptions import HTTPException
 
 
-async def create_movie(db: AsyncSession, movie_in: MovieCreate) -> Movie:
-    movie = Movie(**movie_in.model_dump())
+async def create_movie(db: AsyncSession, movie_in: MovieCreate, user_id: uuid.UUID) -> Movie:
+    movie = Movie(**movie_in.model_dump(), user_id=user_id)
     db.add(movie)
     await db.commit()
     await db.refresh(movie)
