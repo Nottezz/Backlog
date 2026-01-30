@@ -22,6 +22,13 @@
 
         <!-- Metadata row -->
         <div class="flex flex-wrap gap-3 text-sm">
+
+          <!-- User -->
+          <div v-if="movie.user" class="flex items-center gap-1 text-gray-500">
+            <span>👤</span>
+            <span class="font-medium">{{ movie.user }}</span>
+          </div>
+
           <!-- Rating -->
           <div v-if="movie.rating" class="flex items-center gap-1">
             <span class="text-yellow-500 font-medium">
@@ -33,9 +40,9 @@
           <div v-if="movie.kp_id" class="flex items-center gap-1 text-gray-500">
             <span>🎬 KP:</span>
             <a
-              :href="`https://www.kinopoisk.ru/film/${movie.kp_id}/`"
-              target="_blank"
-              class="text-indigo-600 hover:text-indigo-800 underline"
+                :href="`https://www.kinopoisk.ru/film/${movie.kp_id}/`"
+                target="_blank"
+                class="text-indigo-600 hover:text-indigo-800 underline"
             >
               {{ movie.kp_id }}
             </a>
@@ -45,9 +52,9 @@
           <div v-if="movie.original_link" class="flex items-center gap-1 text-gray-500">
             <span>🔗</span>
             <a
-              :href="movie.original_link"
-              target="_blank"
-              class="text-indigo-600 hover:text-indigo-800 underline truncate max-w-[200px]"
+                :href="movie.original_link"
+                target="_blank"
+                class="text-indigo-600 hover:text-indigo-800 underline truncate max-w-[200px]"
             >
               Resource
             </a>
@@ -56,9 +63,9 @@
           <div v-if="movie.watch_link" class="flex items-center gap-1 text-gray-500">
             <span>🔗</span>
             <a
-              :href="movie.watch_link"
-              target="_blank"
-              class="text-indigo-600 hover:text-indigo-800 underline truncate max-w-[200px]"
+                :href="movie.watch_link"
+                target="_blank"
+                class="text-indigo-600 hover:text-indigo-800 underline truncate max-w-[200px]"
             >
               Watch link
             </a>
@@ -69,14 +76,14 @@
       <!-- Action Buttons -->
       <div class="flex gap-2 flex-shrink-0">
         <button
-          @click="$emit('edit', movie)"
-          class="bg-blue-500 text-white px-3 py-1.5 rounded hover:bg-blue-600 transition text-sm font-medium"
+            @click="$emit('edit', movie)"
+            class="bg-blue-500 text-white px-3 py-1.5 rounded hover:bg-blue-600 transition text-sm font-medium"
         >
           Edit
         </button>
         <button
-          @click="deleteMovie"
-          class="bg-red-500 text-white px-3 py-1.5 rounded hover:bg-red-600 transition text-sm font-medium"
+            @click="deleteMovie"
+            class="bg-red-500 text-white px-3 py-1.5 rounded hover:bg-red-600 transition text-sm font-medium"
         >
           Delete
         </button>
