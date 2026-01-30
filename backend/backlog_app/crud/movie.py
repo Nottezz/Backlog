@@ -31,8 +31,13 @@ async def create_movie(
     )
 
 
-async def get_movies(db: AsyncSession):
-    result = await db.execute(select(Movie).options(selectinload(Movie.user)))
+async def get_movies(db: AsyncSession, user_id: str | None = None):
+    query = select(Movie).options(selectinload(Movie.user))
+
+    if user_id is not None:
+        query = query.where(Movie.user_id == user_id)
+
+    result = await db.execute(query)
     movies = result.scalars().all()
     return [
         MovieRead(
@@ -52,13 +57,22 @@ async def get_movies(db: AsyncSession):
     ]
 
 
-async def get_movie_by_id(db: AsyncSession, movie_id: int) -> MovieRead | None:
-    result = await db.execute(
-        select(Movie).options(selectinload(Movie.user)).where(Movie.id == movie_id)
-    )
+async def get_movie_by_id(
+    db: AsyncSession,
+    movie_id: int,
+    user_id: int | None = None
+) -> MovieRead | None:
+    query = select(Movie).options(selectinload(Movie.user)).where(Movie.id == movie_id)
+
+    if user_id is not None:
+        query = query.where(Movie.user_id == user_id)
+
+    result = await db.execute(query)
     movie = result.scalars().first()
+
     if not movie:
-        return None
+        raise HTTPException(status_code=404, detail="Movie not found")
+
     return MovieRead(
         id=movie.id,
         title=movie.title,

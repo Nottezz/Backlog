@@ -25,8 +25,12 @@ async def add_movie(
 @router.get("/", response_model=List[MovieRead])
 async def list_movies(
     db: Annotated[AsyncSession, Depends(get_async_session)],
+    user: Annotated[User, Depends(current_active_user)],
+    only_mine: bool = False,
 ):
-    return await movie.get_movies(db)
+    user_id = user.id if only_mine else None
+    movies = await movie.get_movies(db, user_id=user_id)
+    return movies
 
 
 @router.get("/{movie_id}", response_model=MovieRead)
@@ -34,8 +38,11 @@ async def get_movie_by_id(
     movie_id: int,
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
+    only_mine: bool = False,
 ):
-    return await movie.get_movie_by_id(db, movie_id)
+    user_id = user.id if only_mine else None
+    one_movie = await movie.get_movie_by_id(db, movie_id, user_id)
+    return one_movie
 
 
 @router.put("/{movie_id}", response_model=MovieRead)
