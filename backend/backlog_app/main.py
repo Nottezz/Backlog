@@ -6,6 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from api import router as api_router
+from api.main_view import router as main_router
 
 app = FastAPI(title="Backlog API", lifespan=lifespan)
 app_launch_time = datetime.now()
@@ -16,23 +17,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.get("/", include_in_schema=False)
-async def root(request: Request):
-    uptime = (datetime.now() - app_launch_time).total_seconds()
-    docs_url = request.url.replace(
-        path="/docs",
-        query="",
-    )
-    return {
-        "status": "OK",
-        "current_time": datetime.now().isoformat(sep=" "),
-        "app_launch_time": int(uptime),
-        "docs_url": str(docs_url),
-    }
-
-
+app.include_router(main_router)
 app.include_router(api_router)
 
 if __name__ == "__main__":
