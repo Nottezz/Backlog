@@ -18,7 +18,7 @@ async def add_movie(
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await movie.create_movie(db, movie_create, user_id=user.id)
+    return await movie.create_movie(db, movie_create, user=user)
 
 
 @router.get("/", response_model=List[MovieRead])

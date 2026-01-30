@@ -11,11 +11,11 @@
           Title <span class="text-red-500">*</span>
         </label>
         <input
-          v-model="title"
-          placeholder="Movie Title"
-          class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
-          :class="{ 'border-red-500': errors.title }"
-          @input="errors.title = ''"
+            v-model="title"
+            placeholder="Movie Title"
+            class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
+            :class="{ 'border-red-500': errors.title }"
+            @input="errors.title = ''"
         />
         <p v-if="errors.title" class="text-red-500 text-sm mt-1">{{ errors.title }}</p>
       </div>
@@ -26,12 +26,12 @@
           Description <span class="text-gray-400 text-xs">(optional)</span>
         </label>
         <textarea
-          v-model="description"
-          placeholder="Movie description"
-          rows="3"
-          class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none text-gray-900 placeholder-gray-400"
-          :class="{ 'border-red-500': errors.description }"
-          @input="errors.description = ''"
+            v-model="description"
+            placeholder="Movie description"
+            rows="3"
+            class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none text-gray-900 placeholder-gray-400"
+            :class="{ 'border-red-500': errors.description }"
+            @input="errors.description = ''"
         ></textarea>
         <p v-if="errors.description" class="text-red-500 text-sm mt-1">{{ errors.description }}</p>
       </div>
@@ -42,14 +42,14 @@
           Year <span class="text-gray-400 text-xs">(optional)</span>
         </label>
         <input
-          v-model.number="year"
-          placeholder="e.g. 2024"
-          type="number"
-          min="1888"
-          :max="currentYear + 5"
-          class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
-          :class="{ 'border-red-500': errors.year }"
-          @input="errors.year = ''"
+            v-model.number="year"
+            placeholder="e.g. 2024"
+            type="number"
+            min="1888"
+            :max="currentYear + 5"
+            class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
+            :class="{ 'border-red-500': errors.year }"
+            @input="errors.year = ''"
         />
         <p v-if="errors.year" class="text-red-500 text-sm mt-1">{{ errors.year }}</p>
       </div>
@@ -60,33 +60,17 @@
           Rating <span class="text-gray-400 text-xs">(optional, 1.0-10.0)</span>
         </label>
         <input
-          v-model.number="rating"
-          placeholder="e.g. 8.5"
-          type="number"
-          step="0.1"
-          min="1.0"
-          max="10.0"
-          class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
-          :class="{ 'border-red-500': errors.rating }"
-          @input="errors.rating = ''"
+            v-model.number="rating"
+            placeholder="e.g. 8.5"
+            type="number"
+            step="0.1"
+            min="1.0"
+            max="10.0"
+            class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
+            :class="{ 'border-red-500': errors.rating }"
+            @input="errors.rating = ''"
         />
         <p v-if="errors.rating" class="text-red-500 text-sm mt-1">{{ errors.rating }}</p>
-      </div>
-
-      <!-- Original Link (Optional) -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          Original Link <span class="text-gray-400 text-xs">(optional)</span>
-        </label>
-        <input
-          v-model="original_link"
-          placeholder="https://example.com/movie"
-          type="url"
-          class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
-          :class="{ 'border-red-500': errors.original_link }"
-          @input="errors.original_link = ''"
-        />
-        <p v-if="errors.original_link" class="text-red-500 text-sm mt-1">{{ errors.original_link }}</p>
       </div>
 
       <!-- Watch Link (Optional) -->
@@ -95,12 +79,12 @@
           Watch Link <span class="text-gray-400 text-xs">(optional)</span>
         </label>
         <input
-          v-model="watch_link"
-          placeholder="https://example.com/movie"
-          type="url"
-          class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
-          :class="{ 'border-red-500': errors.watch_link }"
-          @input="errors.watch_link = ''"
+            v-model="watch_link"
+            placeholder="https://example.com/movie"
+            type="url"
+            class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
+            :class="{ 'border-red-500': errors.watch_link }"
+            @input="errors.watch_link = ''"
         />
         <p v-if="errors.watch_link" class="text-red-500 text-sm mt-1">{{ errors.watch_link }}</p>
       </div>
@@ -111,24 +95,41 @@
           Kinopoisk ID <span class="text-gray-400 text-xs">(optional)</span>
         </label>
         <input
-          v-model.number="kp_id"
-          placeholder="e.g. 326"
-          type="number"
-          min="0"
-          class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
-          :class="{ 'border-red-500': errors.kp_id }"
-          @input="errors.kp_id = ''"
+            v-model.number="kp_id"
+            placeholder="e.g. 326"
+            type="number"
+            min="0"
+            class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
+            :class="{ 'border-red-500': errors.kp_id }"
+            @input="errors.kp_id = ''"
         />
         <p v-if="errors.kp_id" class="text-red-500 text-sm mt-1">{{ errors.kp_id }}</p>
+      </div>
+
+      <!-- IMDB ID (Optional) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          IMDB ID <span class="text-gray-400 text-xs">(optional)</span>
+        </label>
+        <input
+            v-model.number="imdb_id"
+            placeholder="e.g. 326"
+            type="number"
+            min="0"
+            class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
+            :class="{ 'border-red-500': errors.imdb_id }"
+            @input="errors.imdb_id = ''"
+        />
+        <p v-if="errors.imdb_id" class="text-red-500 text-sm mt-1">{{ errors.imdb_id }}</p>
       </div>
 
       <!-- Watched (Optional) -->
       <div class="flex items-center gap-3 p-3 bg-white rounded border border-gray-300">
         <input
-          v-model="watched"
-          type="checkbox"
-          id="watched-checkbox"
-          class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+            v-model="watched"
+            type="checkbox"
+            id="watched-checkbox"
+            class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer"
         />
         <label for="watched-checkbox" class="text-sm font-medium text-gray-700 cursor-pointer select-none">
           I've already watched this movie
@@ -138,26 +139,26 @@
       <!-- Buttons -->
       <div class="flex gap-2 pt-2">
         <button
-          v-if="!editingId"
-          @click="addMovie"
-          :disabled="loading"
-          class="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
+            v-if="!editingId"
+            @click="addMovie"
+            :disabled="loading"
+            class="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
         >
           {{ loading ? 'Adding...' : 'Add Movie' }}
         </button>
 
         <template v-else>
           <button
-            @click="updateMovie"
-            :disabled="loading"
-            class="flex-1 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
+              @click="updateMovie"
+              :disabled="loading"
+              class="flex-1 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
           >
             {{ loading ? 'Updating...' : 'Update Movie' }}
           </button>
           <button
-            @click="clearForm"
-            :disabled="loading"
-            class="bg-gray-500 text-white px-4 py-3 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
+              @click="clearForm"
+              :disabled="loading"
+              class="bg-gray-500 text-white px-4 py-3 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
           >
             Cancel
           </button>
@@ -180,9 +181,9 @@ export default {
       description: '',
       year: null,
       rating: null,
-      original_link: '',
       watch_link: '',
       kp_id: null,
+      imdb_id: null,
       watched: false,
       editingId: null,
       loading: false,
@@ -191,8 +192,9 @@ export default {
         description: '',
         year: '',
         rating: '',
-        original_link: '',
-        kp_id: ''
+        kp_id: '',
+        imdb_id: ""
+
       },
       successMessage: '',
       errorMessage: ''
@@ -210,9 +212,9 @@ export default {
         description: '',
         year: '',
         rating: '',
-        original_link: '',
         watch_link: '',
-        kp_id: ''
+        kp_id: '',
+        imdb_id: '',
       }
       let isValid = true
 
@@ -268,6 +270,12 @@ export default {
         isValid = false
       }
 
+      // IMDB ID validation (optional, but if provided must be positive)
+      if (this.imdb_id !== null && this.imdb_id !== '' && this.imdb_id < 0) {
+        this.errors.imdb_id = 'IMDB ID must be a positive number'
+        isValid = false
+      }
+
       return isValid
     },
 
@@ -284,9 +292,9 @@ export default {
           description: this.description.trim() || null,
           year: this.year || null,
           rating: this.rating || null,
-          original_link: this.original_link.trim() || null,
           watch_link: this.watch_link.trim() || null,
           kp_id: this.kp_id || null,
+          imdb_id: this.imdb_id || null,
           watched: this.watched
         }
 
@@ -320,9 +328,9 @@ export default {
           description: this.description.trim() || null,
           year: this.year || null,
           rating: this.rating || null,
-          original_link: this.original_link.trim() || null,
           watch_link: this.watch_link.trim() || null,
           kp_id: this.kp_id || null,
+          imdb_id: this.imdb_id || null,
           watched: this.watched
         }
 
@@ -347,9 +355,9 @@ export default {
       this.description = ''
       this.year = null
       this.rating = null
-      this.original_link = ''
       this.watch_link = ''
       this.kp_id = null
+      this.imdb_id = null
       this.watched = false
       this.editingId = null
       this.errors = {
@@ -358,7 +366,8 @@ export default {
         year: '',
         rating: '',
         original_link: '',
-        kp_id: ''
+        kp_id: '',
+        imdb_id: ''
       }
       this.errorMessage = ''
     },
@@ -371,6 +380,7 @@ export default {
       this.original_link = movie.original_link || ''
       this.watch_link = movie.watch_link || ''
       this.kp_id = movie.kp_id || null
+      this.imdb_id = movie.imdb_id || null
       this.watched = movie.watched || false
       this.editingId = movie.id
       this.errorMessage = ''

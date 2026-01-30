@@ -1,19 +1,32 @@
-import uuid
-
-from models.movie import Movie
-from schemas.movie import MovieCreate, MovieUpdate, MovieRead
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 from starlette.exceptions import HTTPException
 
+from models import User
+from models.movie import Movie
+from schemas.movie import MovieCreate, MovieUpdate, MovieRead
 
-async def create_movie(db: AsyncSession, movie_in: MovieCreate, user_id: uuid.UUID) -> Movie:
-    movie = Movie(**movie_in.model_dump(), user_id=user_id)
+
+async def create_movie(db: AsyncSession, movie_in: MovieCreate, user: User) -> MovieRead:
+    movie = Movie(**movie_in.model_dump(), user_id=user.id)
     db.add(movie)
     await db.commit()
     await db.refresh(movie)
-    return movie
+
+    return MovieRead(
+        id=movie.id,
+        title=movie.title,
+        description=movie.description,
+        year=movie.year,
+        rating=movie.rating,
+        kp_id=movie.kp_id,
+        imdb_id=movie.imdb_id,
+        watch_link=movie.watch_link,
+        watched=movie.watched,
+        created_at=movie.created_at,
+        user=user.email.split("@")[0]
+    )
 
 
 async def get_movies(db: AsyncSession):
@@ -28,7 +41,7 @@ async def get_movies(db: AsyncSession):
             description=m.description,
             year=m.year,
             rating=m.rating,
-            original_link=m.original_link,
+            imdb_id=m.imdb_id,
             watch_link=m.watch_link,
             watched=m.watched,
             created_at=m.created_at,
@@ -54,7 +67,7 @@ async def get_movie_by_id(db: AsyncSession, movie_id: int) -> MovieRead | None:
         description=movie.description,
         year=movie.year,
         rating=movie.rating,
-        original_link=movie.original_link,
+        imdb_id=movie.imdb_id,
         watch_link=movie.watch_link,
         watched=movie.watched,
         created_at=movie.created_at,
@@ -89,7 +102,7 @@ async def update_movie(
         year=movie.year,
         rating=movie.rating,
         kp_id=movie.kp_id,
-        original_link=movie.original_link,
+        imdb_id=movie.imdb_id,
         watch_link=movie.watch_link,
         watched=movie.watched,
         user=movie.user.email.split("@")[0],

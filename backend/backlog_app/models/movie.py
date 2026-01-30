@@ -45,17 +45,17 @@ class Movie(Base):
         nullable=True,
     )
 
-    original_link: Mapped[str] = mapped_column(
-        String(255),
-        nullable=True,
-    )
-
     watch_link: Mapped[str | None] = mapped_column(
         String(255),
         nullable=True,
     )
 
     kp_id: Mapped[int] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    imdb_id: Mapped[int] = mapped_column(
         Integer,
         nullable=True,
     )

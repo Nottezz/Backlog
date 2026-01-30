@@ -48,18 +48,19 @@
             </a>
           </div>
 
-          <!-- Original Link -->
-          <div v-if="movie.original_link" class="flex items-center gap-1 text-gray-500">
-            <span>🔗</span>
+          <!-- IMDB ID -->
+          <div v-if="movie.imdb_id" class="flex items-center gap-1 text-gray-500">
+            <span>IMDB:</span>
             <a
-                :href="movie.original_link"
+                :href="`https://www.imdb.com/title/tt${movie.imdb_id}/`"
                 target="_blank"
-                class="text-indigo-600 hover:text-indigo-800 underline truncate max-w-[200px]"
+                class="text-indigo-600 hover:text-indigo-800 underline"
             >
-              Resource
+              {{ movie.imdb_id }}
             </a>
           </div>
 
+          <!--  Watch Link -->
           <div v-if="movie.watch_link" class="flex items-center gap-1 text-gray-500">
             <span>🔗</span>
             <a
