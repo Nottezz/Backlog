@@ -52,7 +52,7 @@ async def update_movie(
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await movie.update_movie(db, movie_id, movie_update)
+    return await movie.update_movie(db, movie_id, movie_update, user)
 
 
 @router.patch("/{movie_id}", response_model=MovieRead)
@@ -71,4 +71,4 @@ async def delete_movie(
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await movie.delete_movie(db, movie_id)
+    return await movie.delete_movie(db, movie_id, user)

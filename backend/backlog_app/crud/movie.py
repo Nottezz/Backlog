@@ -1,7 +1,7 @@
+from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
-from starlette.exceptions import HTTPException
 
 from models import User
 from models.movie import Movie
@@ -89,7 +89,7 @@ async def get_movie_by_id(
 
 
 async def update_movie(
-    db: AsyncSession, movie_id: int, movie_in: MovieUpdate
+    db: AsyncSession, movie_id: int, movie_in: MovieUpdate, user: User,
 ) -> MovieRead:
     result = await db.execute(
         select(Movie).options(selectinload(Movie.user)).where(Movie.id == movie_id)
@@ -98,6 +98,8 @@ async def update_movie(
 
     if not movie:
         raise HTTPException(status_code=404, detail="Movie not found")
+
+    check_movie_ownership(movie, user)
 
     for field, value in movie_in.model_dump(exclude_unset=True).items():
         setattr(movie, field, value)
@@ -136,12 +138,20 @@ async def partial_update_movie(
     return movie
 
 
-async def delete_movie(db: AsyncSession, movie_id: int) -> Movie | None:
+async def delete_movie(db: AsyncSession, movie_id: int, user: User, ) -> Movie | None:
     result = await db.execute(select(Movie).where(Movie.id == movie_id))
     movie = result.scalars().first()
     if not movie:
         raise HTTPException(status_code=404)
 
+    check_movie_ownership(movie, user)
+
     await db.delete(movie)
     await db.commit()
     return movie
+
+
+def check_movie_ownership(movie: Movie, user: User) -> None:
+    """Проверяет, может ли пользователь изменять фильм"""
+    if not user.is_superuser and movie.user_id != user.id:
+        raise HTTPException(status_code=403, detail="You don't have access to this action")
