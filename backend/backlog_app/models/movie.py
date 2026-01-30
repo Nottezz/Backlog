@@ -1,10 +1,11 @@
+import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, DateTime, Integer, String, func, Float, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import (Boolean, DateTime, Float, ForeignKey, Integer, String,
+                        func)
 from sqlalchemy.dialects.postgresql import UUID
-import uuid
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models.base import Base
 
@@ -67,8 +68,6 @@ class Movie(Base):
     )
 
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("user.id"),
-        nullable=False
+        UUID(as_uuid=True), ForeignKey("user.id"), nullable=False
     )
     user: Mapped["User"] = relationship("User", back_populates="movies")

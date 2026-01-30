@@ -1,6 +1,7 @@
 import uuid
 
 from fastapi_users import FastAPIUsers
+
 from models import User
 
 from .backend import authentication_backend

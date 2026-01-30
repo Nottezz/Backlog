@@ -1,13 +1,14 @@
 from typing import TYPE_CHECKING
 
-from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase, SQLAlchemyBaseUserTableUUID
+from fastapi_users_db_sqlalchemy import (SQLAlchemyBaseUserTableUUID,
+                                         SQLAlchemyUserDatabase)
 from sqlalchemy.orm import Mapped, relationship
 
 from models.base import Base
 
-
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
+
     from .movie import Movie
 
 

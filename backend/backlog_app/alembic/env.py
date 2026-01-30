@@ -7,12 +7,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".
 import asyncio
 from logging.config import fileConfig
 
+from sqlalchemy import pool
+from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
+
 from alembic import context
 # Импорт настроек из FastAPI
 from config import settings
 from models.base import Base
-from sqlalchemy import pool
-from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
 
 # Этот объект конфигурации Alembic
 config = context.config

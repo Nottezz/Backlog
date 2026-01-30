@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING, Annotated
 
-from core.database import get_async_session
 from fastapi import Depends
+
+from core.database import get_async_session
 from models import AccessToken
 
 if TYPE_CHECKING:

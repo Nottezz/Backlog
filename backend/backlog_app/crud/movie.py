@@ -5,10 +5,12 @@ from starlette.exceptions import HTTPException
 
 from models import User
 from models.movie import Movie
-from schemas.movie import MovieCreate, MovieUpdate, MovieRead
+from schemas.movie import MovieCreate, MovieRead, MovieUpdate
 
 
-async def create_movie(db: AsyncSession, movie_in: MovieCreate, user: User) -> MovieRead:
+async def create_movie(
+    db: AsyncSession, movie_in: MovieCreate, user: User
+) -> MovieRead:
     movie = Movie(**movie_in.model_dump(), user_id=user.id)
     db.add(movie)
     await db.commit()
@@ -25,14 +27,12 @@ async def create_movie(db: AsyncSession, movie_in: MovieCreate, user: User) -> M
         watch_link=movie.watch_link,
         watched=movie.watched,
         created_at=movie.created_at,
-        user=user.email.split("@")[0]
+        user=user.email.split("@")[0],
     )
 
 
 async def get_movies(db: AsyncSession):
-    result = await db.execute(
-        select(Movie).options(selectinload(Movie.user))
-    )
+    result = await db.execute(select(Movie).options(selectinload(Movie.user)))
     movies = result.scalars().all()
     return [
         MovieRead(
@@ -54,9 +54,7 @@ async def get_movies(db: AsyncSession):
 
 async def get_movie_by_id(db: AsyncSession, movie_id: int) -> MovieRead | None:
     result = await db.execute(
-        select(Movie)
-        .options(selectinload(Movie.user))
-        .where(Movie.id == movie_id)
+        select(Movie).options(selectinload(Movie.user)).where(Movie.id == movie_id)
     )
     movie = result.scalars().first()
     if not movie:
@@ -80,9 +78,7 @@ async def update_movie(
     db: AsyncSession, movie_id: int, movie_in: MovieUpdate
 ) -> MovieRead:
     result = await db.execute(
-        select(Movie)
-        .options(selectinload(Movie.user))
-        .where(Movie.id == movie_id)
+        select(Movie).options(selectinload(Movie.user)).where(Movie.id == movie_id)
     )
     movie = result.scalars().first()
 
@@ -106,7 +102,7 @@ async def update_movie(
         watch_link=movie.watch_link,
         watched=movie.watched,
         user=movie.user.email.split("@")[0],
-        created_at=movie.created_at.isoformat()
+        created_at=movie.created_at.isoformat(),
     )
 
 
