@@ -30,7 +30,7 @@ class MovieUpdate(MovieBase):
 
 class MovieRead(MovieBase):
     id: int
-    user_id: UUID4
+    user: str
     description: str | None
     year: int | None
     watched: bool
