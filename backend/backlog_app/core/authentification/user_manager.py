@@ -2,9 +2,8 @@ import logging
 import uuid
 from typing import TYPE_CHECKING, Optional
 
-from fastapi_users import BaseUserManager, UUIDIDMixin
-
 from config import settings
+from fastapi_users import BaseUserManager, UUIDIDMixin
 from models import User
 from tasks.email_task import send_email_confirmed, send_verification_email
 

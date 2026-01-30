@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Request
 from datetime import datetime
+
+from fastapi import APIRouter, Request
 
 router = APIRouter()
 app_launch_time = datetime.now()
+
 
 @router.get("/", include_in_schema=False)
 async def root(request: Request):

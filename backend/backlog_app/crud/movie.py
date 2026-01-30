@@ -1,11 +1,10 @@
 from fastapi import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-from sqlalchemy.orm import selectinload
-
 from models import User
 from models.movie import Movie
 from schemas.movie import MovieCreate, MovieRead, MovieUpdate
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy.orm import selectinload
 
 
 async def create_movie(
@@ -58,9 +57,7 @@ async def get_movies(db: AsyncSession, user_id: str | None = None):
 
 
 async def get_movie_by_id(
-    db: AsyncSession,
-    movie_id: int,
-    user_id: int | None = None
+    db: AsyncSession, movie_id: int, user_id: int | None = None
 ) -> MovieRead | None:
     query = select(Movie).options(selectinload(Movie.user)).where(Movie.id == movie_id)
 
@@ -89,7 +86,10 @@ async def get_movie_by_id(
 
 
 async def update_movie(
-    db: AsyncSession, movie_id: int, movie_in: MovieUpdate, user: User,
+    db: AsyncSession,
+    movie_id: int,
+    movie_in: MovieUpdate,
+    user: User,
 ) -> MovieRead:
     result = await db.execute(
         select(Movie).options(selectinload(Movie.user)).where(Movie.id == movie_id)
@@ -138,7 +138,11 @@ async def partial_update_movie(
     return movie
 
 
-async def delete_movie(db: AsyncSession, movie_id: int, user: User, ) -> Movie | None:
+async def delete_movie(
+    db: AsyncSession,
+    movie_id: int,
+    user: User,
+) -> Movie | None:
     result = await db.execute(select(Movie).where(Movie.id == movie_id))
     movie = result.scalars().first()
     if not movie:
@@ -154,4 +158,6 @@ async def delete_movie(db: AsyncSession, movie_id: int, user: User, ) -> Movie |
 def check_movie_ownership(movie: Movie, user: User) -> None:
     """Проверяет, может ли пользователь изменять фильм"""
     if not user.is_superuser and movie.user_id != user.id:
-        raise HTTPException(status_code=403, detail="You don't have access to this action")
+        raise HTTPException(
+            status_code=403, detail="You don't have access to this action"
+        )

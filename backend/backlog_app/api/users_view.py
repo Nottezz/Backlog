@@ -1,6 +1,5 @@
-from fastapi import APIRouter
-
 from dependencies.authentification.fastapi_users_routers import fastapi_users
+from fastapi import APIRouter
 from schemas.user import UserRead, UserUpdate
 
 router = APIRouter(prefix="/users", tags=["Users"])

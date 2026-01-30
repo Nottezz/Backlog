@@ -1,14 +1,13 @@
 import asyncio
 import contextlib
 
-from fastapi_users import password
-from fastapi_users.exceptions import UserAlreadyExists
-
 from config import settings
 from core.authentification.user_manager import UserManager
 from core.database import get_async_session
 from dependencies.authentification.user_manager import get_user_manager
 from dependencies.authentification.users import get_user_db
+from fastapi_users import password
+from fastapi_users.exceptions import UserAlreadyExists
 from models import User
 from schemas.user import UserCreate
 
