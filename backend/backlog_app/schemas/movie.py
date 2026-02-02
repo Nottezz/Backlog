@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AnyHttpUrl
 
 
 class MovieBase(BaseModel):
@@ -8,7 +8,7 @@ class MovieBase(BaseModel):
     description: str
     year: int
     rating: float
-    watch_link: str | None = None
+    watch_link: AnyHttpUrl | None = None
     kp_id: int | None = None
     imdb_id: int | None = None
 
@@ -35,8 +35,6 @@ class MovieRead(MovieBase):
     year: int | None
     watched: bool
     rating: float | None
-    kp_id: int | None = None
-    imdb_id: int | None = None
     created_at: datetime
 
     model_config = {"from_attributes": True}
