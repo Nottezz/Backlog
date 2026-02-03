@@ -1,0 +1,36 @@
+name: Python checks 🐍
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    paths:
+      - backend/backlog_app/**
+
+jobs:
+  run-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: "backend/.python-version"
+
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v7
+
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
+
+      - name: Run black
+        uses: rickstaa/action-black@v1
+        with:
+          black_args: "./backend/backlog_app --check"
+
+      - uses: isort/isort-action@v1
+        with:
+          args: "./backend/backlog_app --check-only --diff"
