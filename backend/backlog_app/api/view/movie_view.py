@@ -21,7 +21,7 @@ async def add_movie(
 
 
 @router.get("/", response_model=List[MovieRead])
-async def list_movies(
+async def get_movie_list(
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
     only_mine: bool = False,
