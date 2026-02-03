@@ -23,7 +23,8 @@ async def send_verification_email(
 
         Your site admin,
         2025
-""")
+    """
+    )
     template = templates.get_template("email-verify/verification-request.html")
     context = {
         "user_id": user_id,
