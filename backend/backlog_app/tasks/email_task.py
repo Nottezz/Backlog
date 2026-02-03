@@ -1,7 +1,7 @@
 from textwrap import dedent
 
 from jinja2_templates import templates
-from mailing.send_email import send_email
+from servicies.mailing import send_email
 from taskiq_broker import broker
 
 

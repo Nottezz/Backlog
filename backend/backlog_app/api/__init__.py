@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
 
-from .auth_view import router as auth_router
-from .movie_view import router as movie_router
-from .users_view import router as users_router
+from .view.auth_view import router as auth_router
+from .view.movie_view import router as movie_router
+from .view.users_view import router as users_router
 
 http_bearer = HTTPBearer(auto_error=False)
 
