@@ -24,3 +24,10 @@ dev = [
     "isort>=7.0.0",
     "pre-commit>=4.5.1",
 ]
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
