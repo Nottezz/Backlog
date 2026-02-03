@@ -28,11 +28,9 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       - name: Run black
-        uses: rickstaa/action-black@v1
-        with:
-          black_args: "./backend/backlog_app --check --diff --config ./backend/pyproject.toml"
+        working-directory: backend
+        run: uv run black . --check --diff
 
       - name: Run isort
-        uses: isort/isort-action@v1
-        with:
-          args: "./backend/backlog_app --check-only --diff"
+        working-directory: backend
+        run: uv run isort . --check-only --diff

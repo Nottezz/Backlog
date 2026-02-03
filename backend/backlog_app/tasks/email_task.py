@@ -14,8 +14,7 @@ async def send_verification_email(
 ):
     subject = "Confirm your email for site.com"
 
-    plain_content = dedent(
-        f"""\
+    plain_content = dedent(f"""\
         Dear {user_email},
         Please verify your email for site.com at {verification_link}.
 
@@ -23,8 +22,7 @@ async def send_verification_email(
 
         Your site admin,
         2025
-    """
-    )
+    """)
     template = templates.get_template("email-verify/verification-request.html")
     context = {
         "user_id": user_id,
@@ -48,13 +46,11 @@ async def send_email_confirmed(
 ):
     subject = "Email Confirmed"
 
-    plain_content = dedent(
-        f"""\
+    plain_content = dedent(f"""\
     Dear {user_email},
     Your email has been confirmed.
     Your site admin,
-        2025"""
-    )
+        2025""")
     template = templates.get_template("email-verify/email-verified.html")
     context = {
         "user_id": user_id,
