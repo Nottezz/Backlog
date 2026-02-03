@@ -1,7 +1,7 @@
 from typing import Annotated, List
 
-from core.database import get_async_session
-from crud import movie
+from storages.database import get_async_session
+from api import crud
 from dependencies.authentification.fastapi_users_routers import \
     current_active_user
 from fastapi import APIRouter, Depends
@@ -18,7 +18,7 @@ async def add_movie(
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await movie.create_movie(db, movie_create, user=user)
+    return await crud.create_movie(db, movie_create, user=user)
 
 
 @router.get("/", response_model=List[MovieRead])
@@ -28,7 +28,7 @@ async def list_movies(
     only_mine: bool = False,
 ):
     user_id = user.id if only_mine else None
-    movies = await movie.get_movies(db, user_id=user_id)
+    movies = await crud.get_movies(db, user_id=user_id)
     return movies
 
 
@@ -40,7 +40,7 @@ async def get_movie_by_id(
     only_mine: bool = False,
 ):
     user_id = user.id if only_mine else None
-    one_movie = await movie.get_movie_by_id(db, movie_id, user_id)
+    one_movie = await crud.get_movie_by_id(db, movie_id, user_id)
     return one_movie
 
 
@@ -51,7 +51,7 @@ async def update_movie(
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await movie.update_movie(db, movie_id, movie_update, user)
+    return await crud.update_movie(db, movie_id, movie_update, user)
 
 
 @router.patch("/{movie_id}", response_model=MovieRead)
@@ -61,7 +61,7 @@ async def partial_update_movie(
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await movie.partial_update_movie(db, movie_id, movie_update)
+    return await crud.partial_update_movie(db, movie_id, movie_update)
 
 
 @router.delete("/{movie_id}", response_model=MovieRead)
@@ -70,4 +70,4 @@ async def delete_movie(
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await movie.delete_movie(db, movie_id, user)
+    return await crud.delete_movie(db, movie_id, user)
