@@ -6,8 +6,7 @@ from backend.backlog_app.main import app
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 import os
-from models import Base, User, Movie, AccessToken
-from _helpers.create_super_user import create_super_user
+from models import Base
 
 DB_PATH = "test.db"
 DATABASE_URL = f"sqlite+aiosqlite:///{DB_PATH}"
@@ -34,9 +33,3 @@ async def init_db():
 async def session(init_db):
     async with AsyncSessionTest() as session:
         yield session
-
-
-@pytest.fixture
-def client() -> Generator[TestClient]:
-    with TestClient(app) as client:
-        yield client
