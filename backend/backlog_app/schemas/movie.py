@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field, AnyHttpUrl
+from pydantic import AnyHttpUrl, BaseModel, Field
 
 
 class MovieBase(BaseModel):

@@ -3,7 +3,9 @@ from typing import TYPE_CHECKING
 
 from fastapi_users_db_sqlalchemy import GUID
 from fastapi_users_db_sqlalchemy.access_token import (
-    SQLAlchemyAccessTokenDatabase, SQLAlchemyBaseAccessTokenTableUUID)
+    SQLAlchemyAccessTokenDatabase,
+    SQLAlchemyBaseAccessTokenTableUUID,
+)
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 

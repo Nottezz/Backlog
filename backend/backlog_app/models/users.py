@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING
 
-from fastapi_users_db_sqlalchemy import (SQLAlchemyBaseUserTableUUID,
-                                         SQLAlchemyUserDatabase)
+from fastapi_users_db_sqlalchemy import (
+    SQLAlchemyBaseUserTableUUID,
+    SQLAlchemyUserDatabase,
+)
 from models.base import Base
 from sqlalchemy.orm import Mapped, relationship
 

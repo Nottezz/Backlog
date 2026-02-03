@@ -2,13 +2,13 @@ import logging
 from datetime import datetime
 
 import uvicorn
+from api import router as api_router
+from api.view.main_view import router as main_router
+from config import settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api import router as api_router
-from api.view.main_view import router as main_router
 from backend.backlog_app.app_lifespan import lifespan
-from config import settings
 
 logging.basicConfig(
     format=settings.logging.log_format,

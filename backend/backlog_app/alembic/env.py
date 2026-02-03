@@ -8,7 +8,6 @@ import asyncio
 from logging.config import fileConfig
 
 from alembic import context
-
 from config import settings
 from models.base import Base
 from sqlalchemy import pool
@@ -20,6 +19,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
+
 
 def run_migrations_offline():
     url = settings.db.connection.database_url_asyncpg

@@ -1,13 +1,12 @@
 from typing import Annotated, List
 
-from storages.database import get_async_session
 from api import crud
-from dependencies.authentification.fastapi_users_routers import \
-    current_active_user
+from dependencies.authentification.fastapi_users_routers import current_active_user
 from fastapi import APIRouter, Depends
 from models.users import User
 from schemas.movie import MovieCreate, MovieRead, MovieUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
+from storages.database import get_async_session
 
 router = APIRouter(prefix="/movies", tags=["Movies"])
 

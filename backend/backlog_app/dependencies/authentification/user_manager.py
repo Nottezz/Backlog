@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Annotated
 
-from servicies.authentification import UserManager
 from fastapi import Depends
+from servicies.authentification import UserManager
 
 from .users import get_user_db
 
