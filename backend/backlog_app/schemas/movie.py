@@ -8,7 +8,7 @@ class MovieBase(BaseModel):
     description: str
     year: int
     rating: float
-    watch_link: AnyHttpUrl | None = None
+    watch_link: str | None = None
     kp_id: int | None = None
     imdb_id: int | None = None
 
