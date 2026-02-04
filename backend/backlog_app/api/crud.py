@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 async def create_movie(
     db: AsyncSession, movie_in: MovieCreate, user: User
 ) -> MovieRead:
-    movie = Movie(**movie_in.model_dump(), user_id=user.id)
+    movie = Movie(**movie_in.model_dump(), user=user)
     db.add(movie)
     await db.commit()
     await db.refresh(movie)
