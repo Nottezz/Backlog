@@ -8,8 +8,8 @@ import asyncio
 from logging.config import fileConfig
 
 from alembic import context
-from config import settings
-from models.base import Base
+from backlog_app.config import settings
+from backlog_app.models import Base
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
 
