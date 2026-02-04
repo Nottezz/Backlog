@@ -1,12 +1,18 @@
-import pytest
-from typing import Generator
-from fastapi.testclient import TestClient
+import contextlib
+from typing import Generator, Any, AsyncGenerator
 
-from backend.backlog_app.main import app
+import pytest
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 import os
-from models import Base
+
+from _helpers.create_super_user import create_user
+from api.crud import create_movie, delete_movie
+from dependencies.authentification.user_manager import get_user_manager
+from dependencies.authentification.users import get_user_db
+from schemas.movie import MovieCreate, MovieRead
+from schemas.user import UserCreate
+from models import Base, Movie, User
 
 DB_PATH = "test.db"
 DATABASE_URL = f"sqlite+aiosqlite:///{DB_PATH}"
@@ -33,3 +39,44 @@ async def init_db():
 async def session(init_db):
     async with AsyncSessionTest() as session:
         yield session
+
+@pytest.fixture
+async def user_test(session) -> AsyncGenerator[User, None]:
+    get_user_db_context = contextlib.asynccontextmanager(lambda: get_user_db(session))
+    get_user_manager_context = contextlib.asynccontextmanager(get_user_manager)
+
+    user_create = UserCreate(
+        email="test_user@test.com",
+        password="test",
+        is_active=True,
+        is_superuser=False,
+        is_verified=True,
+    )
+
+    async with get_user_db_context() as user_db:
+        async with get_user_manager_context(user_db) as user_manager:
+            user = await create_user(
+                user_manager=user_manager,
+                user_create=user_create
+            )
+            yield user
+            await user_manager.delete(user)
+
+def build_movie_create(title: str, rating: float, watch_link: str) -> MovieCreate:
+    return MovieCreate(
+        title=title,
+        rating=rating,
+        imdb_id=123456789,
+        watch_link=watch_link,
+    )
+
+@pytest.fixture
+async def movie(session, user_test) -> AsyncGenerator[MovieRead, None]:
+    title = "Interstellar"
+    rating = 9.5
+    watch_link = "https://example.com"
+    movie_in = build_movie_create(title, rating, watch_link)
+
+    movie = await create_movie(session, movie_in, user_test)
+    yield movie
+    await delete_movie(session, movie.id, user_test)
