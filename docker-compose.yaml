@@ -3,7 +3,7 @@ services:
   backend:
     container_name: fastapi_app
     build:
-      context: ./backend
+      context: backend
       dockerfile: Dockerfile
     env_file:
       - ./backend/backlog_app/.env
@@ -32,16 +32,16 @@ services:
     restart: unless-stopped
 
   pg:
-    image: postgres:18-alpine
+    image: postgres:18
     environment:
       POSTGRES_DB: backlog
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      PGDATA: /var/lib/postgresql/data
+      PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data/pgdata
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 5s
