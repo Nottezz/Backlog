@@ -1,8 +1,8 @@
 from textwrap import dedent
 
-from jinja2_templates import templates
-from servicies.mailing import send_email
-from taskiq_broker import broker
+from backlog_app.jinja2_templates import templates
+from backlog_app.servicies.mailing import send_email
+from backlog_app.taskiq_broker import broker
 
 
 @broker.task
