@@ -3,7 +3,7 @@ from typing import Generator
 import pytest
 from starlette.testclient import TestClient
 
-from main import app
+from backlog_app.main import app
 
 TEST_USERNAME = "test_user@example.com"
 TEST_PASSWORD = "testuser"
@@ -29,7 +29,5 @@ def access_token(client) -> str:
 @pytest.fixture
 def auth_client(access_token: str) -> Generator[TestClient, None, None]:
     with TestClient(app) as client:
-        client.headers.update(
-            {"Authorization": f"Bearer {access_token}"}
-        )
+        client.headers.update({"Authorization": f"Bearer {access_token}"})
         yield client

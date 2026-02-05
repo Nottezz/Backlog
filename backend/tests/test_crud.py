@@ -2,11 +2,11 @@ from uuid import uuid4
 
 import pytest
 from fastapi import HTTPException, status
-
-from api import crud
-from models import Movie, User
-from schemas.movie import MovieCreate, MovieRead, MovieUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from backlog_app.api import crud
+from backlog_app.models import Movie, User
+from backlog_app.schemas.movie import MovieCreate, MovieRead, MovieUpdate
 
 
 @pytest.mark.asyncio
@@ -38,6 +38,7 @@ async def test_create_movie(
     assert movie_in_db.watch_link == movie_in.watch_link
     assert movie_in_db.rating == movie_in.rating
 
+
 @pytest.mark.asyncio
 async def test_get_movie_by_id(
     session: AsyncSession,
@@ -58,6 +59,7 @@ async def test_get_movie_by_id(
 
     assert result.user == user_test.email.split("@")[0]
 
+
 @pytest.mark.asyncio
 async def test_get_movie_by_id_wrong_user(
     session: AsyncSession,
@@ -75,11 +77,12 @@ async def test_get_movie_by_id_wrong_user(
     assert exc.value.status_code == status.HTTP_404_NOT_FOUND
     assert exc.value.detail == "Movie not found"
 
+
 @pytest.mark.asyncio
 async def test_update_movie(
-        session: AsyncSession,
-        user_test: User,
-        movie: Movie,
+    session: AsyncSession,
+    user_test: User,
+    movie: Movie,
 ):
     movie_in = MovieUpdate(
         title="Movie Title x2",
@@ -88,10 +91,7 @@ async def test_update_movie(
     )
 
     movie = await crud.update_movie(
-        db=session,
-        movie_id=movie.id,
-        user=user_test,
-        movie_in=movie_in
+        db=session, movie_id=movie.id, user=user_test, movie_in=movie_in
     )
 
     assert movie.title == movie_in.title
@@ -108,6 +108,7 @@ async def test_update_movie(
     assert movie_in_db.imdb_id == movie_in.imdb_id
     assert movie_in_db.watch_link == movie_in.watch_link
     assert movie_in_db.rating == movie_in.rating
+
 
 async def test_delete_movie(session: AsyncSession, user_test: User):
     movie_in = MovieCreate(
