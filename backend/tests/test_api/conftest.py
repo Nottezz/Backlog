@@ -8,6 +8,7 @@ from backlog_app.main import app
 TEST_USERNAME = "test_user@example.com"
 TEST_PASSWORD = "testuser"
 
+
 @pytest.fixture
 def client():
     return TestClient(app)

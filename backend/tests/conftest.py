@@ -62,7 +62,9 @@ async def user_test(session) -> AsyncGenerator[User, None]:
             await user_manager.delete(user)
 
 
-def build_movie_create(title: str, rating: float, watch_link: str, description: str) -> MovieCreate:
+def build_movie_create(
+    title: str, rating: float, watch_link: str, description: str
+) -> MovieCreate:
     return MovieCreate(
         title=title,
         description=description,

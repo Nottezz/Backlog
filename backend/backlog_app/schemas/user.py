@@ -1,8 +1,8 @@
 import uuid
 from typing import Annotated
 
-from fastapi_users import schemas
 from annotated_types import Len
+from fastapi_users import schemas
 
 
 class UserRead(schemas.BaseUser[uuid.UUID]):

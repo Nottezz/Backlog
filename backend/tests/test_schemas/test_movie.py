@@ -1,8 +1,9 @@
+from datetime import datetime
+
 import pytest
 from pydantic import ValidationError
 
 from backlog_app.schemas.movie import MovieCreate, MovieRead, MovieUpdate
-from datetime import datetime
 
 
 def test_movie_can_be_create_from_create_schema() -> None:
@@ -12,7 +13,13 @@ def test_movie_can_be_create_from_create_schema() -> None:
         watch_link="https://example.com",
         rating=6.7,
     )
-    movie = MovieRead(**movie_in.model_dump(), id=0, watched=False, created_at=datetime.now(), user="test")
+    movie = MovieRead(
+        **movie_in.model_dump(),
+        id=0,
+        watched=False,
+        created_at=datetime.now(),
+        user="test",
+    )
 
     assert movie_in.title == movie.title
     assert movie_in.description == movie.description
@@ -43,10 +50,17 @@ def test_movie_create_max_value(
             title=title,
             description=description,
         )
-        movie = MovieRead(**movie_in.model_dump(), id=0, watched=False, created_at=datetime.now(), user="test")
+        movie = MovieRead(
+            **movie_in.model_dump(),
+            id=0,
+            watched=False,
+            created_at=datetime.now(),
+            user="test",
+        )
 
         assert movie.title == title
         assert movie.description == description
+
 
 def test_movie_update_from_update_schema() -> None:
     movie = MovieRead(
@@ -60,8 +74,7 @@ def test_movie_update_from_update_schema() -> None:
         imdb_id=1234,
         kp_id=5678,
         year=2020,
-        rating=2.8
-
+        rating=2.8,
     )
     movie_update = MovieUpdate(
         title="Test Movie Update",
