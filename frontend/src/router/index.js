@@ -35,13 +35,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuthenticated = authService.isAuthenticated()
 
-  // Если маршрут требует авторизации
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login')
     return
   }
 
-  // Если пользователь авторизован и пытается зайти на login/register
   if (to.meta.guest && isAuthenticated) {
     next('/')
     return

@@ -8,7 +8,6 @@ class AuthService {
     this.user = JSON.parse(localStorage.getItem('user') || 'null')
   }
 
-  // Регистрация
   async register(email, password) {
     const response = await axios.post(`${API_URL}/auth/register`, {
       email,
@@ -17,7 +16,6 @@ class AuthService {
     return response.data
   }
 
-  // Вход
   async login(email, password) {
     const formData = new URLSearchParams()
     formData.append('username', email)
@@ -56,7 +54,6 @@ class AuthService {
     }
   }
 
-  // Выход
   async logout() {
     try {
       if (this.token) {
@@ -76,17 +73,14 @@ class AuthService {
     }
   }
 
-  // Проверка авторизации
   isAuthenticated() {
     return !!this.token
   }
 
-  // Получить пользователя
   getUser() {
     return this.user
   }
 
-  // Настроить axios interceptor для автоматической авторизации
   setupAxiosInterceptor() {
     axios.interceptors.request.use(
       config => {
