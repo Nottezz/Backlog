@@ -18,7 +18,7 @@ async def test_create_movie(
         title="Movie Title",
         rating=8.5,
         watch_link="https://example.com",
-        description="Movie Description",
+        description="Movie Description" * 20,
         imdb_id=1234,
     )
     movie: MovieRead = await crud.create_movie(session, movie_in, user_test)
@@ -115,7 +115,7 @@ async def test_delete_movie(session: AsyncSession, user_test: User):
         title="Movie Title",
         rating=8.5,
         watch_link="https://example.com",
-        description="Movie Description",
+        description="Movie Description" * 20,
         imdb_id=1234,
     )
     movie: MovieRead = await crud.create_movie(session, movie_in, user_test)

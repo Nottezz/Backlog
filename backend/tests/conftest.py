@@ -62,9 +62,10 @@ async def user_test(session) -> AsyncGenerator[User, None]:
             await user_manager.delete(user)
 
 
-def build_movie_create(title: str, rating: float, watch_link: str) -> MovieCreate:
+def build_movie_create(title: str, rating: float, watch_link: str, description: str) -> MovieCreate:
     return MovieCreate(
         title=title,
+        description=description,
         rating=rating,
         imdb_id=123456789,
         watch_link=watch_link,
@@ -74,9 +75,10 @@ def build_movie_create(title: str, rating: float, watch_link: str) -> MovieCreat
 @pytest.fixture
 async def movie(session, user_test) -> AsyncGenerator[MovieRead, None]:
     title = "Interstellar"
+    description = "Interstellar" * 20
     rating = 9.5
     watch_link = "https://example.com"
-    movie_in = build_movie_create(title, rating, watch_link)
+    movie_in = build_movie_create(title, rating, watch_link, description)
 
     movie = await create_movie(session, movie_in, user_test)
     yield movie
