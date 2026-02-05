@@ -49,7 +49,7 @@ async def user_test(session) -> AsyncGenerator[User, None]:
 
     user_create = UserCreate(
         email="test_user@test.com",
-        password="test",
+        password="testpassword",
         is_active=True,
         is_superuser=False,
         is_verified=True,
