@@ -12,7 +12,7 @@ repos:
     rev: 25.12.0
     hooks:
       - id: black
-        files: ^backend/app/.*\.py$
+        files: ^backend/
         args:
           - --diff
 
@@ -20,6 +20,6 @@ repos:
     rev: 7.0.0
     hooks:
       - id: isort
-        files: ^backend/app/.*\.py$
+        files: ^backend/
         args:
           - --diff

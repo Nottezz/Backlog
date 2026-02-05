@@ -1,13 +1,13 @@
 import asyncio
 import contextlib
 
-from config import settings
-from dependencies.authentification.user_manager import get_user_manager
-from dependencies.authentification.users import get_user_db
-from models import User
-from schemas.user import UserCreate
-from servicies.authentification import UserManager
-from storages.database import get_async_session
+from backlog_app.config import settings
+from backlog_app.dependencies.authentification.user_manager import get_user_manager
+from backlog_app.dependencies.authentification.users import get_user_db
+from backlog_app.models import User
+from backlog_app.schemas.user import UserCreate
+from backlog_app.servicies.authentification import UserManager
+from backlog_app.storages.database import get_async_session
 
 get_async_session_context = contextlib.asynccontextmanager(get_async_session)
 get_user_db_context = contextlib.asynccontextmanager(get_user_db)

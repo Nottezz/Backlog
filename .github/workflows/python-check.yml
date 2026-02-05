@@ -34,3 +34,64 @@ jobs:
       - name: Run isort
         working-directory: backend
         run: uv run isort . --check-only --diff
+
+  run-tests:
+    runs-on: ubuntu-latest
+    container: node:20-bookworm-slim
+    needs:
+      - run-checks
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: "backend/.python-version"
+
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies
+        working-directory: backend
+        run: uv sync --locked --all-extras --dev
+
+      - name: Run python tests
+        working-directory: backend
+        run: uv run pytest --cov=backlog_app --cov-report=xml:coverage.xml
+        env:
+          BACKLOG__DB__CONNECTION__USERNAME: test
+          BACKLOG__DB__CONNECTION__PASSWORD: test
+          BACKLOG__DB__CONNECTION__NAME: backlog
+          BACKLOG__DB__CONNECTION__HOST: localhost
+          BACKLOG__DB__CONNECTION__PORT: 5432
+          BACKLOG__SUPERUSER__EMAIL: admin@site.com
+          BACKLOG__SUPERUSER__PASSWORD: admin
+          BACKLOG__ACCESS_TOKEN_DB__RESET_PASSWORD_TOKEN_SECRET: secret1
+          BACKLOG__ACCESS_TOKEN_DB__VERIFICATION_TOKEN_SECRET: secret2
+
+      - name: Upload artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: |
+            coverage.xml
+          retention-days: 1
+
+  upload-report-to-codcov:
+    runs-on: ubuntu-latest
+    needs:
+      - run-tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-reports
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          fail_ci_if_error: 'true'

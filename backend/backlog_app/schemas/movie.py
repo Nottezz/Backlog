@@ -1,11 +1,13 @@
 from datetime import datetime
+from typing import Annotated
 
-from pydantic import AnyHttpUrl, BaseModel, Field
+from annotated_types import Len
+from pydantic import BaseModel, Field
 
 
 class MovieBase(BaseModel):
-    title: str
-    description: str
+    title: Annotated[str, Len(min_length=3, max_length=255)]
+    description: Annotated[str, Len(min_length=20, max_length=1000)]
     year: int
     rating: float
     watch_link: str | None = None
@@ -14,15 +16,14 @@ class MovieBase(BaseModel):
 
 
 class MovieCreate(MovieBase):
-    title: str
-    description: str | None = None
+    description: Annotated[str, Len(min_length=20, max_length=1000)] | None = None
     year: int | None = None
     rating: float | None = Field(default=None, ge=1.0, le=10.0)
 
 
 class MovieUpdate(MovieBase):
-    title: str | None = None
-    description: str | None = None
+    title: Annotated[str, Len(min_length=3, max_length=255)] | None = None
+    description: Annotated[str, Len(min_length=20, max_length=1000)] | None = None
     year: int | None = None
     watched: bool | None = None
     rating: float | None = Field(default=None, ge=1.0, le=10.0)
@@ -31,7 +32,7 @@ class MovieUpdate(MovieBase):
 class MovieRead(MovieBase):
     id: int
     user: str
-    description: str | None
+    description: Annotated[str, Len(min_length=20, max_length=1000)] | None
     year: int | None
     watched: bool
     rating: float | None
