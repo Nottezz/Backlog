@@ -1,8 +1,9 @@
 from typing import TYPE_CHECKING, Annotated
 
 from fastapi import Depends
-from models import AccessToken
-from storages.database import get_async_session
+
+from backlog_app.models import AccessToken
+from backlog_app.storages.database import get_async_session
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession

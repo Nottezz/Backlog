@@ -1,12 +1,13 @@
 import logging
 
 from fastapi import HTTPException
-from models import User
-from models.movie import Movie
-from schemas.movie import MovieCreate, MovieRead, MovieUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
+
+from backlog_app.models import User
+from backlog_app.models.movie import Movie
+from backlog_app.schemas.movie import MovieCreate, MovieRead, MovieUpdate
 
 logger = logging.getLogger(__name__)
 
