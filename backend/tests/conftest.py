@@ -16,7 +16,7 @@ from backlog_app.schemas.user import UserCreate
 DB_PATH = "test.db"
 DATABASE_URL = f"sqlite+aiosqlite:///{DB_PATH}"
 
-engine_test = create_async_engine(DATABASE_URL, echo=True)  # todo: change to False
+engine_test = create_async_engine(DATABASE_URL, echo=False)
 AsyncSessionTest = async_sessionmaker(
     engine_test,
     expire_on_commit=False,
