@@ -1,5 +1,6 @@
 from fastapi_users.authentication import AuthenticationBackend
-from servicies.authentification import bearer_transport
+
+from backlog_app.servicies.authentification import bearer_transport
 
 from .strategy import get_database_strategy
 

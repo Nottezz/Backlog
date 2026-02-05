@@ -2,8 +2,8 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from storages.database import engine
 
+from .storages.database import engine
 from .taskiq_broker import broker
 
 
