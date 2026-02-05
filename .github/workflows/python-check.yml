@@ -52,9 +52,11 @@ jobs:
         uses: astral-sh/setup-uv@v7
 
       - name: Install dependencies
+        working-directory: backend
         run: uv sync --locked --all-extras --dev
 
       - name: Run python tests
+        working-directory: backend
         run: uv run pytest --cov=backlog_app --cov-report=xml:coverage.xml
 
       - name: Upload artefacts
