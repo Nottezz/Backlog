@@ -58,6 +58,16 @@ jobs:
       - name: Run python tests
         working-directory: backend
         run: uv run pytest --cov=backlog_app --cov-report=xml:coverage.xml
+        env:
+          BACKLOG__DB__CONNECTION__USERNAME: test
+          BACKLOG__DB__CONNECTION__PASSWORD: test
+          BACKLOG__DB__CONNECTION__NAME: backlog
+          BACKLOG__DB__CONNECTION__HOST: localhost
+          BACKLOG__DB__CONNECTION__PORT: 5432
+          BACKLOG__SUPERUSER__EMAIL: admin@site.com
+          BACKLOG__SUPERUSER__PASSWORD: admin
+          BACKLOG__ACCESS_TOKEN_DB__RESET_PASSWORD_TOKEN_SECRET: secret1
+          BACKLOG__ACCESS_TOKEN_DB__VERIFICATION_TOKEN_SECRET: secret2
 
       - name: Upload artefacts
         uses: actions/upload-artifact@v4
