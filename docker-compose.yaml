@@ -68,8 +68,19 @@ services:
     networks:
       - app-network
 
+  dockhand:
+    image: fnsys/dockhand:latest
+    container_name: dockhand
+    restart: unless-stopped
+    expose:
+      - "3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - dockhand_data:/app/data
+
 volumes:
   pgdata:
+  dockhand_data:
 
 networks:
   app-network:
