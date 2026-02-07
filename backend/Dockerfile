@@ -14,5 +14,4 @@ COPY ./backlog_app ./backlog_app
 RUN uv sync
 
 EXPOSE 8000
-
-CMD ["uv", "run", "fastapi", "run", "backlog_app/main.py", "--port", "8000"]
+CMD ["sh", "-c", "cd backlog_app && uv run alembic upgrade head && cd .. && uv run fastapi run backlog_app/main.py --port 8000"]
