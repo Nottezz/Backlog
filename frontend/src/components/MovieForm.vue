@@ -298,7 +298,7 @@ export default {
           watched: this.watched
         }
 
-        await axios.post('http://127.0.0.1:8000/api/movies/', payload)
+        await axios.post('/api/movies/', payload)
         this.successMessage = 'Movie added successfully!'
         this.clearForm()
         this.$emit('movie-updated')
@@ -334,7 +334,7 @@ export default {
           watched: this.watched
         }
 
-        await axios.put(`http://127.0.0.1:8000/api/movies/${this.editingId}`, payload)
+        await axios.put(`/api/movies/${this.editingId}`, payload)
         this.successMessage = 'Movie updated successfully!'
         this.clearForm()
         this.$emit('movie-updated')

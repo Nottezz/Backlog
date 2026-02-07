@@ -113,7 +113,7 @@ export default {
         const params = {
           only_mine: this.onlyMine
         }
-        const res = await axios.get('http://127.0.0.1:8000/api/movies/', { params })
+        const res = await axios.get('/api/movies/', { params })
         this.movies = res.data
       } catch (error) {
         console.error('Error fetching movies:', error)

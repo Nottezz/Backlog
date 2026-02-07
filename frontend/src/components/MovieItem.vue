@@ -107,7 +107,7 @@ export default {
     async deleteMovie() {
       if (!confirm(`Delete "${this.movie.title}"?`)) return
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/movies/${this.movie.id}`)
+        await axios.delete(`/api/movies/${this.movie.id}`)
         this.$emit('movie-updated')
       } catch (error) {
         console.error('Error deleting movie:', error)
