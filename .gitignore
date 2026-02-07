@@ -149,7 +149,7 @@ activemq-data/
 
 # Environments
 .env
-.env.production
+config.local.yaml
 .envrc
 .venv
 env/
