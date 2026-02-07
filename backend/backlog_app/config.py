@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from pydantic_settings import (
     BaseSettings,
     PydanticBaseSettingsSource,
@@ -102,6 +102,7 @@ class Settings(BaseSettings):
     logging: LoggingConfig = LoggingConfig()
     access_token_db: AccessToken
     superuser: SuperUser
+    cors_origins: list[str] = ["http://localhost:5173"]
 
 
 settings = Settings()
