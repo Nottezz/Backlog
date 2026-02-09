@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import HTTPException
+from sqlalchemy import or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
@@ -40,11 +41,19 @@ async def create_movie(
 async def get_movies(db: AsyncSession, user_id: str | None = None):
     query = select(Movie).options(selectinload(Movie.user))
 
-    if user_id is not None:
-        query = query.where(Movie.user_id == user_id)
+    if user_id:
+        query = query.where(
+            or_(
+                Movie.user_id == user_id,
+                Movie.published.is_(False)
+            )
+        )
+    else:
+        query = query.where(Movie.published.is_(True))
 
     result = await db.execute(query)
     movies = result.scalars().all()
+
     return [
         MovieRead(
             id=m.id,
