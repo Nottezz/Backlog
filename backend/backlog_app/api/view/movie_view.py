@@ -1,6 +1,6 @@
 from typing import Annotated, List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backlog_app.api import crud
@@ -14,7 +14,7 @@ from backlog_app.storages.database import get_async_session
 router = APIRouter(prefix="/movies", tags=["Movies"])
 
 
-@router.post("/", response_model=MovieRead)
+@router.post("/", response_model=MovieRead, status_code=status.HTTP_201_CREATED)
 async def add_movie(
     movie_create: MovieCreate,
     db: Annotated[AsyncSession, Depends(get_async_session)],
@@ -66,7 +66,7 @@ async def partial_update_movie(
     return await crud.partial_update_movie(db, movie_id, movie_update)
 
 
-@router.delete("/{movie_id}", response_model=MovieRead)
+@router.delete("/{movie_id}", status_code=status.HTTP_204_NO_CONTENT,)
 async def delete_movie(
     movie_id: int,
     db: Annotated[AsyncSession, Depends(get_async_session)],
