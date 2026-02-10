@@ -136,13 +136,59 @@
         </label>
       </div>
 
+      <!-- Publication Status -->
+      <div class="bg-white p-3 rounded border border-gray-300">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-sm font-medium text-gray-700">Publication Status</span>
+          </div>
+          <span
+              class="inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium"
+              :class="published
+                ? 'bg-green-100 text-green-700'
+                : 'bg-gray-100 text-gray-600'"
+          >
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <circle v-if="published" cx="10" cy="10" r="3"></circle>
+              <path v-else fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clip-rule="evenodd"></path>
+            </svg>
+            {{ published ? 'Public' : 'Private' }}
+          </span>
+        </div>
+
+        <p class="text-xs text-gray-500 mb-3">
+          <span v-if="published">👁️ This movie will be visible to everyone</span>
+          <span v-else>🔒 This movie will be private and only visible to you</span>
+        </p>
+
+        <!-- Toggle Switch -->
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input
+              type="checkbox"
+              v-model="published"
+              class="sr-only peer"
+          >
+          <div
+              class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+          <span class="ms-2 text-sm text-gray-600">
+            {{ published ? 'Published' : 'Unpublished' }}
+          </span>
+        </label>
+      </div>
+
       <!-- Buttons -->
       <div class="flex gap-2 pt-2">
         <button
             v-if="!editingId"
             @click="addMovie"
             :disabled="loading"
-            class="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
+            class="flex-1 bg-indigo-600 text-white px-4 py-3 rounded hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
         >
           {{ loading ? 'Adding...' : 'Add Movie' }}
         </button>
@@ -151,14 +197,14 @@
           <button
               @click="updateMovie"
               :disabled="loading"
-              class="flex-1 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
+              class="flex-1 bg-green-600 text-white px-4 py-3 rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
           >
             {{ loading ? 'Updating...' : 'Update Movie' }}
           </button>
           <button
               @click="clearForm"
               :disabled="loading"
-              class="bg-gray-500 text-white px-4 py-3 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
+              class="bg-gray-500 text-white px-4 py-3 rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
           >
             Cancel
           </button>
@@ -185,6 +231,7 @@ export default {
       kp_id: null,
       imdb_id: null,
       watched: false,
+      published: false,
       editingId: null,
       loading: false,
       errors: {
@@ -193,8 +240,7 @@ export default {
         year: '',
         rating: '',
         kp_id: '',
-        imdb_id: ""
-
+        imdb_id: ''
       },
       successMessage: '',
       errorMessage: ''
@@ -245,16 +291,6 @@ export default {
       }
 
       // URL validation (optional, but if provided must be valid)
-      if (this.original_link && this.original_link.trim() !== '') {
-        try {
-          new URL(this.original_link)
-        } catch (e) {
-          this.errors.original_link = 'Please enter a valid URL (e.g., https://example.com)'
-          isValid = false
-        }
-      }
-
-      // URL validation (optional, but if provided must be valid)
       if (this.watch_link && this.watch_link.trim() !== '') {
         try {
           new URL(this.watch_link)
@@ -295,7 +331,8 @@ export default {
           watch_link: this.watch_link.trim() || null,
           kp_id: this.kp_id || null,
           imdb_id: this.imdb_id || null,
-          watched: this.watched
+          watched: this.watched,
+          published: this.published
         }
 
         await axios.post('/api/movies/', payload)
@@ -331,7 +368,8 @@ export default {
           watch_link: this.watch_link.trim() || null,
           kp_id: this.kp_id || null,
           imdb_id: this.imdb_id || null,
-          watched: this.watched
+          watched: this.watched,
+          published: this.published
         }
 
         await axios.put(`/api/movies/${this.editingId}`, payload)
@@ -359,13 +397,14 @@ export default {
       this.kp_id = null
       this.imdb_id = null
       this.watched = false
+      this.published = false
       this.editingId = null
       this.errors = {
         title: '',
         description: '',
         year: '',
         rating: '',
-        original_link: '',
+        watch_link: '',
         kp_id: '',
         imdb_id: ''
       }
@@ -377,11 +416,11 @@ export default {
       this.description = movie.description || ''
       this.year = movie.year || null
       this.rating = movie.rating || null
-      this.original_link = movie.original_link || ''
       this.watch_link = movie.watch_link || ''
       this.kp_id = movie.kp_id || null
       this.imdb_id = movie.imdb_id || null
       this.watched = movie.watched || false
+      this.published = movie.published || false
       this.editingId = movie.id
       this.errorMessage = ''
       this.successMessage = ''
