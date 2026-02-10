@@ -8,8 +8,8 @@ Create Date: 2026-02-09 14:41:50.069806
 
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "b470381bb2ef"
@@ -22,9 +22,7 @@ def upgrade() -> None:
     """Upgrade schema."""
     op.add_column(
         "movies",
-        sa.Column(
-            "published", sa.Boolean(), server_default="false", nullable=False
-        ),
+        sa.Column("published", sa.Boolean(), server_default="false", nullable=False),
     )
 
 

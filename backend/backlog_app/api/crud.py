@@ -42,12 +42,7 @@ async def get_movies(db: AsyncSession, user_id: str | None = None):
     query = select(Movie).options(selectinload(Movie.user))
 
     if user_id:
-        query = query.where(
-            or_(
-                Movie.user_id == user_id,
-                Movie.published.is_(False)
-            )
-        )
+        query = query.where(Movie.user_id == user_id)
     else:
         query = query.where(Movie.published.is_(True))
 
