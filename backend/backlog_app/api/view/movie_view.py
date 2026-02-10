@@ -66,7 +66,10 @@ async def partial_update_movie(
     return await crud.partial_update_movie(db, movie_id, movie_update)
 
 
-@router.delete("/{movie_id}", status_code=status.HTTP_204_NO_CONTENT,)
+@router.delete(
+    "/{movie_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 async def delete_movie(
     movie_id: int,
     db: Annotated[AsyncSession, Depends(get_async_session)],
