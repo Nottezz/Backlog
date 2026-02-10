@@ -4,6 +4,8 @@ from typing import Annotated
 from annotated_types import Len
 from pydantic import BaseModel, Field
 
+from .user import UserRead
+
 
 class MovieBase(BaseModel):
     title: Annotated[str, Len(min_length=3, max_length=255)]
@@ -13,6 +15,8 @@ class MovieBase(BaseModel):
     watch_link: str | None = None
     kp_id: int | None = None
     imdb_id: int | None = None
+
+    model_config = {"from_attributes": True}
 
 
 class MovieCreate(MovieBase):
@@ -39,5 +43,3 @@ class MovieRead(MovieBase):
     watched: bool
     rating: float | None
     created_at: datetime
-
-    model_config = {"from_attributes": True}

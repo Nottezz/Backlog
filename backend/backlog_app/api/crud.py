@@ -21,7 +21,7 @@ async def create_movie(
     await db.commit()
     await db.refresh(movie)
 
-    logger.info("Movie has been created.")
+    logger.info("Movie <%s> has been created.", movie.id)
 
     return MovieRead(
         id=movie.id,
@@ -162,7 +162,7 @@ async def delete_movie(
     db: AsyncSession,
     movie_id: int,
     user: User,
-) -> Movie | None:
+) -> None:
     result = await db.execute(select(Movie).where(Movie.id == movie_id))
     movie = result.scalars().first()
     if not movie:
@@ -173,9 +173,7 @@ async def delete_movie(
     await db.delete(movie)
     await db.commit()
 
-    logger.info("Movie has been deleted.")
-
-    return movie
+    logger.info("Movie <%s> has been deleted.", movie_id)
 
 
 def check_movie_ownership(movie: Movie, user: User) -> None:
