@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import Annotated
-from .user import UserRead
 
 from annotated_types import Len
 from pydantic import BaseModel, Field
+
+from .user import UserRead
 
 
 class MovieBase(BaseModel):
