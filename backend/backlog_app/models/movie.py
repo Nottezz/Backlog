@@ -39,7 +39,12 @@ class Movie(Base):
         server_default="false",
         nullable=False,
     )
-
+    published: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        server_default="false",
+        nullable=False,
+    )
     rating: Mapped[float | None] = mapped_column(
         Float,
         nullable=True,
