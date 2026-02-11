@@ -74,4 +74,4 @@ class Movie(Base):
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("user.id"), nullable=False
     )
-    user: Mapped["User"] = relationship("User", back_populates="movies")
+    user: Mapped["User"] = relationship("User", back_populates="movies", lazy="joined")
