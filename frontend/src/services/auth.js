@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 class AuthService {
   constructor() {
     this.token = localStorage.getItem('token')
@@ -9,7 +7,7 @@ class AuthService {
   }
 
   async register(email, password) {
-    const response = await axios.post(`${API_URL}/auth/register`, {
+    const response = await axios.post(`api/auth/register`, {
       email,
       password,
     })
@@ -21,7 +19,7 @@ class AuthService {
     formData.append('username', email)
     formData.append('password', password)
 
-    const response = await axios.post(`${API_URL}/auth/login`, formData, {
+    const response = await axios.post(`api/auth/login`, formData, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -40,7 +38,7 @@ class AuthService {
     if (!this.token) return null
 
     try {
-      const response = await axios.get(`${API_URL}/users/me`, {
+      const response = await axios.get(`api/users/me`, {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
@@ -57,7 +55,7 @@ class AuthService {
   async logout() {
     try {
       if (this.token) {
-        await axios.post(`${API_URL}/auth/logout`, null, {
+        await axios.post(`api/auth/logout`, null, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
