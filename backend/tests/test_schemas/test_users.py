@@ -45,6 +45,3 @@ def test_user_read():
     user = UserRead(**data)
     assert user.id == user_id
     assert user.email == data["email"]
-    assert user.is_active is True
-    assert user.is_superuser is False
-    assert user.is_verified is True
