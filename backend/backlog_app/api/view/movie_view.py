@@ -8,7 +8,7 @@ from backlog_app.dependencies.authentification.fastapi_users_routers import (
     current_active_user,
 )
 from backlog_app.models.users import User
-from backlog_app.schemas.movie import MovieCreate, MovieRead, MovieUpdate
+from backlog_app.schemas.movie import MovieCreate, MovieRead, MovieUpdate, MovieList
 from backlog_app.storages.database import get_async_session
 
 router = APIRouter(prefix="/movies", tags=["Movies"])
@@ -23,7 +23,7 @@ async def add_movie(
     return await crud.create_movie(db, movie_create, user=user)
 
 
-@router.get("/", response_model=List[MovieRead])
+@router.get("/", response_model=MovieList)
 async def get_movie_list(
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
