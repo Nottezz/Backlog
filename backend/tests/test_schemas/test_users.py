@@ -38,10 +38,8 @@ def test_user_read():
     data = {
         "id": user_id,
         "email": "read@example.com",
-        "is_active": True,
-        "is_superuser": False,
-        "is_verified": True,
     }
     user = UserRead(**data)
     assert user.id == user_id
     assert user.email == data["email"]
+    assert user.username == "read"
