@@ -81,7 +81,7 @@ def test_movie_update_from_update_schema() -> None:
         description="Test Movie Update Description",
         watch_link="https://abc.example.com",
     )
-    for field, value in movie_update:
+    for field, value in movie_update.model_dump(exclude_unset=True).items():
         setattr(movie, field, value)
 
     assert movie_update.title == movie.title
