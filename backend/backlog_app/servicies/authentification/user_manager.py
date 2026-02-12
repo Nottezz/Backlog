@@ -6,7 +6,7 @@ from fastapi_users import BaseUserManager, UUIDIDMixin
 
 from backlog_app.config import settings
 from backlog_app.models import User
-from backlog_app.tasks.email_task import send_email_confirmed, send_verification_email
+from backlog_app.tasks import email_task
 
 if TYPE_CHECKING:
     from fastapi import Request
@@ -38,7 +38,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         verification_link = (
             "http://127.0.0.1:8000/docs#/Auth/verify_verify_api_auth_verify_post"
         )
-        await send_verification_email.kiq(
+        await email_task.send_verification_email.kiq(
             user_id=str(user.id),
             user_email=user.email,
             verification_token=token,
@@ -48,7 +48,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     async def on_after_verify(self, user: User, request: Optional["Request"] = None):
         logger.warning("User %s has been verified", user.id)
 
-        await send_email_confirmed.kiq(
+        await email_task.send_email_confirmed.kiq(
             user_id=str(user.id),
             user_email=user.email,
         )
