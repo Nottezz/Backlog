@@ -4,6 +4,8 @@ import authService from '../services/auth'
 import HomeView from '../components/Home.vue'
 import LoginView from '../components/Login.vue'
 import RegisterView from '../components/Register.vue'
+import ForgotPasswordView from '../components/ForgotPassword.vue'
+import ResetPasswordView from '../components/ResetPassword.vue'
 
 const routes = [
   {
@@ -24,6 +26,18 @@ const routes = [
     component: RegisterView,
     meta: { guest: true },
   },
+  {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: ForgotPasswordView,
+    meta: { guest: true },
+  },
+  {
+    path: '/reset-password',
+    name: 'ResetPassword',
+    component: ResetPasswordView,
+    meta: { guest: true },
+  },
 ]
 
 const router = createRouter({
@@ -31,7 +45,6 @@ const router = createRouter({
   routes,
 })
 
-// Navigation guard
 router.beforeEach((to, from, next) => {
   const isAuthenticated = authService.isAuthenticated()
 
