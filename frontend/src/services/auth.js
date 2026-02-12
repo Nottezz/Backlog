@@ -34,6 +34,23 @@ class AuthService {
     return response.data
   }
 
+  async forgotPassword(email) {
+    const response = await axios.post(`api/auth/forgot-password`, {
+      email,
+    })
+
+    return response.data
+  }
+
+  async resetPassword(token, password) {
+    const response = await axios.post(`api/auth/reset-password`, {
+      token,
+      password,
+    })
+
+    return response.data
+  }
+
   async fetchUser() {
     if (!this.token) return null
 
