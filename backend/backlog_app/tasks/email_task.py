@@ -1,7 +1,7 @@
 from textwrap import dedent
 
 from backlog_app.jinja2_templates import templates
-from backlog_app.servicies.mailing import send_email
+from backlog_app.servicies.mailing.email_sender import send_email
 from backlog_app.taskiq_broker import broker
 
 
@@ -11,7 +11,7 @@ async def send_verification_email(
     user_email: str,
     verification_token: str,
     verification_link: str,
-):
+) -> None:
     subject = "Confirm your email for site.com"
 
     plain_content = dedent(f"""\
@@ -26,10 +26,11 @@ async def send_verification_email(
     template = templates.get_template("email-verify/verification-request.html")
     context = {
         "user_id": user_id,
+        "user_email": user_email,
         "verification_link": verification_link,
         "verification_token": verification_token,
     }
-    html_content = template.render(context=context)
+    html_content = template.render(context)
 
     await send_email(
         recipient=user_email,
@@ -56,7 +57,7 @@ async def send_email_confirmed(
         "user_id": user_id,
         "user_email": user_email,
     }
-    html_content = template.render(context=context)
+    html_content = template.render(context)
 
     await send_email(
         recipient=user_email,
