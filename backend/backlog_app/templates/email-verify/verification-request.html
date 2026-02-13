@@ -6,11 +6,12 @@
 
 {% block main %}
   <p>
-    Dear, {{ user_email }},
+    Dear, {{user_email}},
+    Please verify your email for site.com at {{verification_link}}
   </p>
   <p>
-    To verify your email address, please follow the link:
+   Use this token to verify your email:
     <br>
-    <a href="{{ verification_link }}">Confirm email</a>
+    <code>{{verification_token}}</code>
   </p>
 {% endblock %}
