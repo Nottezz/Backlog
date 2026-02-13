@@ -35,9 +35,10 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             "Verification requested for user %s. Verification token: %s", user.id, token
         )
 
-        verification_link = (
-            "http://127.0.0.1:8000/docs#/Auth/verify_verify_api_auth_verify_post"
-        )
+        origin = request.headers.get("origin") or settings.FRONTEND_URL
+        logger.debug("origin url: %s", origin)
+
+        verification_link = f"{origin}/verify?token={token}"
         await email_task.send_verification_email.kiq(
             user_id=str(user.id),
             user_email=user.email,
