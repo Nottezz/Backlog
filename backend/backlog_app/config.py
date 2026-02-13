@@ -17,6 +17,9 @@ class LoggingConfig(BaseModel):
     log_format: str = (
         "[-] %(asctime)s [%(levelname)s] %(module)s-%(lineno)d - %(message)s"
     )
+    worker_log_format: str = (
+        "[-] %(asctime)s [%(levelname)s] [%(processName)s] %(module)s-%(lineno)d - %(message)s"
+    )
     log_level_name: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "WARNING"
     log_date_format: str = "%Y-%m-%d %H:%M:%S"
 
