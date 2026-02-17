@@ -114,7 +114,7 @@ export default {
           only_mine: this.onlyMine
         }
         const res = await axios.get('/api/movies/', { params })
-        this.movies = res.data
+        this.movies = res.data["movies"]
       } catch (error) {
         console.error('Error fetching movies:', error)
         this.error = error.response?.data?.detail || 'Failed to load movies. Please check your connection.'

@@ -79,14 +79,14 @@
           Watch Link <span class="text-gray-400 text-xs">(optional)</span>
         </label>
         <input
-            v-model="watch_link"
+            v-model="watchLink"
             placeholder="https://example.com/movie"
             type="url"
             class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
-            :class="{ 'border-red-500': errors.watch_link }"
-            @input="errors.watch_link = ''"
+            :class="{ 'border-red-500': errors.watchLink }"
+            @input="errors.watchLink = ''"
         />
-        <p v-if="errors.watch_link" class="text-red-500 text-sm mt-1">{{ errors.watch_link }}</p>
+        <p v-if="errors.watchLink" class="text-red-500 text-sm mt-1">{{ errors.watchLink }}</p>
       </div>
 
       <!-- Kinopoisk ID (Optional) -->
@@ -95,15 +95,15 @@
           Kinopoisk ID <span class="text-gray-400 text-xs">(optional)</span>
         </label>
         <input
-            v-model.number="kp_id"
+            v-model.number="kpId"
             placeholder="e.g. 326"
             type="number"
             min="0"
             class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
-            :class="{ 'border-red-500': errors.kp_id }"
-            @input="errors.kp_id = ''"
+            :class="{ 'border-red-500': errors.kpId }"
+            @input="errors.kpId = ''"
         />
-        <p v-if="errors.kp_id" class="text-red-500 text-sm mt-1">{{ errors.kp_id }}</p>
+        <p v-if="errors.kpId" class="text-red-500 text-sm mt-1">{{ errors.kpId }}</p>
       </div>
 
       <!-- IMDB ID (Optional) -->
@@ -112,15 +112,15 @@
           IMDB ID <span class="text-gray-400 text-xs">(optional)</span>
         </label>
         <input
-            v-model.number="imdb_id"
+            v-model.number="imdbId"
             placeholder="e.g. 326"
             type="number"
             min="0"
             class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
-            :class="{ 'border-red-500': errors.imdb_id }"
-            @input="errors.imdb_id = ''"
+            :class="{ 'border-red-500': errors.imdbId }"
+            @input="errors.imdbId = ''"
         />
-        <p v-if="errors.imdb_id" class="text-red-500 text-sm mt-1">{{ errors.imdb_id }}</p>
+        <p v-if="errors.imdbId" class="text-red-500 text-sm mt-1">{{ errors.imdbId }}</p>
       </div>
 
       <!-- Watched (Optional) -->
@@ -227,9 +227,9 @@ export default {
       description: '',
       year: null,
       rating: null,
-      watch_link: '',
-      kp_id: null,
-      imdb_id: null,
+      watchLink: '',
+      kpId: null,
+      imdbId: null,
       watched: false,
       published: false,
       editingId: null,
@@ -258,9 +258,9 @@ export default {
         description: '',
         year: '',
         rating: '',
-        watch_link: '',
-        kp_id: '',
-        imdb_id: '',
+        watchLink: '',
+        kpId: '',
+        imdbId: '',
       }
       let isValid = true
 
@@ -291,24 +291,24 @@ export default {
       }
 
       // URL validation (optional, but if provided must be valid)
-      if (this.watch_link && this.watch_link.trim() !== '') {
+      if (this.watchLink && this.watchLink.trim() !== '') {
         try {
-          new URL(this.watch_link)
+          new URL(this.watchLink)
         } catch (e) {
-          this.errors.watch_link = 'Please enter a valid URL (e.g., https://example.com)'
+          this.errors.watchLink = 'Please enter a valid URL (e.g., https://example.com)'
           isValid = false
         }
       }
 
       // KP ID validation (optional, but if provided must be positive)
-      if (this.kp_id !== null && this.kp_id !== '' && this.kp_id < 0) {
-        this.errors.kp_id = 'Kinopoisk ID must be a positive number'
+      if (this.kpId !== null && this.kpId !== '' && this.kpId < 0) {
+        this.errors.kpId = 'Kinopoisk ID must be a positive number'
         isValid = false
       }
 
       // IMDB ID validation (optional, but if provided must be positive)
-      if (this.imdb_id !== null && this.imdb_id !== '' && this.imdb_id < 0) {
-        this.errors.imdb_id = 'IMDB ID must be a positive number'
+      if (this.imdbId !== null && this.imdbId !== '' && this.imdbId < 0) {
+        this.errors.imdbId = 'IMDB ID must be a positive number'
         isValid = false
       }
 
@@ -328,9 +328,9 @@ export default {
           description: this.description.trim() || null,
           year: this.year || null,
           rating: this.rating || null,
-          watch_link: this.watch_link.trim() || null,
-          kp_id: this.kp_id || null,
-          imdb_id: this.imdb_id || null,
+          watch_link: this.watchLink.trim() || null,
+          kp_id: this.kpId || null,
+          imdb_id: this.imdbId || null,
           watched: this.watched,
           published: this.published
         }
@@ -365,9 +365,9 @@ export default {
           description: this.description.trim() || null,
           year: this.year || null,
           rating: this.rating || null,
-          watch_link: this.watch_link.trim() || null,
-          kp_id: this.kp_id || null,
-          imdb_id: this.imdb_id || null,
+          watch_link: this.watchLink.trim() || null,
+          kp_id: this.kpId || null,
+          imdb_id: this.imdbId || null,
           watched: this.watched,
           published: this.published
         }
@@ -393,9 +393,9 @@ export default {
       this.description = ''
       this.year = null
       this.rating = null
-      this.watch_link = ''
-      this.kp_id = null
-      this.imdb_id = null
+      this.watchLink = ''
+      this.kpId = null
+      this.imdbId = null
       this.watched = false
       this.published = false
       this.editingId = null
@@ -404,9 +404,9 @@ export default {
         description: '',
         year: '',
         rating: '',
-        watch_link: '',
-        kp_id: '',
-        imdb_id: ''
+        watchLink: '',
+        kpId: '',
+        imdbId: ''
       }
       this.errorMessage = ''
     },
@@ -416,9 +416,9 @@ export default {
       this.description = movie.description || ''
       this.year = movie.year || null
       this.rating = movie.rating || null
-      this.watch_link = movie.watch_link || ''
-      this.kp_id = movie.kp_id || null
-      this.imdb_id = movie.imdb_id || null
+      this.watchLink = movie.watchLink || ''
+      this.kpId = movie.kpId || null
+      this.imdbId = movie.imdbId || null
       this.watched = movie.watched || false
       this.published = movie.published || false
       this.editingId = movie.id

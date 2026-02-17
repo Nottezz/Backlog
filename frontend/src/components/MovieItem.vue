@@ -26,7 +26,7 @@
           <!-- User -->
           <div v-if="movie.user" class="flex items-center gap-1 text-gray-500">
             <span>👤</span>
-            <span class="font-medium">{{ movie.user }}</span>
+            <span class="font-medium">{{ movie.user.username }}</span>
           </div>
 
           <!-- Rating -->
@@ -37,34 +37,34 @@
           </div>
 
           <!-- Kinopoisk ID -->
-          <div v-if="movie.kp_id" class="flex items-center gap-1 text-gray-500">
+          <div v-if="movie.kpId" class="flex items-center gap-1 text-gray-500">
             <span>🎬 KP:</span>
             <a
                 :href="`https://www.kinopoisk.ru/film/${movie.kp_id}/`"
                 target="_blank"
                 class="text-indigo-600 hover:text-indigo-800 underline"
             >
-              {{ movie.kp_id }}
+              {{ movie.kpId }}
             </a>
           </div>
 
           <!-- IMDB ID -->
-          <div v-if="movie.imdb_id" class="flex items-center gap-1 text-gray-500">
+          <div v-if="movie.imdbId" class="flex items-center gap-1 text-gray-500">
             <span>IMDB:</span>
             <a
-                :href="`https://www.imdb.com/title/tt${movie.imdb_id}/`"
+                :href="`https://www.imdb.com/title/tt${movie.imdbId}/`"
                 target="_blank"
                 class="text-indigo-600 hover:text-indigo-800 underline"
             >
-              {{ movie.imdb_id }}
+              {{ movie.imdbId }}
             </a>
           </div>
 
           <!--  Watch Link -->
-          <div v-if="movie.watch_link" class="flex items-center gap-1 text-gray-500">
+          <div v-if="movie.watchLink" class="flex items-center gap-1 text-gray-500">
             <span>🔗</span>
             <a
-                :href="movie.watch_link"
+                :href="movie.watchLink"
                 target="_blank"
                 class="text-indigo-600 hover:text-indigo-800 underline truncate max-w-[200px]"
             >
