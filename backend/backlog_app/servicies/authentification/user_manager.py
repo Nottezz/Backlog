@@ -65,7 +65,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             self.reset_password_token_lifetime_seconds,
         )
         origin = request.headers.get("origin") or settings.FRONTEND_URL
-        reset_link = f"{origin}/forgot-password?token={token}"
+        reset_link = f"{origin}/reset-password?token={token}"
         token_lifetime = format_seconds_for_email(
             self.reset_password_token_lifetime_seconds
         )
