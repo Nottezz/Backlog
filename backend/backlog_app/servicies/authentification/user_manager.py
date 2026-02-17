@@ -4,9 +4,9 @@ from typing import TYPE_CHECKING, Optional
 
 from fastapi_users import BaseUserManager, UUIDIDMixin
 
-from backlog_app.servicies.mailing import format_seconds_for_email
 from backlog_app.config import settings
 from backlog_app.models import User
+from backlog_app.servicies.mailing import format_seconds_for_email
 from backlog_app.tasks import email_task
 
 if TYPE_CHECKING:

@@ -61,9 +61,7 @@ async def send_email_confirmed(
 
 @broker.task
 async def send_email_forgot_password(
-    user_email: str,
-    reset_link: str,
-    token_lifetime: str
+    user_email: str, reset_link: str, token_lifetime: str
 ):
     subject = "Request for change password"
     plain_content = dedent(f"""\

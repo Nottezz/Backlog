@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, field_validator, AmqpDsn
+from pydantic import AmqpDsn, BaseModel, field_validator
 from pydantic_settings import (
     BaseSettings,
     PydanticBaseSettingsSource,
@@ -53,6 +53,7 @@ class DataBaseConnection(BaseModel):
 
 class DataBase(BaseModel):
     connection: DataBaseConnection
+
 
 class TaskiqConfig(BaseModel):
     url: AmqpDsn = "amqp://guest:guest@localhost:5672//"

@@ -1,4 +1,3 @@
-
 def format_seconds_for_email(seconds: int) -> str:
     """
     Converts a number of seconds into a human-readable string for emails.
