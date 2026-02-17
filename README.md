@@ -40,6 +40,7 @@ Backlog — сервис «списка хотелок» (backlog) для фил
 - Alembic (миграции)
 - PostgreSQL
 - taskiq (фоновые задачи)
+- RabbitMQ
 - Jinja2
 
 ### Frontend
