@@ -7,28 +7,22 @@ from backlog_app.taskiq_broker import broker
 
 @broker.task
 async def send_verification_email(
-    user_id: str,
     user_email: str,
-    verification_token: str,
     verification_link: str,
 ) -> None:
-    subject = "Confirm your email for site.com"
+    subject = "Confirm your email"
 
     plain_content = dedent(f"""\
         Dear {user_email},
         Please verify your email for site.com at {verification_link}.
-
-        Use this token to verify your email: {verification_token}
 
         Your site admin,
         2025
     """)
     template = templates.get_template("email-verify/verification-request.html")
     context = {
-        "user_id": user_id,
         "user_email": user_email,
         "verification_link": verification_link,
-        "verification_token": verification_token,
     }
     html_content = template.render(context)
 
@@ -42,7 +36,6 @@ async def send_verification_email(
 
 @broker.task
 async def send_email_confirmed(
-    user_id: str,
     user_email: str,
 ):
     subject = "Email Confirmed"
@@ -54,7 +47,6 @@ async def send_email_confirmed(
         2025""")
     template = templates.get_template("email-verify/email-verified.html")
     context = {
-        "user_id": user_id,
         "user_email": user_email,
     }
     html_content = template.render(context)

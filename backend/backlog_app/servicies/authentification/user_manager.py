@@ -40,9 +40,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
 
         verification_link = f"{origin}/verify?token={token}"
         await email_task.send_verification_email.kiq(
-            user_id=str(user.id),
             user_email=user.email,
-            verification_token=token,
             verification_link=verification_link,
         )
 
@@ -50,6 +48,5 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         logger.warning("User %s has been verified", user.id)
 
         await email_task.send_email_confirmed.kiq(
-            user_id=str(user.id),
             user_email=user.email,
         )
