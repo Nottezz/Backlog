@@ -16,6 +16,7 @@ class MovieBase(BaseModel):
     watch_link: str | None = None
     kp_id: int | None = None
     imdb_id: int | None = None
+    published: bool = False
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -28,7 +29,6 @@ class MovieCreate(MovieBase):
     description: Annotated[str, Len(min_length=20, max_length=1000)] | None = None
     year: int | None = None
     rating: float | None = Field(default=None, ge=1.0, le=10.0)
-    published: bool = False
 
 
 class MovieUpdate(MovieBase):
@@ -37,7 +37,6 @@ class MovieUpdate(MovieBase):
     year: int | None = None
     watched: bool | None = None
     rating: float | None = Field(default=None, ge=1.0, le=10.0)
-    published: bool = False
 
 
 class MovieRead(MovieBase):
