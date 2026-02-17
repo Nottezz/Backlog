@@ -8,7 +8,7 @@ from backlog_app.dependencies.authentification.fastapi_users_routers import (
     current_active_user,
 )
 from backlog_app.models.users import User
-from backlog_app.schemas.movie import MovieCreate, MovieRead, MovieUpdate, MovieList
+from backlog_app.schemas.movie import MovieCreate, MovieList, MovieRead, MovieUpdate
 from backlog_app.storages.database import get_async_session
 
 router = APIRouter(prefix="/movies", tags=["Movies"])

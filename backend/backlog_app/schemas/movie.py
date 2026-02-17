@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Annotated
 
 from annotated_types import Len
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from .helper import to_camel_case
 from .user import UserRead
@@ -47,6 +47,7 @@ class MovieRead(MovieBase):
     watched: bool
     rating: float | None
     created_at: datetime
+
 
 class MovieList(BaseModel):
     movies: list[MovieRead]

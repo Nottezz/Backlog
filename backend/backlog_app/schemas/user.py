@@ -3,7 +3,7 @@ from uuid import UUID
 
 from annotated_types import Len
 from fastapi_users import schemas
-from pydantic import BaseModel, EmailStr, ConfigDict, computed_field
+from pydantic import BaseModel, ConfigDict, EmailStr, computed_field
 
 from .helper import to_camel_case
 
@@ -15,12 +15,9 @@ class UserRead(BaseModel):
     @computed_field
     @property
     def username(self) -> str:
-        return self.email.split('@')[0]
+        return self.email.split("@")[0]
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        alias_generator=to_camel_case
-    )
+    model_config = ConfigDict(from_attributes=True, alias_generator=to_camel_case)
 
 
 class UserCreate(schemas.BaseUserCreate):

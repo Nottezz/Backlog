@@ -9,7 +9,7 @@ from sqlalchemy.orm import selectinload
 
 from backlog_app.models import User
 from backlog_app.models.movie import Movie
-from backlog_app.schemas.movie import MovieCreate, MovieRead, MovieUpdate, MovieList
+from backlog_app.schemas.movie import MovieCreate, MovieList, MovieRead, MovieUpdate
 
 logger = logging.getLogger(__name__)
 

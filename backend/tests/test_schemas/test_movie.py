@@ -1,5 +1,6 @@
 from datetime import datetime
 from uuid import uuid4
+
 import pytest
 from pydantic import ValidationError
 
@@ -14,10 +15,7 @@ def test_movie_can_be_create_from_create_schema() -> None:
         watch_link="https://example.com",
         rating=6.7,
     )
-    user = UserRead(
-        id=uuid4(),
-        email="test@example.com"
-    )
+    user = UserRead(id=uuid4(), email="test@example.com")
     movie = MovieRead(
         **movie_in.model_dump(),
         id=0,
@@ -55,10 +53,7 @@ def test_movie_create_max_value(
             title=title,
             description=description,
         )
-        user = UserRead(
-            id=uuid4(),
-            email="test@example.com"
-        )
+        user = UserRead(id=uuid4(), email="test@example.com")
         movie = MovieRead(
             **movie_in.model_dump(),
             id=0,
@@ -72,10 +67,7 @@ def test_movie_create_max_value(
 
 
 def test_movie_update_from_update_schema() -> None:
-    user = UserRead(
-        id=uuid4(),
-        email="test@example.com"
-    )
+    user = UserRead(id=uuid4(), email="test@example.com")
 
     movie = MovieRead(
         id=0,
