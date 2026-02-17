@@ -14,7 +14,7 @@ router = APIRouter(
 router.include_router(
     fastapi_users.get_auth_router(
         authentication_backend,
-        # requires_verification=True,  # It is not necessary to include the parameter in this application.
+        requires_verification=True,  # It is not necessary to include the parameter in this application.
     )
 )
 

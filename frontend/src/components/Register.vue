@@ -18,15 +18,15 @@
               Email
             </label>
             <input
-              id="email"
-              v-model="email"
-              type="email"
-              required
-              placeholder="your@email.com"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
-              :class="{ 'border-red-500': errors.email }"
-              :disabled="loading"
-              @input="errors.email = ''"
+                id="email"
+                v-model="email"
+                type="email"
+                required
+                placeholder="your@email.com"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                :class="{ 'border-red-500': errors.email }"
+                :disabled="loading"
+                @input="errors.email = ''"
             />
             <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
           </div>
@@ -37,15 +37,15 @@
               Password
             </label>
             <input
-              id="password"
-              v-model="password"
-              type="password"
-              required
-              placeholder="••••••••"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
-              :class="{ 'border-red-500': errors.password }"
-              :disabled="loading"
-              @input="errors.password = ''"
+                id="password"
+                v-model="password"
+                type="password"
+                required
+                placeholder="••••••••"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                :class="{ 'border-red-500': errors.password }"
+                :disabled="loading"
+                @input="errors.password = ''"
             />
             <p v-if="errors.password" class="text-red-500 text-sm mt-1">{{ errors.password }}</p>
             <p class="text-gray-500 text-xs mt-1">Minimum 8 characters</p>
@@ -57,15 +57,15 @@
               Confirm Password
             </label>
             <input
-              id="confirmPassword"
-              v-model="confirmPassword"
-              type="password"
-              required
-              placeholder="••••••••"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
-              :class="{ 'border-red-500': errors.confirmPassword }"
-              :disabled="loading"
-              @input="errors.confirmPassword = ''"
+                id="confirmPassword"
+                v-model="confirmPassword"
+                type="password"
+                required
+                placeholder="••••••••"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                :class="{ 'border-red-500': errors.confirmPassword }"
+                :disabled="loading"
+                @input="errors.confirmPassword = ''"
             />
             <p v-if="errors.confirmPassword" class="text-red-500 text-sm mt-1">
               {{ errors.confirmPassword }}
@@ -86,9 +86,9 @@
 
           <!-- Submit Button -->
           <button
-            type="submit"
-            :disabled="loading"
-            class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              type="submit"
+              :disabled="loading"
+              class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {{ loading ? 'Creating account...' : 'Sign Up' }}
           </button>
@@ -171,14 +171,16 @@ export default {
         await authService.register(this.email, this.password)
         this.success = true
 
-        // Redirect to login after 2 seconds
-        setTimeout(() => {
-          this.$router.push('/login')
-        }, 2000)
+        this.$router.push({
+          path: '/check-email',
+          query: { email: this.email }
+        })
+
       } catch (error) {
         console.error('Registration error:', error)
         this.error =
-          error.response?.data?.detail || 'Registration failed. Please try again.'
+          error.response?.data?.detail ||
+          'Registration failed. Please try again.'
       } finally {
         this.loading = false
       }
