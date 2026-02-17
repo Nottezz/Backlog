@@ -20,20 +20,20 @@ class AuthService {
     }
 
     async requestVerifyToken(email) {
-    const response = await axios.post('/api/auth/request-verify-token', {
-        email,
-    })
+        const response = await axios.post('/api/auth/request-verify-token', {
+            email,
+        })
 
-    return response.data
-}
+        return response.data
+    }
 
     async verifyEmail(token) {
-    const response = await axios.post('/api/auth/verify', {
-        token,
-    })
+        const response = await axios.post('/api/auth/verify', {
+            token,
+        })
 
-    return response.data
-}
+        return response.data
+    }
 
     async login(email, password) {
         const formData = new URLSearchParams()
@@ -118,6 +118,8 @@ class AuthService {
     }
 
     setupAxiosInterceptor() {
+        let isLoggingOut = false
+
         axios.interceptors.request.use(
             config => {
                 if (this.token) {
@@ -130,9 +132,10 @@ class AuthService {
 
         axios.interceptors.response.use(
             response => response,
-            error => {
-                if (error.response?.status === 401) {
-                    this.logout()
+            async error => {
+                if (error.response?.status === 401 && !isLoggingOut) {
+                    isLoggingOut = true
+                    await this.logout()
                     window.location.href = '/login'
                 }
                 return Promise.reject(error)
