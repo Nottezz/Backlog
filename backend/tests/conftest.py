@@ -32,6 +32,8 @@ async def init_db():
         await connection.run_sync(Base.metadata.create_all)
     yield
 
+    await engine_test.dispose()
+
     if os.path.exists(DB_PATH):
         os.remove(DB_PATH)
 
