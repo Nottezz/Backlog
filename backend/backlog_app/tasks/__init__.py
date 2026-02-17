@@ -1,2 +1,4 @@
 from .email_task import send_verification_email
 from .email_task import send_email_confirmed
+from .email_task import send_email_forgot_password
+from .email_task import send_email_forgot_password_confirmed
