@@ -40,6 +40,7 @@ Backlog — сервис «списка хотелок» (backlog) для фил
 - Alembic (миграции)
 - PostgreSQL
 - taskiq (фоновые задачи)
+- RabbitMQ
 - Jinja2
 
 ### Frontend
@@ -139,6 +140,12 @@ curl -X POST "http://localhost:8000/api/movies" \
 - Защищённые эндпоинты требуют заголовок:
   `Authorization: Bearer <access_token>`
 
+
+## Брокер сообщений
+- Запуск:
+```bash
+taskiq worker backlog_app.taskiq_broker:broker --fs-discover -tp "**/tasks" --no-configure-logging
+```
 ## Тестирование
 
 - Запуск тестов:

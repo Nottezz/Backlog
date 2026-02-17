@@ -1,51 +1,76 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import authService from '../services/auth'
 
 import HomeView from '../components/Home.vue'
 import LoginView from '../components/Login.vue'
 import RegisterView from '../components/Register.vue'
+import ForgotPasswordView from '../components/ForgotPassword.vue'
+import ResetPasswordView from '../components/ResetPassword.vue'
+import VerifyEmail from "../components/VerifyEmail.vue"
+import CheckEmail from "../components/CheckEmail.vue";
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: HomeView,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: LoginView,
-    meta: { guest: true },
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: RegisterView,
-    meta: { guest: true },
-  },
+    {
+        path: '/',
+        name: 'Home',
+        component: HomeView,
+        meta: {requiresAuth: true},
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: LoginView,
+        meta: {guest: true},
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: RegisterView,
+        meta: {guest: true},
+    },
+    {
+        path: '/forgot-password',
+        name: 'ForgotPassword',
+        component: ForgotPasswordView,
+        meta: {guest: true},
+    },
+    {
+        path: '/reset-password',
+        name: 'ResetPassword',
+        component: ResetPasswordView,
+        meta: {guest: true},
+    },
+    {
+        path: '/check-email',
+        name: 'CheckEmail',
+        component: CheckEmail
+    },
+    {
+        path: '/verify',
+        name: 'VerifyEmail',
+        component: VerifyEmail
+    }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+    history: createWebHistory(),
+    routes,
 })
 
-// Navigation guard
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = authService.isAuthenticated()
+    const isAuthenticated = authService.isAuthenticated()
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/login')
-    return
-  }
+    if (to.meta.requiresAuth && !isAuthenticated) {
+        next('/login')
+        return
+    }
 
-  if (to.meta.guest && isAuthenticated) {
-    next('/')
-    return
-  }
+    if (to.meta.guest && isAuthenticated) {
+        next('/')
+        return
+    }
 
-  next()
+    next()
 })
 
 export default router

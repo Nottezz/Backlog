@@ -18,14 +18,14 @@
               Email
             </label>
             <input
-              id="email"
-              v-model="email"
-              type="email"
-              required
-              placeholder="your@email.com"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
-              :class="{ 'border-red-500': error }"
-              :disabled="loading"
+                id="email"
+                v-model="email"
+                type="email"
+                required
+                placeholder="your@email.com"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                :class="{ 'border-red-500': error }"
+                :disabled="loading"
             />
           </div>
 
@@ -35,15 +35,25 @@
               Password
             </label>
             <input
-              id="password"
-              v-model="password"
-              type="password"
-              required
-              placeholder="••••••••"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
-              :class="{ 'border-red-500': error }"
-              :disabled="loading"
+                id="password"
+                v-model="password"
+                type="password"
+                required
+                placeholder="••••••••"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                :class="{ 'border-red-500': error }"
+                :disabled="loading"
             />
+          </div>
+
+          <!-- Forgot Password -->
+          <div class="text-right -mt-2">
+            <router-link
+                to="/forgot-password"
+                class="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+            >
+              Forgot password?
+            </router-link>
           </div>
 
           <!-- Error Message -->
@@ -53,9 +63,9 @@
 
           <!-- Submit Button -->
           <button
-            type="submit"
-            :disabled="loading"
-            class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              type="submit"
+              :disabled="loading"
+              class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {{ loading ? 'Signing in...' : 'Sign In' }}
           </button>

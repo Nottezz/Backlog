@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, field_validator
+from pydantic import AmqpDsn, BaseModel, field_validator
 from pydantic_settings import (
     BaseSettings,
     PydanticBaseSettingsSource,
@@ -16,6 +16,9 @@ BASE_DIR = Path(__file__).resolve().parent
 class LoggingConfig(BaseModel):
     log_format: str = (
         "[-] %(asctime)s [%(levelname)s] %(module)s-%(lineno)d - %(message)s"
+    )
+    worker_log_format: str = (
+        "[-] %(asctime)s [%(levelname)s] [%(processName)s] %(module)s-%(lineno)d - %(message)s"
     )
     log_level_name: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "WARNING"
     log_date_format: str = "%Y-%m-%d %H:%M:%S"
@@ -50,6 +53,10 @@ class DataBaseConnection(BaseModel):
 
 class DataBase(BaseModel):
     connection: DataBaseConnection
+
+
+class TaskiqConfig(BaseModel):
+    url: AmqpDsn = "amqp://guest:guest@localhost:5672//"
 
 
 class Settings(BaseSettings):
@@ -99,6 +106,7 @@ class Settings(BaseSettings):
         )
 
     db: DataBase
+    taskiq: TaskiqConfig = TaskiqConfig()
     logging: LoggingConfig = LoggingConfig()
     access_token_db: AccessToken
     superuser: SuperUser
