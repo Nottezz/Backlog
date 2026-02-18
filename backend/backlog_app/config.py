@@ -11,6 +11,7 @@ from pydantic_settings import (
 )
 
 BASE_DIR = Path(__file__).resolve().parent
+ROOT_DIR = BASE_DIR.parent
 
 
 class LoggingConfig(BaseModel):
@@ -56,21 +57,28 @@ class DataBase(BaseModel):
 
 
 class TaskiqConfig(BaseModel):
-    url: AmqpDsn = "amqp://guest:guest@localhost:5672//"
+    rbmq_host: str
+    rbmq_port: int
+    rbmq_username: str
+    rbmq_password: str
+
+    @property
+    def url(self) -> str:
+        return f"amqp://{self.rbmq_username}:{self.rbmq_password}@{self.rbmq_host}:{self.rbmq_port}//"
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
         env_file=(
-            BASE_DIR / ".env.template",
-            BASE_DIR / ".env",
+            ROOT_DIR / ".env.template",
+            ROOT_DIR / ".env",
         ),
         env_prefix="BACKLOG__",
         env_nested_delimiter="__",
         yaml_file=(
-            BASE_DIR / "config.default.yaml",
-            BASE_DIR / "config.local.yaml",
+            ROOT_DIR / "config.default.yaml",
+            ROOT_DIR / "config.local.yaml",
         ),
         yaml_config_section="backlog",
     )
@@ -106,7 +114,7 @@ class Settings(BaseSettings):
         )
 
     db: DataBase
-    taskiq: TaskiqConfig = TaskiqConfig()
+    taskiq: TaskiqConfig
     logging: LoggingConfig = LoggingConfig()
     access_token_db: AccessToken
     superuser: SuperUser
