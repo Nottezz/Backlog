@@ -1,4 +1,4 @@
-FROM python:3.13-slim
+FROM python:3.13
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -9,9 +9,10 @@ WORKDIR /app
 
 COPY ./pyproject.toml ./
 COPY ./uv.lock ./
+COPY config.default.yaml ./
 COPY ./backlog_app ./backlog_app
 
-RUN uv sync
+RUN uv sync --locked --no-install-project --no-dev
 
 EXPOSE 8000
 CMD ["sh", "-c", "cd backlog_app && uv run alembic upgrade head && cd .. && uv run fastapi run backlog_app/main.py --port 8000"]
