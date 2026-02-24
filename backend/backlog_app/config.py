@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 from typing import Literal
 
-from pydantic import AmqpDsn, BaseModel, field_validator, EmailStr
+from pydantic import AmqpDsn, BaseModel, EmailStr, field_validator
 from pydantic_settings import (
     BaseSettings,
     PydanticBaseSettingsSource,
@@ -38,6 +38,7 @@ class AccessToken(BaseModel):
 class SuperUser(BaseModel):
     email: EmailStr
     password: str
+
 
 class SMTPConfig(BaseModel):
     username: EmailStr
