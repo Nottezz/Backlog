@@ -22,9 +22,12 @@ services:
       - app-network
 
   worker:
-    <<: *app
-    command: >
-      uv run taskiq worker backlog_app.taskiq_broker:broker --no-configure-logging
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    command: uv run taskiq worker backlog_app.taskiq_broker:broker --no-configure-logging
     depends_on:
       rabbitmq:
         condition: service_started
