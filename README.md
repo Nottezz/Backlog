@@ -83,7 +83,7 @@ docker compose up --build -d
 
 ## API (общая информация)
 
-- Базовый путь: `/api` (может быть `/`)
+- Базовый путь: `/`
 - Документация OpenAPI:
     - Swagger UI: `/docs`
     - ReDoc: `/redoc`
@@ -116,7 +116,7 @@ curl -X POST "http://localhost:8000/api/movies" \
 
 ## Брокер сообщений
 
-- Запуск:
+- Локальный запуск:
 
 ```bash
 taskiq worker backlog_app.taskiq_broker:broker --fs-discover -tp "**/tasks" --no-configure-logging
