@@ -14,6 +14,7 @@ repos:
       - id: black
         files: ^backend/
         args:
+          - --check
           - --diff
 
   - repo: https://github.com/pycqa/isort
@@ -22,4 +23,5 @@ repos:
       - id: isort
         files: ^backend/
         args:
+          - --check-only
           - --diff
