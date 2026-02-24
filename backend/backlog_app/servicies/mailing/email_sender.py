@@ -3,6 +3,8 @@ from email.mime.text import MIMEText
 
 import aiosmtplib
 
+from backlog_app.config import settings
+
 
 async def send_email(
     recipient: str,
@@ -10,9 +12,8 @@ async def send_email(
     plain_content: str,
     html_content: str = "",
 ):
-    admin_email = "admin@site.com"  # todo: перенести в настройки
     message = MIMEMultipart("alternative")
-    message["From"] = admin_email
+    message["From"] = settings.smtp.username
     message["To"] = recipient
     message["Subject"] = subject
 
@@ -31,4 +32,11 @@ async def send_email(
         )
         message.attach(html_message)
 
-    await aiosmtplib.send(message, hostname="127.0.0.1", port=1025)
+    await aiosmtplib.send(
+        message,
+        hostname=settings.smtp.server,
+        port=settings.smtp.port,
+        use_tls=settings.smtp.use_tls,
+        username=settings.smtp.username,
+        password=settings.smtp.password,
+    )
