@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 from typing import Literal
 
-from pydantic import AmqpDsn, BaseModel, field_validator
+from pydantic import AmqpDsn, BaseModel, field_validator, EmailStr
 from pydantic_settings import (
     BaseSettings,
     PydanticBaseSettingsSource,
@@ -36,8 +36,15 @@ class AccessToken(BaseModel):
 
 
 class SuperUser(BaseModel):
-    email: str
+    email: EmailStr
     password: str
+
+class SMTPConfig(BaseModel):
+    username: EmailStr
+    password: str
+    server: str
+    port: int
+    use_tls: bool = True
 
 
 class DataBaseConnection(BaseModel):
@@ -118,6 +125,7 @@ class Settings(BaseSettings):
     logging: LoggingConfig = LoggingConfig()
     access_token_db: AccessToken
     superuser: SuperUser
+    smtp: SMTPConfig
     cors_origins: list[str] = ["http://localhost:5173"]
 
 
