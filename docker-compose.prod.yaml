@@ -53,6 +53,7 @@ services:
       - app-network
 
   pg:
+    container_name: pg
     image: postgres:18
     env_file:
       - .env
