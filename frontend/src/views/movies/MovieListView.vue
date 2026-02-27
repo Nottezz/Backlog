@@ -81,7 +81,7 @@
           v-for="movie in filteredMovies"
           :key="movie.id"
           :movie="movie"
-          @toggle-watched="store.toggleWatched($event)"
+          @toggle-watched="handleToggleWatched"
           @delete="confirmDelete($event)"
         />
       </div>
@@ -125,8 +125,10 @@ import MovieCard from '@/components/ui/MovieCard.vue'
 import AddMovieModal from '@/components/ui/AddMovieModal.vue'
 import AlertMessage from '@/components/ui/AlertMessage.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
+import { useToast } from '@/composables/useToast'
 
 const store = useMoviesStore()
+const toast = useToast()
 const showAddModal = ref(false)
 const editingMovie = ref<MovieRead | null>(null)
 const deletingMovie = ref<MovieRead | null>(null)
@@ -176,13 +178,36 @@ async function handleMovieSubmit(data: Parameters<typeof store.addMovie>[0] & { 
   }
 }
 
+async function handleToggleWatched(movie: MovieRead) {
+  try {
+    await store.toggleWatched(movie)
+  } catch (e: unknown) {
+    const err = e as { response?: { status?: number } }
+    if (err.response?.status === 403) {
+      toast.error('Вы не можете изменять чужие записи')
+    } else {
+      toast.error('Не удалось обновить статус')
+    }
+  }
+}
+
 function confirmDelete(movie: MovieRead) {
   deletingMovie.value = movie
 }
 
 async function handleDelete() {
   if (!deletingMovie.value) return
-  await store.deleteMovie(deletingMovie.value.id)
-  deletingMovie.value = null
+  try {
+    await store.deleteMovie(deletingMovie.value.id)
+    deletingMovie.value = null
+  } catch (e: unknown) {
+    const err = e as { response?: { status?: number } }
+    deletingMovie.value = null
+    if (err.response?.status === 403) {
+      toast.error('Вы не можете удалять чужие записи')
+    } else {
+      toast.error('Не удалось удалить фильм')
+    }
+  }
 }
 </script>

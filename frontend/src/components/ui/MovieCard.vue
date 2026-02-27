@@ -4,11 +4,16 @@
     <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-surface-border">
       <button
         :class="[
-          'flex items-center gap-1.5 text-xs font-mono transition-colors',
-          movie.watched ? 'text-emerald-600' : 'text-base-300 hover:text-base-600',
+          'flex items-center gap-1.5 text-xs font-mono transition-all duration-150',
+          movie.watched
+            ? 'text-emerald-600'
+            : isOwner
+              ? 'text-base-300 hover:text-base-600 cursor-pointer'
+              : 'text-base-200 cursor-not-allowed opacity-60',
         ]"
-        @click.stop="$emit('toggle-watched', movie)"
-        :title="movie.watched ? 'Отметить как непросмотренный' : 'Отметить как просмотренный'"
+        :disabled="!isOwner"
+        :title="!isOwner ? 'Только автор может изменять статус' : movie.watched ? 'Снять отметку' : 'Отметить как просмотренный'"
+        @click.stop="handleToggleWatched"
       >
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path v-if="movie.watched" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
@@ -27,7 +32,7 @@
       <RouterLink :to="`/movies/${movie.id}`" class="flex-1">
         <!-- Title + year -->
         <div class="flex items-start justify-between gap-3 mb-2">
-          <h3 class="font-display font-bold text-base-900 group-hover:text-base-600 transition-colors leading-tight">
+          <h3 class="font-display font-bold text-base-900 group-hover:text-accent transition-colors leading-tight">
             {{ movie.title }}
           </h3>
           <span v-if="movie.year" class="shrink-0 font-mono text-xs text-base-400 mt-0.5">
@@ -43,7 +48,8 @@
         <!-- Rating -->
         <div v-if="movie.rating" class="flex items-center gap-1.5 mb-4">
           <div class="flex">
-            <span v-for="n in 5" :key="n"
+            <span
+              v-for="n in 5" :key="n"
               :class="n <= Math.round(movie.rating / 2) ? 'text-amber-400' : 'text-base-200'"
               class="text-sm"
             >★</span>
@@ -54,13 +60,25 @@
 
       <!-- Actions -->
       <div class="flex items-center justify-between pt-3 border-t border-surface-border mt-auto">
-        <span class="font-mono text-xs text-base-300">
+        <!-- Author label for foreign movies -->
+        <span v-if="!isOwner" class="font-mono text-xs text-base-300 flex items-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          {{ movie.user.username || movie.user.email }}
+        </span>
+        <span v-else class="font-mono text-xs text-base-300">
           {{ formatDate(movie.createdAt) }}
         </span>
-        <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+
+        <!-- Owner-only action buttons -->
+        <div
+          v-if="isOwner"
+          class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
           <RouterLink
             :to="`/movies/${movie.id}`"
-            class="p-1.5 text-base-400 hover:text-base-700 rounded transition-colors"
+            class="p-1.5 text-base-400 hover:text-base-700 rounded-lg transition-colors"
             title="Открыть"
           >
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,7 +87,7 @@
             </svg>
           </RouterLink>
           <button
-            class="p-1.5 text-base-400 hover:text-accent rounded transition-colors"
+            class="p-1.5 text-base-400 hover:text-danger rounded-lg transition-colors"
             title="Удалить"
             @click.stop="$emit('delete', movie)"
           >
@@ -78,22 +96,57 @@
             </svg>
           </button>
         </div>
+
+        <!-- Non-owner: just open link -->
+        <RouterLink
+          v-else
+          :to="`/movies/${movie.id}`"
+          class="p-1.5 text-base-300 hover:text-base-600 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+          title="Открыть"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </RouterLink>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { MovieRead } from '@/api/movies'
+import { useAuthStore } from '@/stores/auth'
+import { useToast } from '@/composables/useToast'
 
-defineProps<{ movie: MovieRead }>()
-defineEmits<{
+const props = defineProps<{ movie: MovieRead }>()
+const emit = defineEmits<{
   'toggle-watched': [movie: MovieRead]
   delete: [movie: MovieRead]
 }>()
 
+const authStore = useAuthStore()
+const toast = useToast()
+
+// Check ownership by comparing user IDs
+const isOwner = computed(() =>
+  authStore.user?.id === props.movie.user.id
+)
+
+function handleToggleWatched() {
+  if (!isOwner.value) {
+    toast.error('Вы не можете изменять чужие записи')
+    return
+  }
+  emit('toggle-watched', props.movie)
+}
+
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' })
+  return new Date(iso).toLocaleDateString('ru-RU', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
 }
 </script>

@@ -101,23 +101,35 @@
           </a>
         </div>
 
-        <!-- Actions -->
+        <!-- Actions — owner only -->
         <div class="flex flex-wrap gap-3 pt-6 border-t border-surface-border">
-          <button
-            :class="[
-              'btn-secondary',
-              movie.watched ? 'text-emerald-700 border-emerald-200 hover:bg-emerald-50' : '',
-            ]"
-            @click="handleToggleWatched"
-          >
-            {{ movie.watched ? '✓ Отметить как непросмотренный' : 'Отметить как просмотренный' }}
-          </button>
-          <button @click="showEditModal = true" class="btn-secondary">
-            Редактировать
-          </button>
-          <button @click="confirmDelete = true" class="btn-danger">
-            Удалить
-          </button>
+          <template v-if="isOwner">
+            <button
+              :class="[
+                'btn-secondary',
+                movie.watched ? 'text-emerald-700 border-emerald-200 hover:bg-emerald-50' : '',
+              ]"
+              @click="handleToggleWatched"
+            >
+              {{ movie.watched ? '✓ Снять отметку' : 'Отметить как просмотренный' }}
+            </button>
+            <button @click="showEditModal = true" class="btn-secondary">
+              Редактировать
+            </button>
+            <button @click="confirmDelete = true" class="btn-danger">
+              Удалить
+            </button>
+          </template>
+
+          <!-- Non-owner: read-only hint -->
+          <template v-else>
+            <div class="flex items-center gap-2 text-sm text-base-400 font-body bg-surface-muted border border-surface-border rounded-xl px-4 py-2.5">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Только автор может редактировать эту запись
+            </div>
+          </template>
         </div>
       </div>
     </main>
@@ -152,10 +164,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { moviesApi, type MovieRead } from '@/api/movies'
 import { useMoviesStore } from '@/stores/movies'
+import { useAuthStore } from '@/stores/auth'
+import { useToast } from '@/composables/useToast'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AlertMessage from '@/components/ui/AlertMessage.vue'
 import AddMovieModal from '@/components/ui/AddMovieModal.vue'
@@ -163,12 +177,18 @@ import AddMovieModal from '@/components/ui/AddMovieModal.vue'
 const route = useRoute()
 const router = useRouter()
 const store = useMoviesStore()
+const authStore = useAuthStore()
+const toast = useToast()
 
 const movie = ref<MovieRead | null>(null)
 const loading = ref(true)
 const error = ref('')
 const showEditModal = ref(false)
 const confirmDelete = ref(false)
+
+const isOwner = computed(() =>
+  movie.value ? authStore.user?.id === movie.value.user.id : false
+)
 
 onMounted(async () => {
   try {
@@ -182,19 +202,55 @@ onMounted(async () => {
 
 async function handleToggleWatched() {
   if (!movie.value) return
-  movie.value = await store.toggleWatched(movie.value)
+  if (!isOwner.value) {
+    toast.error('Вы не можете изменять чужие записи')
+    return
+  }
+  try {
+    movie.value = await store.toggleWatched(movie.value)
+  } catch (e: unknown) {
+    const err = e as { response?: { status?: number } }
+    toast.error(err.response?.status === 403
+      ? 'Вы не можете изменять чужие записи'
+      : 'Не удалось обновить статус')
+  }
 }
 
 async function handleEdit(data: Parameters<typeof store.updateMovie>[1]) {
   if (!movie.value) return
-  movie.value = await store.updateMovie(movie.value.id, data)
-  showEditModal.value = false
+  if (!isOwner.value) {
+    toast.error('Вы не можете редактировать чужие записи')
+    showEditModal.value = false
+    return
+  }
+  try {
+    movie.value = await store.updateMovie(movie.value.id, data)
+    showEditModal.value = false
+  } catch (e: unknown) {
+    const err = e as { response?: { status?: number } }
+    toast.error(err.response?.status === 403
+      ? 'Вы не можете редактировать чужие записи'
+      : 'Не удалось сохранить изменения')
+  }
 }
 
 async function handleDelete() {
   if (!movie.value) return
-  await store.deleteMovie(movie.value.id)
-  router.push('/movies')
+  if (!isOwner.value) {
+    toast.error('Вы не можете удалять чужие записи')
+    confirmDelete.value = false
+    return
+  }
+  try {
+    await store.deleteMovie(movie.value.id)
+    router.push('/movies')
+  } catch (e: unknown) {
+    const err = e as { response?: { status?: number } }
+    confirmDelete.value = false
+    toast.error(err.response?.status === 403
+      ? 'Вы не можете удалять чужие записи'
+      : 'Не удалось удалить фильм')
+  }
 }
 
 function formatDate(iso: string) {
