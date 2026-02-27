@@ -2,7 +2,6 @@ import logging
 from uuid import UUID
 
 from fastapi import HTTPException
-from sqlalchemy import or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
@@ -90,12 +89,17 @@ async def update_movie(
 
 
 async def partial_update_movie(
-    db: AsyncSession, movie_id: int, movie_in: MovieUpdate
+    db: AsyncSession,
+    movie_id: int,
+    movie_in: MovieUpdate,
+    user: User,
 ) -> Movie | None:
     result = await db.execute(select(Movie).where(Movie.id == movie_id))
     movie = result.scalars().first()
     if not movie:
         raise HTTPException(status_code=404)
+
+    check_movie_ownership(movie, user)
 
     for field, value in movie_in.model_dump(exclude_unset=True).items():
         setattr(movie, field, value)
