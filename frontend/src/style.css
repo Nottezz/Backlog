@@ -8,7 +8,7 @@
   }
 
   body {
-    @apply font-body text-ink-900 bg-parchment-50;
+    @apply font-body text-base-900 bg-surface-soft;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -20,76 +20,62 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-ink-900 text-parchment-100 font-body font-medium rounded-sm
-    hover:bg-ink-700 active:bg-ink-950
-    transition-all duration-200
-    focus:outline-none focus:ring-2 focus:ring-ink-500 focus:ring-offset-2 focus:ring-offset-parchment-50
-    disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5
+    bg-accent text-white font-body font-medium text-sm rounded-xl
+    hover:bg-accent-600 active:bg-accent-700
+    transition-all duration-150 shadow-sm hover:shadow-md
+    focus:outline-none focus:ring-2 focus:ring-accent/40 focus:ring-offset-2
+    disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent text-ink-900 font-body font-medium
-    border border-ink-300 rounded-sm
-    hover:bg-ink-50 hover:border-ink-500
-    transition-all duration-200
-    focus:outline-none focus:ring-2 focus:ring-ink-500 focus:ring-offset-2;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5
+    bg-surface text-base-700 font-body font-medium text-sm rounded-xl
+    border border-surface-border
+    hover:bg-surface-muted hover:border-base-300
+    transition-all duration-150
+    focus:outline-none focus:ring-2 focus:ring-accent/30 focus:ring-offset-2
+    disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
-  .btn-accent {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent text-white font-body font-medium rounded-sm
-    hover:bg-accent-light active:bg-accent-dark
-    transition-all duration-200
-    focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2;
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5
+    bg-danger text-white font-body font-medium text-sm rounded-xl
+    hover:bg-danger-dark
+    transition-all duration-150 shadow-sm
+    focus:outline-none focus:ring-2 focus:ring-danger/40 focus:ring-offset-2;
   }
 
   .input-field {
-    @apply w-full px-4 py-3 bg-white border border-ink-200 rounded-sm
-    font-body text-ink-900 placeholder-ink-300
-    focus:outline-none focus:ring-2 focus:ring-ink-400 focus:border-ink-400
-    transition-all duration-200;
+    @apply w-full px-4 py-2.5 bg-surface border border-surface-border rounded-xl
+    font-body text-sm text-base-900 placeholder-base-400
+    focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent
+    transition-all duration-150;
   }
 
   .input-field.error {
-    @apply border-accent focus:ring-accent focus:border-accent;
+    @apply border-danger focus:ring-danger/30 focus:border-danger;
   }
 
   .card {
-    @apply bg-white border border-ink-100 rounded-sm shadow-sm;
+    @apply bg-surface border border-surface-border rounded-2xl shadow-sm;
   }
 
   .page-enter-active,
   .page-leave-active {
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.25s ease, transform 0.25s ease;
   }
-
   .page-enter-from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
-
   .page-leave-to {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-6px);
   }
 }
 
-/* Decorative rule */
-.ornament::before,
-.ornament::after {
-  content: '—';
-  @apply text-ink-300 mx-3;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  @apply bg-parchment-100;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-ink-300 rounded-full;
-}
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-ink-500;
-}
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #f0f2f8; }
+::-webkit-scrollbar-thumb { background: #c1c9df; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #9aa4c0; }

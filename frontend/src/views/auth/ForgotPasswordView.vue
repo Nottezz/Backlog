@@ -4,22 +4,22 @@
       <!-- Success state -->
       <template v-if="sent">
         <div class="text-center py-4">
-          <div class="w-16 h-16 bg-ink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg class="w-8 h-8 text-ink-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-16 h-16 bg-surface-muted rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8 text-base-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
-          <h1 class="font-display text-2xl font-bold text-ink-900 mb-3">Письмо отправлено</h1>
-          <p class="font-body text-ink-500 text-sm mb-2">
+          <h1 class="font-display text-2xl font-bold text-base-900 mb-3">Письмо отправлено</h1>
+          <p class="font-body text-base-500 text-sm mb-2">
             Мы отправили инструкцию на
           </p>
-          <p class="font-mono text-sm text-ink-900 font-medium bg-parchment-100 px-3 py-1.5 rounded-sm inline-block mb-6">
+          <p class="font-mono text-sm text-base-900 font-medium bg-surface-muted px-3 py-1.5 rounded-xl inline-block mb-6">
             {{ sentEmail }}
           </p>
-          <p class="font-body text-ink-400 text-xs mb-8">
+          <p class="font-body text-base-400 text-xs mb-8">
             Не получили письмо? Проверьте папку «Спам» или
             <button
-              class="underline hover:no-underline text-ink-600 transition-colors"
+              class="underline hover:no-underline text-base-600 transition-colors"
               @click="sent = false"
             >
               попробуйте снова
@@ -33,8 +33,8 @@
 
       <!-- Form state -->
       <template v-else>
-        <h1 class="font-display text-2xl font-bold text-ink-900 mb-1">Восстановление пароля</h1>
-        <p class="font-body text-ink-400 text-sm mb-8">
+        <h1 class="font-display text-2xl font-bold text-base-900 mb-1">Восстановление пароля</h1>
+        <p class="font-body text-base-400 text-sm mb-8">
           Укажите email — мы пришлём ссылку для сброса пароля
         </p>
 
@@ -60,7 +60,7 @@
     </div>
 
     <template #footer>
-      <RouterLink to="/login" class="font-body text-sm text-ink-400 hover:text-ink-700 transition-colors">
+      <RouterLink to="/login" class="font-body text-sm text-base-400 hover:text-base-700 transition-colors">
         ← Вернуться к входу
       </RouterLink>
     </template>

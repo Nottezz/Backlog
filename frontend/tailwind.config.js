@@ -7,38 +7,50 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['"Playfair Display"', 'Georgia', 'serif'],
-        body: ['"DM Sans"', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        body: ['"Inter"', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },
       colors: {
-        ink: {
-          50: '#f5f0eb',
-          100: '#e8ddd2',
-          200: '#d4bfa8',
-          300: '#bb9a7a',
-          400: '#a67c58',
-          500: '#8b6340',
-          600: '#704f33',
-          700: '#563d28',
-          800: '#3d2c1e',
-          900: '#261b12',
-          950: '#140e09',
+        // Dark slate base — modern, neutral, premium
+        base: {
+          50:  '#f8f9fc',
+          100: '#f0f2f8',
+          200: '#dde2ef',
+          300: '#c1c9df',
+          400: '#9aa4c0',
+          500: '#6b7899',
+          600: '#4f5c7e',
+          700: '#3a4564',
+          800: '#27314e',
+          900: '#171e35',
+          950: '#0d1121',
         },
-        parchment: {
-          50: '#fdfaf5',
-          100: '#f9f2e4',
-          200: '#f2e4c8',
-          300: '#e8d0a3',
-        },
+        // Vibrant violet-indigo accent
         accent: {
-          DEFAULT: '#c9463a',
-          light: '#e05a4e',
-          dark: '#a33529',
-        }
-      },
-      backgroundImage: {
-        'paper': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23fdfaf5'/%3E%3Crect x='0' y='0' width='1' height='1' fill='%23f0e8d8' opacity='0.3'/%3E%3C/svg%3E\")",
+          50:  '#eef2ff',
+          100: '#e0e7ff',
+          200: '#c7d2fe',
+          300: '#a5b4fc',
+          400: '#818cf8',
+          DEFAULT: '#6366f1',
+          600: '#4f46e5',
+          700: '#4338ca',
+          dark:   '#3730a3',
+        },
+        // Warm surface tones
+        surface: {
+          DEFAULT: '#ffffff',
+          soft:    '#f8f9fc',
+          muted:   '#f0f2f8',
+          border:  '#e2e8f0',
+        },
+        // Danger
+        danger: {
+          DEFAULT: '#ef4444',
+          light:   '#fca5a5',
+          dark:    '#dc2626',
+        },
       },
       animation: {
         'fade-up': 'fadeUp 0.6s ease forwards',
@@ -46,11 +58,11 @@ export default {
       },
       keyframes: {
         fadeUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '0%':   { opacity: '0', transform: 'translateY(20px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         fadeIn: {
-          '0%': { opacity: '0' },
+          '0%':   { opacity: '0' },
           '100%': { opacity: '1' },
         },
       },

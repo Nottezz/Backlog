@@ -1,11 +1,11 @@
 <template>
   <div class="card group hover:shadow-md transition-all duration-200 flex flex-col">
     <!-- Top bar: watched status + published -->
-    <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-ink-50">
+    <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-surface-border">
       <button
         :class="[
           'flex items-center gap-1.5 text-xs font-mono transition-colors',
-          movie.watched ? 'text-emerald-600' : 'text-ink-300 hover:text-ink-600',
+          movie.watched ? 'text-emerald-600' : 'text-base-300 hover:text-base-600',
         ]"
         @click.stop="$emit('toggle-watched', movie)"
         :title="movie.watched ? 'Отметить как непросмотренный' : 'Отметить как просмотренный'"
@@ -17,7 +17,7 @@
         {{ movie.watched ? 'Просмотрен' : 'Добавить отметку' }}
       </button>
 
-      <span v-if="movie.published" class="font-mono text-xs text-ink-300 border border-ink-100 px-1.5 py-0.5 rounded-sm">
+      <span v-if="movie.published" class="font-mono text-xs text-base-300 border border-surface-border px-1.5 py-0.5 rounded-xl">
         публичный
       </span>
     </div>
@@ -27,16 +27,16 @@
       <RouterLink :to="`/movies/${movie.id}`" class="flex-1">
         <!-- Title + year -->
         <div class="flex items-start justify-between gap-3 mb-2">
-          <h3 class="font-display font-bold text-ink-900 group-hover:text-ink-600 transition-colors leading-tight">
+          <h3 class="font-display font-bold text-base-900 group-hover:text-base-600 transition-colors leading-tight">
             {{ movie.title }}
           </h3>
-          <span v-if="movie.year" class="shrink-0 font-mono text-xs text-ink-400 mt-0.5">
+          <span v-if="movie.year" class="shrink-0 font-mono text-xs text-base-400 mt-0.5">
             {{ movie.year }}
           </span>
         </div>
 
         <!-- Description -->
-        <p v-if="movie.description" class="font-body text-xs text-ink-400 leading-relaxed line-clamp-3 mb-4">
+        <p v-if="movie.description" class="font-body text-xs text-base-400 leading-relaxed line-clamp-3 mb-4">
           {{ movie.description }}
         </p>
 
@@ -44,23 +44,23 @@
         <div v-if="movie.rating" class="flex items-center gap-1.5 mb-4">
           <div class="flex">
             <span v-for="n in 5" :key="n"
-              :class="n <= Math.round(movie.rating / 2) ? 'text-amber-400' : 'text-ink-200'"
+              :class="n <= Math.round(movie.rating / 2) ? 'text-amber-400' : 'text-base-200'"
               class="text-sm"
             >★</span>
           </div>
-          <span class="font-mono text-xs text-ink-400">{{ movie.rating }}/10</span>
+          <span class="font-mono text-xs text-base-400">{{ movie.rating }}/10</span>
         </div>
       </RouterLink>
 
       <!-- Actions -->
-      <div class="flex items-center justify-between pt-3 border-t border-ink-50 mt-auto">
-        <span class="font-mono text-xs text-ink-300">
+      <div class="flex items-center justify-between pt-3 border-t border-surface-border mt-auto">
+        <span class="font-mono text-xs text-base-300">
           {{ formatDate(movie.createdAt) }}
         </span>
         <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <RouterLink
             :to="`/movies/${movie.id}`"
-            class="p-1.5 text-ink-400 hover:text-ink-700 rounded transition-colors"
+            class="p-1.5 text-base-400 hover:text-base-700 rounded transition-colors"
             title="Открыть"
           >
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,7 +69,7 @@
             </svg>
           </RouterLink>
           <button
-            class="p-1.5 text-ink-400 hover:text-accent rounded transition-colors"
+            class="p-1.5 text-base-400 hover:text-accent rounded transition-colors"
             title="Удалить"
             @click.stop="$emit('delete', movie)"
           >

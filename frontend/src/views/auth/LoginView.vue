@@ -1,8 +1,8 @@
 <template>
   <AuthLayout>
     <div>
-      <h1 class="font-display text-2xl font-bold text-ink-900 mb-1">Добро пожаловать</h1>
-      <p class="font-body text-ink-400 text-sm mb-8">Войдите, чтобы продолжить</p>
+      <h1 class="font-display text-2xl font-bold text-base-900 mb-1">Добро пожаловать</h1>
+      <p class="font-body text-base-400 text-sm mb-8">Войдите, чтобы продолжить</p>
 
       <AlertMessage
         :show="!!errorMessage"
@@ -51,7 +51,7 @@
         <div class="flex items-center justify-end">
           <RouterLink
             to="/forgot-password"
-            class="font-body text-sm text-ink-400 hover:text-ink-700 transition-colors"
+            class="font-body text-sm text-base-400 hover:text-base-700 transition-colors"
           >
             Забыли пароль?
           </RouterLink>
@@ -72,9 +72,9 @@
     </div>
 
     <template #footer>
-      <p class="font-body text-sm text-ink-400">
+      <p class="font-body text-sm text-base-400">
         Нет аккаунта?
-        <RouterLink to="/register" class="text-ink-700 font-medium hover:text-ink-900 transition-colors">
+        <RouterLink to="/register" class="text-base-700 font-medium hover:text-base-900 transition-colors">
           Зарегистрироваться
         </RouterLink>
       </p>

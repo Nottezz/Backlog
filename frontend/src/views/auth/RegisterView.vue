@@ -1,8 +1,8 @@
 <template>
   <AuthLayout>
     <div>
-      <h1 class="font-display text-2xl font-bold text-ink-900 mb-1">Создать аккаунт</h1>
-      <p class="font-body text-ink-400 text-sm mb-8">Начните вести свой список фильмов</p>
+      <h1 class="font-display text-2xl font-bold text-base-900 mb-1">Создать аккаунт</h1>
+      <p class="font-body text-base-400 text-sm mb-8">Начните вести свой список фильмов</p>
 
       <AlertMessage
         :show="!!errorMessage"
@@ -55,9 +55,9 @@
     </div>
 
     <template #footer>
-      <p class="font-body text-sm text-ink-400">
+      <p class="font-body text-sm text-base-400">
         Уже есть аккаунт?
-        <RouterLink to="/login" class="text-ink-700 font-medium hover:text-ink-900 transition-colors">
+        <RouterLink to="/login" class="text-base-700 font-medium hover:text-base-900 transition-colors">
           Войти
         </RouterLink>
       </p>

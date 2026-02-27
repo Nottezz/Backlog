@@ -2,72 +2,73 @@
   <div class="min-h-screen flex flex-col">
     <AppHeader />
 
-    <main class="flex-1 pt-16">
+    <main class="flex-1 pt-[60px]">
       <!-- ─── HERO ─── -->
-      <section class="relative overflow-hidden border-b border-ink-200">
-        <!-- Background texture lines -->
-        <div class="absolute inset-0 opacity-[0.03]" aria-hidden="true">
-          <div v-for="i in 20" :key="i"
-            class="absolute border-t border-ink-900"
-            :style="{ top: `${i * 5}%`, left: 0, right: 0 }"
-          />
+      <section class="relative overflow-hidden bg-base-950 text-white">
+        <!-- Gradient orbs -->
+        <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div class="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-accent/20 blur-[120px]" />
+          <div class="absolute bottom-[-20%] right-[-5%] w-[400px] h-[400px] rounded-full bg-accent-300/10 blur-[100px]" />
         </div>
 
-        <div class="max-w-6xl mx-auto px-6 py-28 lg:py-36">
-          <div class="max-w-3xl">
-            <!-- Eyebrow -->
-            <div class="flex items-center gap-3 mb-8 animate-fade-in">
-              <div class="w-8 h-px bg-accent" />
-              <span class="font-mono text-xs tracking-widest text-ink-400 uppercase">Личный кинотеатр</span>
-            </div>
-
-            <!-- Headline -->
-            <h1 class="font-display text-5xl lg:text-7xl font-bold text-ink-900 leading-[1.05] mb-8 animate-fade-up">
-              Все фильмы,<br />
-              которые вы хотите<br />
-              <em class="text-ink-400 font-normal not-italic">посмотреть</em>
-            </h1>
-
-            <p class="font-body text-lg text-ink-500 leading-relaxed mb-12 max-w-xl animate-fade-up" style="animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards;">
-              Backlog — минималистичный трекер фильмов. Сохраняйте, оценивайте
-              и отмечайте просмотренное. Никакой лишней информации.
-            </p>
-
-            <!-- CTA -->
-            <div class="flex flex-wrap gap-4 animate-fade-up" style="animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards;">
-              <RouterLink to="/register" class="btn-primary text-base px-8 py-4">
-                Начать пользоваться
-              </RouterLink>
-              <RouterLink to="/login" class="btn-secondary text-base px-8 py-4">
-                Уже есть аккаунт
-              </RouterLink>
-            </div>
+        <div class="relative max-w-6xl mx-auto px-6 py-28 lg:py-36">
+          <!-- Eyebrow badge -->
+          <div class="inline-flex items-center gap-2 bg-white/10 border border-white/10 rounded-full px-4 py-1.5 mb-10 animate-fade-in">
+            <span class="w-1.5 h-1.5 rounded-full bg-accent-300 animate-pulse" />
+            <span class="font-body text-xs text-white/70 tracking-wide">Личный трекер фильмов</span>
           </div>
-        </div>
 
-        <!-- Decorative number -->
-        <div class="absolute right-8 bottom-8 font-mono text-[10rem] font-bold text-ink-900 opacity-[0.03] leading-none select-none hidden lg:block" aria-hidden="true">
-          15
+          <!-- Headline -->
+          <h1 class="font-display text-5xl lg:text-[4.5rem] font-bold leading-[1.05] mb-7 animate-fade-up max-w-3xl">
+            Ваши фильмы —<br />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent-300 to-accent-400">
+              под контролем
+            </span>
+          </h1>
+
+          <p class="font-body text-lg text-white/60 leading-relaxed mb-12 max-w-xl animate-fade-up"
+            style="animation-delay:0.1s;opacity:0;animation-fill-mode:forwards">
+            Сохраняйте фильмы в личный список, оценивайте просмотренное
+            и планируйте, что посмотреть следующим.
+          </p>
+
+          <!-- CTA -->
+          <div class="flex flex-wrap gap-4 animate-fade-up"
+            style="animation-delay:0.2s;opacity:0;animation-fill-mode:forwards">
+            <RouterLink to="/register"
+              class="inline-flex items-center gap-2 px-7 py-3.5 bg-accent hover:bg-accent-600 text-white font-display font-semibold rounded-xl transition-all shadow-lg shadow-accent/30 hover:shadow-accent/40 text-base">
+              Начать →
+            </RouterLink>
+            <RouterLink to="/login"
+              class="inline-flex items-center gap-2 px-7 py-3.5 bg-white/10 hover:bg-white/15 border border-white/10 text-white font-body font-medium rounded-xl transition-all text-base">
+              Уже есть аккаунт
+            </RouterLink>
+          </div>
         </div>
       </section>
 
       <!-- ─── FEATURES ─── -->
       <section class="max-w-6xl mx-auto px-6 py-24">
-        <div class="flex items-center gap-4 mb-16">
-          <div class="w-8 h-px bg-accent" />
-          <span class="font-mono text-xs tracking-widest text-ink-400 uppercase">Возможности</span>
+        <div class="text-center mb-16">
+          <p class="font-mono text-xs tracking-widest text-base-400 uppercase mb-3">Возможности</p>
+          <h2 class="font-display text-3xl lg:text-4xl font-bold text-base-900">
+            Всё, что нужно для кино-списка
+          </h2>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border border-ink-100">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div v-for="(feature, i) in features" :key="i"
-            class="p-8 border-b md:border-b-0 md:border-r border-ink-100 last:border-0 hover:bg-parchment-100 transition-colors group"
-          >
-            <div class="font-mono text-xs text-ink-300 mb-6">0{{ i + 1 }}</div>
-            <div class="text-3xl mb-5">{{ feature.icon }}</div>
-            <h3 class="font-display text-xl font-bold text-ink-900 mb-3 group-hover:text-ink-700 transition-colors">
+            class="card p-7 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group">
+            <div
+              class="w-11 h-11 rounded-2xl flex items-center justify-center text-xl mb-5"
+              :class="feature.bg"
+            >
+              {{ feature.icon }}
+            </div>
+            <h3 class="font-display font-bold text-base-900 text-lg mb-2 group-hover:text-accent transition-colors">
               {{ feature.title }}
             </h3>
-            <p class="font-body text-sm text-ink-500 leading-relaxed">
+            <p class="font-body text-sm text-base-500 leading-relaxed">
               {{ feature.description }}
             </p>
           </div>
@@ -75,27 +76,25 @@
       </section>
 
       <!-- ─── HOW IT WORKS ─── -->
-      <section class="bg-ink-900 text-parchment-100">
+      <section class="bg-surface-muted border-y border-surface-border">
         <div class="max-w-6xl mx-auto px-6 py-24">
-          <div class="flex items-center gap-4 mb-16">
-            <div class="w-8 h-px bg-accent" />
-            <span class="font-mono text-xs tracking-widest text-parchment-200 opacity-60 uppercase">Как это работает</span>
+          <div class="text-center mb-16">
+            <p class="font-mono text-xs tracking-widest text-base-400 uppercase mb-3">Как это работает</p>
+            <h2 class="font-display text-3xl lg:text-4xl font-bold text-base-900">
+              Три шага до порядка
+            </h2>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
-            <div v-for="(step, i) in steps" :key="i" class="relative">
-              <!-- Step number -->
-              <div class="font-display text-7xl font-bold text-parchment-100 opacity-10 leading-none mb-4 select-none">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            <!-- Connector -->
+            <div class="hidden md:block absolute top-8 left-1/3 right-1/3 h-px bg-surface-border" />
+
+            <div v-for="(step, i) in steps" :key="i" class="relative text-center">
+              <div class="w-16 h-16 rounded-2xl bg-base-950 text-white font-display font-bold text-2xl flex items-center justify-center mx-auto mb-5 shadow-lg">
                 {{ i + 1 }}
               </div>
-              <h3 class="font-display text-xl font-semibold text-parchment-100 mb-3">
-                {{ step.title }}
-              </h3>
-              <p class="font-body text-sm text-parchment-100 opacity-60 leading-relaxed">
-                {{ step.description }}
-              </p>
-              <!-- Connector line -->
-              <div v-if="i < 2" class="hidden md:block absolute top-10 left-full w-16 h-px bg-parchment-100 opacity-10 -translate-y-1/2" />
+              <h3 class="font-display font-bold text-base-900 text-lg mb-2">{{ step.title }}</h3>
+              <p class="font-body text-sm text-base-500 leading-relaxed max-w-xs mx-auto">{{ step.description }}</p>
             </div>
           </div>
         </div>
@@ -103,48 +102,56 @@
 
       <!-- ─── FAQ ─── -->
       <section class="max-w-6xl mx-auto px-6 py-24">
-        <div class="flex items-center gap-4 mb-16">
-          <div class="w-8 h-px bg-accent" />
-          <span class="font-mono text-xs tracking-widest text-ink-400 uppercase">Вопросы и ответы</span>
+        <div class="text-center mb-16">
+          <p class="font-mono text-xs tracking-widest text-base-400 uppercase mb-3">FAQ</p>
+          <h2 class="font-display text-3xl lg:text-4xl font-bold text-base-900">
+            Вопросы и ответы
+          </h2>
         </div>
 
-        <div class="max-w-2xl">
-          <div v-for="(item, i) in faq" :key="i"
-            class="border-t border-ink-100 last:border-b"
-          >
+        <div class="max-w-2xl mx-auto divide-y divide-surface-border">
+          <div v-for="(item, i) in faq" :key="i">
             <button
               class="w-full flex items-center justify-between py-5 text-left group"
               @click="toggleFaq(i)"
             >
-              <span class="font-body font-medium text-ink-900 group-hover:text-ink-600 transition-colors">
+              <span class="font-body font-medium text-base-900 group-hover:text-accent transition-colors pr-4">
                 {{ item.q }}
               </span>
-              <span class="shrink-0 ml-4 w-5 h-5 rounded-full border border-ink-200 flex items-center justify-center text-ink-400 transition-transform duration-200"
-                :class="{ 'rotate-45': openFaq === i }">
+              <span
+                class="shrink-0 w-7 h-7 rounded-lg bg-surface-muted border border-surface-border flex items-center justify-center text-base-500 transition-all duration-200"
+                :class="{ 'bg-accent border-accent text-white rotate-45': openFaq === i }"
+              >
                 +
               </span>
             </button>
             <Transition name="faq">
               <div v-if="openFaq === i" class="pb-5">
-                <p class="font-body text-sm text-ink-500 leading-relaxed">{{ item.a }}</p>
+                <p class="font-body text-sm text-base-500 leading-relaxed">{{ item.a }}</p>
               </div>
             </Transition>
           </div>
         </div>
       </section>
 
-      <!-- ─── CTA FOOTER ─── -->
-      <section class="border-t border-ink-200 bg-parchment-100">
-        <div class="max-w-6xl mx-auto px-6 py-20 flex flex-col lg:flex-row items-center justify-between gap-8">
-          <div>
-            <h2 class="font-display text-3xl lg:text-4xl font-bold text-ink-900 mb-2">
-              Начните сегодня
+      <!-- ─── CTA ─── -->
+      <section class="bg-base-950 text-white">
+        <div class="max-w-6xl mx-auto px-6 py-20">
+          <div class="relative rounded-3xl bg-gradient-to-br from-accent-700 to-accent p-12 lg:p-16 overflow-hidden text-center">
+            <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+              <div class="absolute top-[-30%] right-[-10%] w-[300px] h-[300px] rounded-full bg-white/10 blur-[60px]" />
+            </div>
+            <h2 class="relative font-display text-3xl lg:text-4xl font-bold mb-4">
+              Начните прямо сейчас
             </h2>
-            <p class="font-body text-ink-500">Бесплатно. Без лишнего.</p>
+            <p class="relative font-body text-white/70 mb-10 text-lg max-w-md mx-auto">
+              Создайте аккаунт и ведите свой список фильмов
+            </p>
+            <RouterLink to="/register"
+              class="inline-flex items-center gap-2 px-8 py-4 bg-white text-accent-700 font-display font-bold rounded-xl hover:bg-accent-50 transition-all shadow-xl text-base">
+              Создать аккаунт →
+            </RouterLink>
           </div>
-          <RouterLink to="/register" class="btn-accent text-base px-10 py-4 shrink-0">
-            Создать аккаунт →
-          </RouterLink>
         </div>
       </section>
     </main>
@@ -160,41 +167,43 @@ import AppHeader from '@/components/layout/AppHeader.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 
 const openFaq = ref<number | null>(null)
-
 function toggleFaq(i: number) {
   openFaq.value = openFaq.value === i ? null : i
 }
 
 const features = [
   {
-    icon: '📋',
+    icon: '🎬',
+    bg: 'bg-violet-50',
     title: 'Личный список',
-    description: 'Добавляйте фильмы с описанием, годом, рейтингом и ссылкой для просмотра. Всё в одном месте.',
+    description: 'Добавляйте фильмы с названием, описанием, годом, рейтингом и ссылкой для просмотра.',
   },
   {
-    icon: '✓',
-    title: 'Отмечайте просмотренное',
-    description: 'Простая отметка «просмотрено» помогает видеть прогресс и не возвращаться к одному и тому же.',
+    icon: '✅',
+    bg: 'bg-emerald-50',
+    title: 'Отметки о просмотре',
+    description: 'Отмечайте просмотренные фильмы одним нажатием и следите за прогрессом.',
   },
   {
-    icon: '🔒',
-    title: 'Только ваши данные',
-    description: 'Каждый список приватен по умолчанию. Публикуйте только то, чем хотите поделиться.',
+    icon: '🔐',
+    bg: 'bg-blue-50',
+    title: 'Приватность',
+    description: 'Каждый фильм приватен по умолчанию. Публикуйте только то, чем хотите поделиться.',
   },
 ]
 
 const steps = [
   {
-    title: 'Зарегистрируйтесь',
-    description: 'Создайте аккаунт за одну минуту, используя email и пароль.',
+    title: 'Создайте аккаунт',
+    description: 'Зарегистрируйтесь с помощью email — это займёт меньше минуты.',
   },
   {
     title: 'Добавляйте фильмы',
-    description: 'Вносите название, год, описание, рейтинг и ссылку на просмотр.',
+    description: 'Название, год, описание, рейтинг и ссылка — всё опционально.',
   },
   {
-    title: 'Отслеживайте прогресс',
-    description: 'Отмечайте просмотренные фильмы и планируйте, что посмотреть следующим.',
+    title: 'Следите за прогрессом',
+    description: 'Отмечайте просмотренное и планируйте, что посмотреть следующим.',
   },
 ]
 
@@ -209,7 +218,11 @@ const faq = [
   },
   {
     q: 'Можно ли изменить пароль?',
-    a: 'Конечно. Воспользуйтесь функцией «Забыли пароль» на странице входа — мы пришлём ссылку для сброса на ваш email.',
+    a: 'Да. Воспользуйтесь функцией «Забыли пароль» на странице входа — мы пришлём ссылку для сброса на ваш email.',
+  },
+  {
+    q: 'Как связаться с поддержкой?',
+    a: 'Напишите нам на admin@backlog-movie.ru — ответим в течение рабочего дня.',
   },
 ]
 </script>
@@ -219,12 +232,6 @@ const faq = [
   transition: all 0.25s ease;
   overflow: hidden;
 }
-.faq-enter-from, .faq-leave-to {
-  opacity: 0;
-  max-height: 0;
-}
-.faq-enter-to, .faq-leave-from {
-  opacity: 1;
-  max-height: 200px;
-}
+.faq-enter-from, .faq-leave-to { opacity: 0; max-height: 0; }
+.faq-enter-to, .faq-leave-from { opacity: 1; max-height: 200px; }
 </style>

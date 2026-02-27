@@ -3,16 +3,16 @@
     <Transition name="modal">
       <div v-if="show" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-ink-950/40 backdrop-blur-sm" @click="$emit('close')" />
+        <div class="absolute inset-0 bg-base-950/50 backdrop-blur-sm" @click="$emit('close')" />
 
         <!-- Modal -->
-        <div class="relative w-full max-w-lg bg-white rounded-sm shadow-2xl border border-ink-100 flex flex-col max-h-[90vh]">
+        <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-surface-border flex flex-col max-h-[90vh]">
           <!-- Header -->
-          <div class="flex items-center justify-between px-6 py-4 border-b border-ink-100 shrink-0">
-            <h2 class="font-display font-bold text-ink-900">
+          <div class="flex items-center justify-between px-6 py-4 border-b border-surface-border shrink-0">
+            <h2 class="font-display font-bold text-base-900">
               {{ editMovie ? 'Редактировать фильм' : 'Добавить фильм' }}
             </h2>
-            <button @click="$emit('close')" class="p-1 text-ink-400 hover:text-ink-700 transition-colors">
+            <button @click="$emit('close')" class="p-1.5 text-base-400 hover:text-base-700 hover:bg-surface-muted rounded-lg transition-all">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -49,7 +49,7 @@
               </div>
 
               <div class="flex flex-col gap-1.5">
-                <label class="font-body text-sm font-medium text-ink-700">Описание</label>
+                <label class="font-body text-sm font-medium text-base-700">Описание</label>
                 <textarea
                   v-model="form.description"
                   placeholder="Краткое описание фильма (минимум 20 символов)"
@@ -67,33 +67,17 @@
               />
 
               <div class="flex items-center gap-3">
-                <input
-                  id="published"
-                  v-model="form.published"
-                  type="checkbox"
-                  class="w-4 h-4 accent-ink-700 rounded"
-                />
-                <label for="published" class="font-body text-sm text-ink-700 cursor-pointer">
-                  Сделать публичным
-                </label>
+                <BaseToggle v-model="form.published" label="Сделать публичным" />
               </div>
 
               <div v-if="editMovie" class="flex items-center gap-3">
-                <input
-                  id="watched"
-                  v-model="form.watched"
-                  type="checkbox"
-                  class="w-4 h-4 accent-ink-700 rounded"
-                />
-                <label for="watched" class="font-body text-sm text-ink-700 cursor-pointer">
-                  Просмотрен
-                </label>
+                <BaseToggle v-model="form.watched" label="Просмотрен" />
               </div>
             </form>
           </div>
 
           <!-- Footer -->
-          <div class="px-6 py-4 border-t border-ink-100 flex items-center justify-end gap-3 shrink-0">
+          <div class="px-6 py-4 border-t border-surface-border flex items-center justify-end gap-3 shrink-0">
             <button type="button" @click="$emit('close')" class="btn-secondary text-sm py-2">
               Отмена
             </button>
@@ -120,6 +104,7 @@
 import { ref, reactive, watch } from 'vue'
 import type { MovieRead } from '@/api/movies'
 import BaseInput from './BaseInput.vue'
+import BaseToggle from './BaseToggle.vue'
 
 interface Props {
   show: boolean

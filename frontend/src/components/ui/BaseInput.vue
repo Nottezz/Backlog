@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col gap-1.5">
-    <label v-if="label" :for="inputId" class="font-body text-sm font-medium text-ink-700">
+    <label v-if="label" :for="inputId" class="font-body text-sm font-medium text-base-700">
       {{ label }}
-      <span v-if="required" class="text-accent ml-0.5">*</span>
+      <span v-if="required" class="text-danger ml-0.5">*</span>
     </label>
     <div class="relative">
       <input
@@ -19,7 +19,7 @@
         v-if="type === 'password'"
         type="button"
         tabindex="-1"
-        class="absolute right-3 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-700 transition-colors"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-base-400 hover:text-base-700 transition-colors"
         @click="togglePassword"
       >
         <svg v-if="showPassword" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,8 +31,8 @@
         </svg>
       </button>
     </div>
-    <p v-if="error" class="text-sm text-accent font-body">{{ error }}</p>
-    <p v-else-if="hint" class="text-sm text-ink-400 font-body">{{ hint }}</p>
+    <p v-if="error" class="text-sm text-danger font-body">{{ error }}</p>
+    <p v-else-if="hint" class="text-sm text-base-400 font-body">{{ hint }}</p>
   </div>
 </template>
 

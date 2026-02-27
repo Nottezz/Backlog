@@ -6,8 +6,8 @@
       <!-- Page header -->
       <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
         <div>
-          <p class="font-mono text-xs tracking-widest text-ink-400 uppercase mb-2">Коллекция</p>
-          <h1 class="font-display text-3xl font-bold text-ink-900">Мои фильмы</h1>
+          <p class="font-mono text-xs tracking-widest text-base-400 uppercase mb-2">Коллекция</p>
+          <h1 class="font-display text-3xl font-bold text-base-900">Мои фильмы</h1>
         </div>
         <button @click="showAddModal = true" class="btn-primary shrink-0">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -18,15 +18,15 @@
       </div>
 
       <!-- Filters -->
-      <div class="flex flex-wrap items-center gap-3 mb-8 pb-6 border-b border-ink-100">
+      <div class="flex flex-wrap items-center gap-3 mb-8 pb-6 border-b border-surface-border">
         <button
           v-for="filter in filters"
           :key="filter.key"
           :class="[
-            'px-4 py-1.5 font-body text-sm rounded-sm border transition-all',
+            'px-4 py-1.5 font-body text-sm rounded-xl border transition-all',
             activeFilter === filter.key
-              ? 'bg-ink-900 text-parchment-100 border-ink-900'
-              : 'bg-white text-ink-600 border-ink-200 hover:border-ink-400',
+              ? 'bg-base-900 text-surface-muted border-base-900'
+              : 'bg-white text-base-600 border-surface-border hover:border-base-400',
           ]"
           @click="setFilter(filter.key)"
         >
@@ -36,24 +36,21 @@
           </span>
         </button>
 
-        <div class="ml-auto flex items-center gap-2">
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input v-model="onlyMine" type="checkbox" class="w-3.5 h-3.5 accent-ink-700" @change="loadMovies" />
-            <span class="font-body text-sm text-ink-500">Только мои</span>
-          </label>
-        </div>
+        <div class="ml-auto">
+            <BaseToggle v-model="onlyMine" label="Только мои" @update:modelValue="loadMovies" />
+          </div>
       </div>
 
       <!-- Stats bar -->
-      <div v-if="!store.loading && store.movies.length > 0" class="flex items-center gap-6 mb-8 font-mono text-xs text-ink-400">
-        <span>Всего: <strong class="text-ink-700">{{ store.movies.length }}</strong></span>
+      <div v-if="!store.loading && store.movies.length > 0" class="flex items-center gap-6 mb-8 font-mono text-xs text-base-400">
+        <span>Всего: <strong class="text-base-700">{{ store.movies.length }}</strong></span>
         <span>Просмотрено: <strong class="text-emerald-600">{{ watchedCount }}</strong></span>
-        <span>Ожидает: <strong class="text-ink-700">{{ pendingCount }}</strong></span>
+        <span>Ожидает: <strong class="text-base-700">{{ pendingCount }}</strong></span>
       </div>
 
       <!-- Loading -->
       <div v-if="store.loading" class="flex items-center justify-center py-24">
-        <svg class="w-8 h-8 text-ink-300 animate-spin" fill="none" viewBox="0 0 24 24">
+        <svg class="w-8 h-8 text-base-300 animate-spin" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -65,10 +62,10 @@
       <!-- Empty state -->
       <div v-else-if="filteredMovies.length === 0" class="flex flex-col items-center justify-center py-24 text-center">
         <div class="text-5xl mb-6">🎬</div>
-        <h3 class="font-display text-xl font-bold text-ink-900 mb-2">
+        <h3 class="font-display text-xl font-bold text-base-900 mb-2">
           {{ store.movies.length === 0 ? 'Список пуст' : 'Ничего не найдено' }}
         </h3>
-        <p class="font-body text-sm text-ink-400 mb-8 max-w-xs">
+        <p class="font-body text-sm text-base-400 mb-8 max-w-xs">
           {{ store.movies.length === 0
             ? 'Добавьте первый фильм, который хотите посмотреть'
             : 'Попробуйте другой фильтр' }}
@@ -102,15 +99,15 @@
     <Teleport to="body">
       <Transition name="modal">
         <div v-if="deletingMovie" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div class="absolute inset-0 bg-ink-950/40 backdrop-blur-sm" @click="deletingMovie = null" />
-          <div class="relative bg-white rounded-sm shadow-2xl border border-ink-100 p-6 max-w-sm w-full">
-            <h3 class="font-display text-lg font-bold text-ink-900 mb-2">Удалить фильм?</h3>
-            <p class="font-body text-sm text-ink-500 mb-6">
+          <div class="absolute inset-0 bg-base-950/50 backdrop-blur-sm" @click="deletingMovie = null" />
+          <div class="relative bg-white rounded-xl shadow-2xl border border-surface-border p-6 max-w-sm w-full">
+            <h3 class="font-display text-lg font-bold text-base-900 mb-2">Удалить фильм?</h3>
+            <p class="font-body text-sm text-base-500 mb-6">
               «{{ deletingMovie.title }}» будет удалён без возможности восстановления.
             </p>
             <div class="flex gap-3 justify-end">
-              <button @click="deletingMovie = null" class="btn-secondary text-sm py-2">Отмена</button>
-              <button @click="handleDelete" class="btn-accent text-sm py-2">Удалить</button>
+              <button @click="deletingMovie = null" class="btn-secondary">Отмена</button>
+              <button @click="handleDelete" class="btn-danger">Удалить</button>
             </div>
           </div>
         </div>
@@ -127,6 +124,7 @@ import AppHeader from '@/components/layout/AppHeader.vue'
 import MovieCard from '@/components/ui/MovieCard.vue'
 import AddMovieModal from '@/components/ui/AddMovieModal.vue'
 import AlertMessage from '@/components/ui/AlertMessage.vue'
+import BaseToggle from '@/components/ui/BaseToggle.vue'
 
 const store = useMoviesStore()
 const showAddModal = ref(false)

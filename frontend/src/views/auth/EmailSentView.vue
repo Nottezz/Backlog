@@ -3,8 +3,8 @@
     <div class="text-center py-4">
       <!-- Envelope illustration -->
       <div class="relative w-20 h-20 mx-auto mb-8">
-        <div class="w-20 h-20 bg-ink-100 rounded-full flex items-center justify-center">
-          <svg class="w-10 h-10 text-ink-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-20 h-20 bg-surface-muted rounded-full flex items-center justify-center">
+          <svg class="w-10 h-10 text-base-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
         </div>
@@ -16,23 +16,23 @@
         </div>
       </div>
 
-      <h1 class="font-display text-2xl font-bold text-ink-900 mb-3">Подтвердите email</h1>
+      <h1 class="font-display text-2xl font-bold text-base-900 mb-3">Подтвердите email</h1>
 
-      <p class="font-body text-ink-500 text-sm mb-2">
+      <p class="font-body text-base-500 text-sm mb-2">
         Мы отправили письмо с подтверждением на
       </p>
-      <p class="font-mono text-sm text-ink-900 font-medium bg-parchment-100 px-3 py-1.5 rounded-sm inline-block mb-6">
+      <p class="font-mono text-sm text-base-900 font-medium bg-surface-muted px-3 py-1.5 rounded-xl inline-block mb-6">
         {{ email || 'ваш email' }}
       </p>
 
-      <p class="font-body text-ink-400 text-xs mb-8 max-w-xs mx-auto leading-relaxed">
+      <p class="font-body text-base-400 text-xs mb-8 max-w-xs mx-auto leading-relaxed">
         Перейдите по ссылке в письме для активации аккаунта.
         Письмо может прийти в течение нескольких минут.
       </p>
 
       <!-- Resend -->
-      <div class="border-t border-ink-100 pt-6">
-        <p class="font-body text-sm text-ink-400 mb-3">Не получили письмо?</p>
+      <div class="border-t border-surface-border pt-6">
+        <p class="font-body text-sm text-base-400 mb-3">Не получили письмо?</p>
         <button
           class="btn-secondary text-sm w-full"
           :disabled="resendCooldown > 0 || resending"
@@ -60,7 +60,7 @@
     </div>
 
     <template #footer>
-      <RouterLink to="/login" class="font-body text-sm text-ink-400 hover:text-ink-700 transition-colors">
+      <RouterLink to="/login" class="font-body text-sm text-base-400 hover:text-base-700 transition-colors">
         ← Вернуться к входу
       </RouterLink>
     </template>

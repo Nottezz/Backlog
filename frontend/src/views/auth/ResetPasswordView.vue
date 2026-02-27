@@ -9,8 +9,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 class="font-display text-2xl font-bold text-ink-900 mb-3">Пароль изменён</h1>
-          <p class="font-body text-ink-500 text-sm mb-8">Теперь вы можете войти с новым паролем</p>
+          <h1 class="font-display text-2xl font-bold text-base-900 mb-3">Пароль изменён</h1>
+          <p class="font-body text-base-500 text-sm mb-8">Теперь вы можете войти с новым паролем</p>
           <RouterLink to="/login" class="btn-primary">
             Войти
           </RouterLink>
@@ -25,8 +25,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 class="font-display text-2xl font-bold text-ink-900 mb-3">Ссылка недействительна</h1>
-          <p class="font-body text-ink-500 text-sm mb-8">
+          <h1 class="font-display text-2xl font-bold text-base-900 mb-3">Ссылка недействительна</h1>
+          <p class="font-body text-base-500 text-sm mb-8">
             Ссылка устарела или была использована ранее.<br />Запросите новую.
           </p>
           <RouterLink to="/forgot-password" class="btn-primary">
@@ -38,7 +38,7 @@
       <!-- No token in URL -->
       <template v-else-if="!token">
         <div class="text-center py-4">
-          <p class="font-body text-ink-500 mb-4">Ссылка для сброса пароля не найдена</p>
+          <p class="font-body text-base-500 mb-4">Ссылка для сброса пароля не найдена</p>
           <RouterLink to="/forgot-password" class="btn-secondary text-sm">
             Запросить ссылку
           </RouterLink>
@@ -47,8 +47,8 @@
 
       <!-- Form -->
       <template v-else>
-        <h1 class="font-display text-2xl font-bold text-ink-900 mb-1">Новый пароль</h1>
-        <p class="font-body text-ink-400 text-sm mb-8">Придумайте надёжный пароль</p>
+        <h1 class="font-display text-2xl font-bold text-base-900 mb-1">Новый пароль</h1>
+        <p class="font-body text-base-400 text-sm mb-8">Придумайте надёжный пароль</p>
 
         <AlertMessage
           :show="!!errorMessage"
@@ -90,7 +90,7 @@
     </div>
 
     <template #footer>
-      <RouterLink to="/login" class="font-body text-sm text-ink-400 hover:text-ink-700 transition-colors">
+      <RouterLink to="/login" class="font-body text-sm text-base-400 hover:text-base-700 transition-colors">
         ← Вернуться к входу
       </RouterLink>
     </template>
