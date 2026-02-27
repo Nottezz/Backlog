@@ -1,4 +1,4 @@
-from typing import Annotated, List
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -63,7 +63,7 @@ async def partial_update_movie(
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await crud.partial_update_movie(db, movie_id, movie_update)
+    return await crud.partial_update_movie(db, movie_id, movie_update, user)
 
 
 @router.delete(
