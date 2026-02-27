@@ -76,6 +76,21 @@
           v-if="isOwner"
           class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
         >
+          <!-- Watch link — quick access -->
+          <a
+            v-if="movie.watchLink"
+            :href="movie.watchLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="p-1.5 text-accent hover:text-accent-700 rounded-lg transition-colors"
+            title="Смотреть фильм"
+            @click.stop
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </a>
           <RouterLink
             :to="`/movies/${movie.id}`"
             class="p-1.5 text-base-400 hover:text-base-700 rounded-lg transition-colors"
@@ -97,17 +112,35 @@
           </button>
         </div>
 
-        <!-- Non-owner: just open link -->
-        <RouterLink
+        <!-- Non-owner: watch link + open -->
+        <div
           v-else
-          :to="`/movies/${movie.id}`"
-          class="p-1.5 text-base-300 hover:text-base-600 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-          title="Открыть"
+          class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
         >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </RouterLink>
+          <a
+            v-if="movie.watchLink"
+            :href="movie.watchLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="p-1.5 text-accent hover:text-accent-700 rounded-lg transition-colors"
+            title="Смотреть фильм"
+            @click.stop
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </a>
+          <RouterLink
+            :to="`/movies/${movie.id}`"
+            class="p-1.5 text-base-300 hover:text-base-600 rounded-lg transition-colors"
+            title="Открыть"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </RouterLink>
+        </div>
       </div>
     </div>
   </div>
