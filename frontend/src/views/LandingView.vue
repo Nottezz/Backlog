@@ -36,7 +36,7 @@
             <!-- CTA -->
             <div class="flex flex-wrap gap-4 animate-fade-up" style="animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards;">
               <RouterLink to="/register" class="btn-primary text-base px-8 py-4">
-                Начать бесплатно
+                Начать пользоваться
               </RouterLink>
               <RouterLink to="/login" class="btn-secondary text-base px-8 py-4">
                 Уже есть аккаунт
@@ -47,7 +47,7 @@
 
         <!-- Decorative number -->
         <div class="absolute right-8 bottom-8 font-mono text-[10rem] font-bold text-ink-900 opacity-[0.03] leading-none select-none hidden lg:block" aria-hidden="true">
-          01
+          15
         </div>
       </section>
 
@@ -199,10 +199,6 @@ const steps = [
 ]
 
 const faq = [
-  {
-    q: 'Это бесплатно?',
-    a: 'Да, Backlog полностью бесплатен. Создайте аккаунт и начните пользоваться прямо сейчас.',
-  },
   {
     q: 'Могу ли я поделиться своим списком?',
     a: 'Да. Каждый фильм можно сделать публичным. По умолчанию список виден только вам.',
