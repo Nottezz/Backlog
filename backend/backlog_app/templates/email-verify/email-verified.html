@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  Email confirmed
+  Почта подтверждена
 {% endblock %}
 
 {% block main %}
@@ -15,7 +15,7 @@
         <tr>
           <td align="center" style="padding-bottom:30px;">
             <h1 style="margin:0;font-size:24px;font-weight:600;color:#111827;">
-              ✅ Email successfully confirmed
+              ✅ Почта успешно подтверждена
             </h1>
           </td>
         </tr>
@@ -23,15 +23,15 @@
         <!-- Greeting -->
         <tr>
           <td style="font-size:16px;line-height:1.6;padding-bottom:20px;">
-            Hello <strong>{{ user_email }}</strong>,
+            Здравствуйте!
           </td>
         </tr>
 
         <!-- Message -->
         <tr>
           <td style="font-size:16px;line-height:1.6;padding-bottom:30px;color:#4b5563;">
-            Your email address has been successfully verified.
-            Your account is now fully activated and ready to use.
+            Ваш адрес электронной почты успешно подтверждён.
+            Ваш аккаунт полностью активирован и готов к использованию.
           </td>
         </tr>
 
@@ -43,7 +43,7 @@
                       color:#ffffff;background-color:#16a34a;
                       text-decoration:none;border-radius:8px;
                       font-weight:600;">
-              Go to Login
+              Войти в аккаунт
             </a>
           </td>
         </tr>
@@ -51,7 +51,8 @@
         <!-- Footer -->
         <tr>
           <td style="font-size:13px;color:#9ca3af;text-align:center;padding-top:30px;border-top:1px solid #e5e7eb;">
-            If you did not perform this action, please contact support immediately.
+            Если вы не выполняли это действие, немедленно свяжитесь со службой поддержки:<br>
+            <a href="mailto:admin@backlog-movie.ru" style="color:#9ca3af;">admin@backlog-movie.ru</a>
           </td>
         </tr>
 
