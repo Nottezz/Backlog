@@ -10,18 +10,18 @@ async def send_verification_email(
     user_email: str,
     verification_link: str,
 ) -> None:
-    subject = "Confirm your email"
+    subject = "Подтверждение регистрации на сайте backlog-movie.ru"
 
-    plain_content = dedent(f"""\
-        Dear {user_email},
-        Please verify your email for site.com at {verification_link}.
+    plain_content = dedent(
+        f"""\
+            Здравствуйте!
+            Пожалуйста, подтвердите ваш адрес электронной почты на сайте backlog-movie.ru, перейдя по ссылке: {verification_link}
 
-        Your site admin,
-        2025
-    """)
+            Администрация backlog-movie.ru
+        """
+    )
     template = templates.get_template("email-verify/verification-request.html")
     context = {
-        "user_email": user_email,
         "verification_link": verification_link,
     }
     html_content = template.render(context)
@@ -37,17 +37,20 @@ async def send_verification_email(
 @broker.task
 async def send_email_confirmed(
     user_email: str,
+    login_link: str,
 ):
-    subject = "Email Confirmed"
+    subject = "Адрес электронной почты успешно подтверждён"
 
-    plain_content = dedent(f"""\
-    Dear {user_email},
-    Your email has been confirmed.
-    Your site admin,
-        2025""")
+    plain_content = dedent(
+        f"""\
+        Здравствуйте!
+        Ваш адрес электронной почты успешно подтверждён.
+
+        Администрация backlog-movie.ru"""
+    )
     template = templates.get_template("email-verify/email-verified.html")
     context = {
-        "user_email": user_email,
+        "login_link": login_link,
     }
     html_content = template.render(context)
 
@@ -63,16 +66,16 @@ async def send_email_confirmed(
 async def send_email_forgot_password(
     user_email: str, reset_link: str, token_lifetime: str
 ):
-    subject = "Request for change password"
-    plain_content = dedent(f"""\
-        Dear {user_email},
-        We get your request for change password.
-        Link for change:  {reset_link}
-        Your site admin,
-            2025""")
+    subject = "Запрос на сброс пароля на сайте backlog-movie.ru"
+    plain_content = dedent(
+        f"""\
+            Здравствуйте!
+            Мы получили запрос на сброс пароля. Перейдите по ссылке, чтобы задать новый пароль: {reset_link}
+
+            Администрация backlog-movie.ru"""
+    )
     template = templates.get_template("email-forgot/password-reset-request.html")
     context = {
-        "user_email": user_email,
         "reset_link": reset_link,
         "expires_in": token_lifetime,
     }
@@ -90,17 +93,16 @@ async def send_email_forgot_password(
 async def send_email_forgot_password_confirmed(
     user_email: str,
 ):
-    subject = "Password reset request confirmed"
-    plain_content = dedent(f"""\
-            Dear {user_email},
-            Your password reset request has been confirmed.
-            Your site admin,
-                2025""")
+    subject = "Пароль был успешно изменён"
+    plain_content = dedent(
+        f"""\
+            Здравствуйте!
+            Ваш пароль был успешно изменён.
+
+            Администрация backlog-movie.ru"""
+    )
     template = templates.get_template("email-forgot/password-reset-confirmed.html")
-    context = {
-        "user_email": user_email,
-    }
-    html_content = template.render(context)
+    html_content = template.render()
 
     await send_email(
         recipient=user_email,
