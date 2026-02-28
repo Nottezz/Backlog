@@ -114,7 +114,8 @@ async function handleRegister() {
   loading.value = true
   try {
     await authApi.register(form.email, form.password)
-    router.push({ name: 'email-sent', query: { email: form.email } })
+    await authApi.requestVerifyToken(form.email)
+    await router.push({ name: 'email-sent', query: { email: form.email } })
   } catch (e: unknown) {
     const err = e as { response?: { data?: { detail?: unknown } } }
     const detail = err.response?.data?.detail
