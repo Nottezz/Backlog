@@ -31,10 +31,10 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             token,
         )
 
-        origin = request.headers.get("origin") or settings.FRONTEND_URL
+        origin = request.headers.get("origin")
         logger.debug("origin url: %s", origin)
 
-        verification_link = f"{origin}/verify?token={token}"
+        verification_link = f"{origin}/email-verified?token={token}"
         await email_task.send_verification_email.kiq(
             user_email=user.email,
             verification_link=verification_link,
@@ -43,8 +43,11 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     async def on_after_verify(self, user: User, request: Optional["Request"] = None):
         logger.warning("User <%s> has been verified", user.id)
 
+        origin = request.headers.get("origin")
+        login_link = f"{origin}/login"
+
         await email_task.send_email_confirmed.kiq(
-            user_email=user.email,
+            user_email=user.email, login_link=login_link
         )
 
     async def on_after_login(
@@ -64,7 +67,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             token,
             self.reset_password_token_lifetime_seconds,
         )
-        origin = request.headers.get("origin") or settings.FRONTEND_URL
+        origin = request.headers.get("origin")
         reset_link = f"{origin}/reset-password?token={token}"
         token_lifetime = format_seconds_for_email(
             self.reset_password_token_lifetime_seconds

@@ -13,15 +13,9 @@ repos:
     hooks:
       - id: black
         files: ^backend/
-        args:
-          - --check
-          - --diff
 
   - repo: https://github.com/pycqa/isort
     rev: 7.0.0
     hooks:
       - id: isort
         files: ^backend/
-        args:
-          - --check-only
-          - --diff
