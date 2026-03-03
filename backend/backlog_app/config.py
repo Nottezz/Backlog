@@ -128,6 +128,7 @@ class Settings(BaseSettings):
     superuser: SuperUser
     smtp: SMTPConfig
     cors_origins: list[str] = ["http://localhost:5173"]
+    imdb_url: str = "https://api.imdbapi.dev"
 
 
 settings = Settings()
