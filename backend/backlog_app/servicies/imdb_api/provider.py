@@ -13,7 +13,7 @@ class IMDBProvider:
     IMDB API provider
     """
 
-    def __init__(self, base_url: str):
+    def __init__(self, base_url: str) -> None:
         self.base_url = base_url
 
     async def _request(
@@ -39,7 +39,9 @@ class IMDBProvider:
                 logger.error(
                     "IMDB API error. Status code: %s, detail: %s", status_code, e
                 )
-                raise HTTPException(status_code=status_code, detail=e) from e
+                raise HTTPException(
+                    status_code=status_code, detail="SERVER_ERROR"
+                ) from e
 
     async def get_title_id(self, title: str) -> str:
         """
