@@ -50,18 +50,18 @@ class Movie(Base):
         nullable=True,
     )
 
+    imdb_rating: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+
+    metacritic_score: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+
     watch_link: Mapped[str | None] = mapped_column(
         String(255),
-        nullable=True,
-    )
-
-    kp_id: Mapped[int] = mapped_column(
-        Integer,
-        nullable=True,
-    )
-
-    imdb_id: Mapped[int] = mapped_column(
-        Integer,
         nullable=True,
     )
 

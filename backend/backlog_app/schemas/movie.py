@@ -14,8 +14,8 @@ class MovieBase(BaseModel):
     year: int
     rating: float
     watch_link: str | None = None
-    kp_id: int | None = None
-    imdb_id: int | None = None
+    imdb_rating: float | None = None
+    metacritic_score: float | None = None
     published: bool = False
 
     model_config = ConfigDict(
