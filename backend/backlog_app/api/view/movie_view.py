@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, BackgroundTasks, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backlog_app.api import crud
@@ -10,6 +10,7 @@ from backlog_app.dependencies.authentification.fastapi_users_routers import (
 from backlog_app.models.users import User
 from backlog_app.schemas.movie import MovieCreate, MovieList, MovieRead, MovieUpdate
 from backlog_app.storages.database import get_async_session
+from backlog_app.tasks.movie_task import update_movie_rating
 
 router = APIRouter(prefix="/movies", tags=["Movies"])
 
@@ -19,8 +20,12 @@ async def add_movie(
     movie_create: MovieCreate,
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
+    background_tasks: BackgroundTasks,
 ):
-    return await crud.create_movie(db, movie_create, user=user)
+    movie = await crud.create_movie(db, movie_create, user=user)
+    background_tasks.add_task(update_movie_rating, movie, db)
+
+    return movie
 
 
 @router.get("/", response_model=MovieList)
