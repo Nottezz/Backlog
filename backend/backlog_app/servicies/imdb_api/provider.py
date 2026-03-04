@@ -43,7 +43,7 @@ class IMDBProvider:
                     status_code=status_code, detail="SERVER_ERROR"
                 ) from e
 
-    async def get_title_id(self, title: str) -> str:
+    async def get_title_id(self, title: str, year: int | None = None) -> str:
         """
         title identifier is of type str, because the imdb identifier is tt0816692
         """
@@ -56,10 +56,21 @@ class IMDBProvider:
         titles = response.get("titles")
         if not titles:
             raise HTTPException(status_code=404, detail="Title not found")
-        title_id = titles[0]["id"]
 
-        logger.debug("Title ID was found: %s", title_id)
-        return title_id
+        if year:
+            exact_year_match = [t for t in titles if t.get("startYear") == year]
+            if exact_year_match:
+                logger.debug("Found exact year match: %s", exact_year_match[0])
+                return exact_year_match[0]["id"]
+
+        def popularity_score(t):
+            rating = t.get("rating", {}).get("aggregateRating", 0)
+            votes = t.get("rating", {}).get("voteCount", 0)
+            return rating * votes
+
+        best_match = max(titles, key=popularity_score)
+        logger.debug("Best match by popularity: %s", best_match)
+        return best_match["id"]
 
     async def get_title(self, title: str) -> dict:
         title_id = await self.get_title_id(title)
