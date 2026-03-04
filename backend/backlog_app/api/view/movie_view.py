@@ -23,7 +23,7 @@ async def add_movie(
     background_tasks: BackgroundTasks,
 ):
     movie = await crud.create_movie(db, movie_create, user=user)
-    background_tasks.add_task(update_movie_rating, movie, db)
+    background_tasks.add_task(update_movie_rating, movie, db, user)
 
     return movie
 
