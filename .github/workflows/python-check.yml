@@ -68,6 +68,8 @@ jobs:
           BACKLOG__SUPERUSER__PASSWORD: admin
           BACKLOG__ACCESS_TOKEN_DB__RESET_PASSWORD_TOKEN_SECRET: secret1
           BACKLOG__ACCESS_TOKEN_DB__VERIFICATION_TOKEN_SECRET: secret2
+          BACKLOG__SMTP__SERVER: 127.0.0.1
+          BACKLOG__SMTP__PORT: 1025
 
       - name: Upload artefacts
         uses: actions/upload-artifact@v4

@@ -30,6 +30,50 @@ def test_movie_can_be_create_from_create_schema() -> None:
     assert movie_in.rating == movie.rating
 
 
+def test_movie_full_shema():
+    movie_in = MovieCreate(
+        title="Test Movie",
+        description="Test Movie Description",
+        year=2026,
+        watch_link="https://abc.example.com",
+        rating=6.7,
+        imdb_rating=0.0,
+        metacritic_score=100,
+    )
+    user = UserRead(id=uuid4(), email="test@example.com")
+    movie = MovieRead(
+        **movie_in.model_dump(),
+        id=0,
+        watched=False,
+        created_at=datetime.now(),
+        user=user,
+    )
+
+    assert movie_in.title == movie.title
+    assert movie_in.description == movie.description
+    assert movie_in.watch_link == movie.watch_link
+    assert movie_in.rating == movie.rating
+
+
+def test_movie_read_fields_contract():
+    expected_fields = {
+        "id",
+        "title",
+        "description",
+        "year",
+        "watch_link",
+        "rating",
+        "imdb_rating",
+        "metacritic_score",
+        "watched",
+        "created_at",
+        "user",
+        "published",
+    }
+
+    assert set(MovieRead.model_fields.keys()) == expected_fields
+
+
 @pytest.mark.parametrize(
     ("title", "description", "should_raise"),
     [
@@ -77,8 +121,6 @@ def test_movie_update_from_update_schema() -> None:
         watch_link="https://example.com",
         watched=True,
         created_at=datetime.now(),
-        imdb_id=1234,
-        kp_id=5678,
         year=2020,
         rating=2.8,
     )
