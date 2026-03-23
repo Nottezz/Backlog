@@ -33,4 +33,5 @@ class AIClient:
         )
 
         response.raise_for_status()
-        return response.json()["choices"][0]["message"]["content"]
+        data = await response.json()
+        return data["choices"][0]["message"]["content"]
