@@ -58,6 +58,12 @@
                   :class="{ 'error': errors.description }"
                 />
                 <p v-if="errors.description" class="text-sm text-accent font-body">{{ errors.description }}</p>
+                <p v-else class="flex items-center gap-1.5 text-xs font-body text-base-400">
+                  <svg class="w-3.5 h-3.5 shrink-0 text-base-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Если не заполнить и указан год — описание добавится автоматически
+                </p>
               </div>
 
               <BaseInput
