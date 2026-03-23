@@ -10,8 +10,8 @@ async def test_translate_success():
     client = AIClient(model="gpt-test")
 
     mock_response = AsyncMock()
-    mock_response.raise_for_status = AsyncMock()
-    mock_response.json = AsyncMock(
+    mock_response.raise_for_status = Mock()
+    mock_response.json = Mock(
         return_value={"choices": [{"message": {"content": "Привет мир"}}]}
     )
 
