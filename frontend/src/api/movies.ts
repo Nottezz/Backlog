@@ -25,6 +25,8 @@ export interface MovieRead {
   watchLink: string | null
   kpId: number | null
   imdbId: number | null
+  imdbRating: number | null
+  metacriticScore: number | null
   published: boolean
   user: UserRead
   watched: boolean
