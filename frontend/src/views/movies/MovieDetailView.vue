@@ -50,13 +50,37 @@
           </h1>
 
           <!-- Rating -->
-          <div v-if="movie.rating" class="flex items-center gap-2 mb-6">
+          <div v-if="movie.rating" class="flex items-center gap-2 mb-4">
             <div class="flex">
               <span v-for="n in 10" :key="n"
                 :class="n <= movie.rating ? 'text-amber-400' : 'text-base-200'"
               >★</span>
             </div>
             <span class="font-mono text-sm text-base-600 font-medium">{{ movie.rating }} / 10</span>
+          </div>
+
+          <!-- External ratings -->
+          <div v-if="movie.imdbRating || movie.metacriticScore" class="flex flex-wrap items-center gap-2 mb-6">
+            <span
+              v-if="movie.imdbRating"
+              class="inline-flex items-baseline gap-1.5 font-mono rounded-md"
+              style="background: #fef3c7; color: #92400e; font-size: 12px; padding: 3px 8px;"
+              title="IMDb рейтинг"
+            >
+              <span>IMDb</span>
+              <span style="font-size: 17px; line-height: 1;">{{ movie.imdbRating }}</span>
+              <span style="color: #666;">/10</span>
+            </span>
+            <span
+              v-if="movie.metacriticScore"
+              :style="metacriticBadgeStyle(movie.metacriticScore)"
+              class="inline-flex items-baseline gap-1.5 font-mono rounded-md"
+              style="font-size: 12px; padding: 3px 8px;"
+              title="Metascore"
+            >
+              <span>Metascore</span>
+              <span style="font-size: 17px; line-height: 1;">{{ movie.metacriticScore }}</span>
+            </span>
           </div>
 
           <!-- Description -->
@@ -251,6 +275,12 @@ async function handleDelete() {
       ? 'Вы не можете удалять чужие записи'
       : 'Не удалось удалить фильм')
   }
+}
+
+function metacriticBadgeStyle(score: number) {
+  const bg = score >= 61 ? '#dcfce7' : score >= 40 ? '#fef9c3' : '#fee2e2'
+  const color = score >= 61 ? '#166534' : score >= 40 ? '#854d0e' : '#991b1b'
+  return `background: ${bg}; color: ${color};`
 }
 
 function formatDate(iso: string) {

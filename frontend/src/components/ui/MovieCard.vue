@@ -46,7 +46,7 @@
         </p>
 
         <!-- Rating -->
-        <div v-if="movie.rating" class="flex items-center gap-1.5 mb-4">
+        <div v-if="movie.rating" class="flex items-center gap-1.5 mb-3">
           <div class="flex">
             <span
               v-for="n in 5" :key="n"
@@ -55,6 +55,23 @@
             >★</span>
           </div>
           <span class="font-mono text-xs text-base-400">{{ movie.rating }}/10</span>
+        </div>
+
+        <!-- External ratings -->
+        <div v-if="movie.imdbRating || movie.metacriticScore" class="flex items-center gap-1.5 mb-4 flex-wrap">
+          <span
+            v-if="movie.imdbRating"
+            class="inline-flex items-center gap-1 font-mono rounded"
+            style="background: #fef3c7; color: #92400e; font-size: 11px; padding: 2px 5px;"
+            title="IMDb рейтинг"
+          >IMDb {{ movie.imdbRating }}</span>
+          <span
+            v-if="movie.metacriticScore"
+            :style="metacriticBadgeStyle(movie.metacriticScore)"
+            class="inline-flex items-center font-mono rounded"
+            style="font-size: 11px; padding: 2px 5px;"
+            title="Metascore"
+          >Metascore {{ movie.metacriticScore }}</span>
         </div>
       </RouterLink>
 
@@ -173,6 +190,12 @@ function handleToggleWatched() {
     return
   }
   emit('toggle-watched', props.movie)
+}
+
+function metacriticBadgeStyle(score: number) {
+  const bg = score >= 61 ? '#dcfce7' : score >= 40 ? '#fef9c3' : '#fee2e2'
+  const color = score >= 61 ? '#166534' : score >= 40 ? '#854d0e' : '#991b1b'
+  return `background: ${bg}; color: ${color};`
 }
 
 function formatDate(iso: string) {

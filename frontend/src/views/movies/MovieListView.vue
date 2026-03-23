@@ -37,7 +37,7 @@
         </button>
 
         <div class="ml-auto">
-            <BaseToggle v-model="onlyMine" label="Только мои" @update:modelValue="loadMovies" />
+            <BaseToggle v-model="onlyMine" label="Только мои" @update:modelValue="toggleOnlyMine" />
           </div>
       </div>
 
@@ -133,7 +133,8 @@ const showAddModal = ref(false)
 const editingMovie = ref<MovieRead | null>(null)
 const deletingMovie = ref<MovieRead | null>(null)
 const activeFilter = ref<'all' | 'watched' | 'pending'>('all')
-const onlyMine = ref(false)
+const ONLY_MINE_KEY = 'movies:onlyMine'
+const onlyMine = ref(sessionStorage.getItem(ONLY_MINE_KEY) === 'true')
 
 const watchedCount = computed(() => store.movies.filter((m) => m.watched).length)
 const pendingCount = computed(() => store.movies.filter((m) => !m.watched).length)
@@ -156,6 +157,11 @@ function setFilter(key: typeof activeFilter.value) {
 
 async function loadMovies() {
   await store.fetchMovies(onlyMine.value)
+}
+
+function toggleOnlyMine(value: boolean) {
+  sessionStorage.setItem(ONLY_MINE_KEY, String(value))
+  loadMovies()
 }
 
 onMounted(loadMovies)

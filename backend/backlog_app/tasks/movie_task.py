@@ -29,7 +29,7 @@ async def update_movie_rating(movie: MovieRead, db: AsyncSession, user: User):
             movie_db.title, movie_db.year
         )
     except Exception as e:
-        logger.error("Failed to fetch rating for movie <%s>: %s", movie.id, e)
+        logger.exception("Failed to fetch rating for movie <%s>: %s", movie.id, e)
         return
 
     await partial_update_movie(
@@ -67,13 +67,15 @@ async def update_movie_description(
             movie_db.title, movie_db.year
         )
     except Exception as e:
-        logger.error("Failed to fetch description for movie <%s>: %s", movie.id, e)
+        logger.exception("Failed to fetch description for movie <%s>: %s", movie.id, e)
         return
 
     try:
         ru_description = await translator.translate(en_description)
     except Exception as e:
-        logger.error("Failed to translate description for movie <%s>: %s", movie.id, e)
+        logger.exception(
+            "Failed to translate description for movie <%s>: %s", movie.id, e
+        )
         return
 
     await partial_update_movie(
