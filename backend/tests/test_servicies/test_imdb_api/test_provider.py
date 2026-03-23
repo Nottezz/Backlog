@@ -35,7 +35,7 @@ async def test_get_title_success(monkeypatch):
 
     result = await imdb.get_title("Interstellar", 2014)
 
-    mock_get_id.assert_awaited_once_with("Interstellar")
+    mock_get_id.assert_awaited_once_with("Interstellar", 2014)
     mock_request.assert_awaited_once_with(
         HTTPMethod.GET,
         endpoint="titles/tt0816692",
@@ -58,7 +58,7 @@ async def test_get_title_rating_success(monkeypatch):
 
     imdb_rating, metacritic_score = await imdb.get_title_rating("Interstellar", 2014)
 
-    mock_get_title.assert_awaited_once_with("Interstellar")
+    mock_get_title.assert_awaited_once_with("Interstellar", 2014)
     assert imdb_rating == 8.6
     assert metacritic_score == 74
 
