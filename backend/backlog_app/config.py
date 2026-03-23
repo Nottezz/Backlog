@@ -75,6 +75,14 @@ class TaskiqConfig(BaseModel):
         return f"amqp://{self.rbmq_username}:{self.rbmq_password}@{self.rbmq_host}:{self.rbmq_port}//"
 
 
+class AIAgentConfig(BaseModel):
+    base_url: str
+    access_id: str
+    token: str
+    model: str = "DeepSeek v3.2"
+    timeout: int = 10
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
@@ -127,6 +135,7 @@ class Settings(BaseSettings):
     access_token_db: AccessToken
     superuser: SuperUser
     smtp: SMTPConfig
+    ai_agent: AIAgentConfig
     cors_origins: list[str] = ["http://localhost:5173"]
     imdb_url: str = "https://api.imdbapi.dev"
 

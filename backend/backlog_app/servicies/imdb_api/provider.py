@@ -43,11 +43,11 @@ class IMDBProvider:
                     status_code=status_code, detail="SERVER_ERROR"
                 ) from e
 
-    async def get_title_id(self, title: str, year: int | None = None) -> str:
+    async def get_title_id(self, title: str, year: int) -> str:
         """
         title identifier is of type str, because the imdb identifier is tt0816692
         """
-        params = {"query": title, "limit": 2}
+        params = {"query": title, "limit": 10}
         response = await self._request(
             HTTPMethod.GET,
             endpoint="search/titles",
@@ -57,11 +57,12 @@ class IMDBProvider:
         if not titles:
             raise HTTPException(status_code=404, detail="Title not found")
 
+        logger.debug("TITLE YEAR: %s", year)
         if year:
-            exact_year_match = [t for t in titles if t.get("startYear") == year]
-            if exact_year_match:
-                logger.debug("Found exact year match: %s", exact_year_match[0])
-                return exact_year_match[0]["id"]
+            for t in titles:
+                if t.get("startYear") == year:
+                    logger.debug("Found match by year: %s", t)
+                    return t["id"]
 
         def popularity_score(t):
             rating = t.get("rating", {}).get("aggregateRating", 0)
@@ -69,15 +70,17 @@ class IMDBProvider:
             return rating * votes
 
         best_match = max(titles, key=popularity_score)
-        logger.debug("Best match by popularity: %s", best_match)
+        logger.warning(
+            "No title found for year %s, using most popular match: %s", year, best_match
+        )
         return best_match["id"]
 
-    async def get_title(self, title: str) -> dict:
-        title_id = await self.get_title_id(title)
+    async def get_title(self, title: str, year: int) -> dict:
+        title_id = await self.get_title_id(title, year)
         return await self._request(HTTPMethod.GET, endpoint=f"titles/{title_id}")
 
-    async def get_title_rating(self, title: str) -> tuple[float, float]:
-        title_data = await self.get_title(title)
+    async def get_title_rating(self, title: str, year: int) -> tuple[float, float]:
+        title_data = await self.get_title(title, year)
 
         rating = title_data.get("rating", {})
         metacritic_rating = title_data.get("metacritic", {})
@@ -86,3 +89,13 @@ class IMDBProvider:
         logger.debug("Title Rating: %s, %s", rating, metacritic_rating)
 
         return rating.get("aggregateRating"), metacritic_rating.get("score")
+
+    async def get_title_description(self, title: str, year: int) -> str:
+        title_data = await self.get_title(title, year)
+
+        description = title_data.get("plot")
+
+        logger.debug("Found title info: %s", title_data)
+        logger.debug("Title Description: %s", description)
+
+        return description

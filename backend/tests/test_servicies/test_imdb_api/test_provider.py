@@ -33,9 +33,9 @@ async def test_get_title_success(monkeypatch):
     monkeypatch.setattr(imdb, "get_title_id", mock_get_id)
     monkeypatch.setattr(imdb, "_request", mock_request)
 
-    result = await imdb.get_title("Interstellar")
+    result = await imdb.get_title("Interstellar", 2014)
 
-    mock_get_id.assert_awaited_once_with("Interstellar")
+    mock_get_id.assert_awaited_once_with("Interstellar", 2014)
     mock_request.assert_awaited_once_with(
         HTTPMethod.GET,
         endpoint="titles/tt0816692",
@@ -56,9 +56,9 @@ async def test_get_title_rating_success(monkeypatch):
     mock_get_title = AsyncMock(return_value=mock_title_data)
     monkeypatch.setattr(imdb, "get_title", mock_get_title)
 
-    imdb_rating, metacritic_score = await imdb.get_title_rating("Interstellar")
+    imdb_rating, metacritic_score = await imdb.get_title_rating("Interstellar", 2014)
 
-    mock_get_title.assert_awaited_once_with("Interstellar")
+    mock_get_title.assert_awaited_once_with("Interstellar", 2014)
     assert imdb_rating == 8.6
     assert metacritic_score == 74
 
@@ -75,7 +75,7 @@ async def test_get_title_rating_without_metacritic(monkeypatch):
         AsyncMock(return_value=mock_title_data),
     )
 
-    imdb_rating, metacritic_score = await imdb.get_title_rating("Cars")
+    imdb_rating, metacritic_score = await imdb.get_title_rating("Cars", 2006)
 
     assert imdb_rating == 7.1
     assert metacritic_score is None
@@ -91,7 +91,7 @@ async def test_get_title_rating_empty_data(monkeypatch):
         AsyncMock(return_value={}),
     )
 
-    imdb_rating, metacritic_score = await imdb.get_title_rating("Unknown")
+    imdb_rating, metacritic_score = await imdb.get_title_rating("Unknown", 0000)
 
     assert imdb_rating is None
     assert metacritic_score is None
