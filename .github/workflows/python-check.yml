@@ -100,4 +100,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml
+          config: backend/codecov.yaml
           fail_ci_if_error: 'true'
