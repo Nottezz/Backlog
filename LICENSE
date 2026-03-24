@@ -1,0 +1,46 @@
+Copyright (c) 2026 Nottezz
+
+All rights reserved.
+
+1. Grant of Rights
+
+You are permitted to:
+- View the source code of this repository
+- Fork the repository
+- Run the software strictly for local development and testing purposes
+- Modify the code for the purpose of contributing to this repository
+- Submit pull requests and contributions
+
+2. Restrictions
+
+You are NOT permitted to:
+- Use the software for any personal, commercial, or production purposes
+- Deploy the software in any environment accessible to others
+- Provide the software as a service (including SaaS, API, or bot usage)
+- Distribute the software or any modified versions
+- Sublicense, sell, rent, or otherwise commercialize the software
+
+3. Definition of Allowed Use
+
+"Local development and testing" means:
+- Running the software on your own machine or isolated environment
+- Solely for the purpose of reviewing, modifying, or contributing to the codebase
+- Not for any real-world usage or benefit beyond development
+
+4. Contributions
+
+By submitting any contribution (including pull requests, patches, or suggestions),
+you agree that:
+- Your contributions become the property of the repository owner
+- The repository owner may use, modify, relicense, or distribute your contributions without restriction
+- Your contributions are provided under the same license as this project
+
+5. No Warranty
+
+This software is provided "as is", without warranty of any kind, express or implied.
+
+6. Contact
+
+For permission requests (including commercial use or deployment),
+please contact:
+https://github.com/Nottezz
