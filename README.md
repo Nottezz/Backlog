@@ -19,6 +19,8 @@ Backlog — сервис «списка хотелок» (backlog) для фил
 
 ## Технологии
 
+[![codecov](https://codecov.io/github/Nottezz/Backlog/graph/badge.svg?token=ENNVXKFH27)](https://codecov.io/github/Nottezz/Backlog)
+
 ### Backend
 
 - Python 3.13+
