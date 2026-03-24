@@ -76,13 +76,11 @@ jobs:
           BACKLOG__AI_AGENT__ACCESS_ID: 1234
           BACKLOG__AI_AGENT__TOKEN: secret3
 
-      - name: Upload artefacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
-        working-directory: backend
         with:
           name: coverage-reports
-          path: |
-            coverage.xml
+          path: backend/coverage.xml
           retention-days: 1
 
   upload-report-to-codcov:
