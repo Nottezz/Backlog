@@ -1,6 +1,7 @@
+import random as stdlib_random
 from typing import Annotated
 
-from fastapi import APIRouter, BackgroundTasks, Depends, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backlog_app.api import crud
@@ -38,6 +39,24 @@ async def get_movie_list(
     user_id = user.id if only_mine else None
     movies = await crud.get_movies(db, user_id=user_id)
     return movies
+
+
+@router.get("/random", response_model=MovieRead)
+async def get_random_movie(
+    db: Annotated[AsyncSession, Depends(get_async_session)],
+    user: Annotated[User, Depends(current_active_user)],
+    exclude_ids: list[int] = Query(default=[]),
+):
+    pool = await crud.get_random_movie_pool(db, user.id, exclude_ids)
+
+    if not pool:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No unwatched movies available",
+        )
+
+    chosen = stdlib_random.choice(pool)
+    return chosen
 
 
 @router.get("/{movie_id}", response_model=MovieRead)

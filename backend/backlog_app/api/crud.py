@@ -2,6 +2,7 @@ import logging
 from uuid import UUID
 
 from fastapi import HTTPException
+from sqlalchemy import or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
@@ -40,6 +41,36 @@ async def get_movies(db: AsyncSession, user_id: str | None = None) -> MovieList:
     logger.debug("Size of movies list: %s", len(movies))
 
     return MovieList.model_validate({"movies": movies})
+
+
+async def get_random_movie_pool(
+    db: AsyncSession,
+    user_id: UUID,
+    exclude_ids: list[int] | None = None,
+) -> list[Movie]:
+    if exclude_ids is None:
+        exclude_ids = []
+
+    query = (
+        select(Movie)
+        .options(selectinload(Movie.user))
+        .where(
+            or_(Movie.published.is_(True), Movie.user_id == user_id),
+            Movie.watched.is_(False),
+        )
+    )
+
+    if exclude_ids:
+        query = query.where(Movie.id.notin_(exclude_ids))
+
+    result = await db.execute(query)
+    pool = result.scalars().all()
+
+    logger.debug(
+        "Random movie pool size: %s (excluded: %s)", len(pool), len(exclude_ids)
+    )
+
+    return list(pool)
 
 
 async def get_movie_by_id(
