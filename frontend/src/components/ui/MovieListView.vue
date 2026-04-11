@@ -9,12 +9,21 @@
           <p class="font-mono text-xs tracking-widest text-base-400 uppercase mb-2">Коллекция</p>
           <h1 class="font-display text-3xl font-bold text-base-900">Мои фильмы</h1>
         </div>
-        <button @click="showAddModal = true" class="btn-primary shrink-0">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          Добавить фильм
-        </button>
+
+        <div class="flex items-center gap-3 shrink-0">
+          <!-- Roulette button -->
+          <button @click="roulette.open()" class="btn-secondary">
+            <span class="text-base leading-none">🎲</span>
+            Не знаю что смотреть
+          </button>
+
+          <button @click="showAddModal = true" class="btn-primary">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Добавить фильм
+          </button>
+        </div>
       </div>
 
       <!-- Filters -->
@@ -37,8 +46,8 @@
         </button>
 
         <div class="ml-auto">
-            <BaseToggle v-model="onlyMine" label="Только мои" @update:modelValue="toggleOnlyMine" />
-          </div>
+          <BaseToggle v-model="onlyMine" label="Только мои" @update:modelValue="toggleOnlyMine" />
+        </div>
       </div>
 
       <!-- Stats bar -->
@@ -95,6 +104,18 @@
       @submit="handleMovieSubmit"
     />
 
+    <!-- Movie Roulette Modal -->
+    <MovieRoulette
+      :show="roulette.isOpen.value"
+      :movie="roulette.pickedMovie.value"
+      :loading="roulette.loading.value"
+      :exhausted="roulette.exhausted.value"
+      :rejected-count="roulette.excludedIds.value.length"
+      @close="roulette.close()"
+      @reject="roulette.reject()"
+      @restart="roulette.restart()"
+    />
+
     <!-- Delete confirm -->
     <Teleport to="body">
       <Transition name="modal">
@@ -118,17 +139,21 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useMoviesStore } from '@/stores/movies'
-import type { MovieRead } from '@/api/movies'
+import { useMoviesStore } from '@/stores/movies.ts'
+import type { MovieRead } from '@/api/movies.ts'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import MovieCard from '@/components/ui/MovieCard.vue'
 import AddMovieModal from '@/components/ui/AddMovieModal.vue'
 import AlertMessage from '@/components/ui/AlertMessage.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
-import { useToast } from '@/composables/useToast'
+import MovieRoulette from '@/components/ui/MovieRoulette.vue'
+import { useToast } from '@/composables/useToast.ts'
+import { useMovieRoulette } from '@/composables/useMovieRoulette'
 
 const store = useMoviesStore()
 const toast = useToast()
+const roulette = useMovieRoulette()
+
 const showAddModal = ref(false)
 const editingMovie = ref<MovieRead | null>(null)
 const deletingMovie = ref<MovieRead | null>(null)

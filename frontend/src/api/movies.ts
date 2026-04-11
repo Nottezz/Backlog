@@ -52,6 +52,13 @@ export const moviesApi = {
     return data
   },
 
+  async getRandom(excludeIds: number[] = []): Promise<MovieRead> {
+    const params = new URLSearchParams()
+    excludeIds.forEach((id) => params.append('exclude_ids', String(id)))
+    const { data } = await api.get<MovieRead>('/movies/random', { params })
+    return data
+  },
+
   async create(movie: MovieCreate): Promise<MovieRead> {
     const { data } = await api.post<MovieRead>('/movies/', movie)
     return data
