@@ -49,7 +49,7 @@ const router = createRouter({
     {
       path: '/movies',
       name: 'movies',
-      component: () => import('@/views/movies/MovieListView.vue'),
+      component: () => import('@/components/ui/MovieListView.vue'),
       meta: { requiresAuth: true },
     },
     {
