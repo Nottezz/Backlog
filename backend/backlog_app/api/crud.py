@@ -1,6 +1,7 @@
 import logging
 from uuid import UUID
 
+from _helpers.slug_helper import generate_unique_slug
 from fastapi import HTTPException
 from sqlalchemy import or_
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,7 +18,8 @@ logger = logging.getLogger(__name__)
 async def create_movie(
     db: AsyncSession, movie_in: MovieCreate, user: User
 ) -> MovieRead:
-    movie = Movie(**movie_in.model_dump(), user_id=user.id)
+    slug = await generate_unique_slug(db=db, title=movie_in.title)
+    movie = Movie(**movie_in.model_dump(), slug=slug, user_id=user.id)
     db.add(movie)
     await db.commit()
     await db.refresh(movie)
@@ -73,10 +75,10 @@ async def get_random_movie_pool(
     return list(pool)
 
 
-async def get_movie_by_id(
-    db: AsyncSession, movie_id: int, user_id: UUID | None = None
+async def get_movie_by_slug(
+    db: AsyncSession, slug: str, user_id: UUID | None = None
 ) -> MovieRead | None:
-    query = select(Movie).options(selectinload(Movie.user)).where(Movie.id == movie_id)
+    query = select(Movie).options(selectinload(Movie.user)).where(Movie.slug == slug)
 
     if user_id is not None:
         query = query.where(Movie.user_id == user_id)
@@ -94,12 +96,12 @@ async def get_movie_by_id(
 
 async def update_movie(
     db: AsyncSession,
-    movie_id: int,
+    slug: str,
     movie_in: MovieUpdate,
     user: User,
 ) -> MovieRead:
     result = await db.execute(
-        select(Movie).options(selectinload(Movie.user)).where(Movie.id == movie_id)
+        select(Movie).options(selectinload(Movie.user)).where(Movie.slug == slug)
     )
     movie = result.scalars().first()
 
@@ -121,11 +123,11 @@ async def update_movie(
 
 async def partial_update_movie(
     db: AsyncSession,
-    movie_id: int,
+    slug: str,
     movie_in: MovieUpdate,
     user: User,
 ) -> Movie | None:
-    result = await db.execute(select(Movie).where(Movie.id == movie_id))
+    result = await db.execute(select(Movie).where(Movie.slug == slug))
     movie = result.scalars().first()
     if not movie:
         raise HTTPException(status_code=404)
@@ -142,10 +144,10 @@ async def partial_update_movie(
 
 async def delete_movie(
     db: AsyncSession,
-    movie_id: int,
+    slug: str,
     user: User,
 ) -> MovieRead:
-    result = await db.execute(select(Movie).where(Movie.id == movie_id))
+    result = await db.execute(select(Movie).where(Movie.slug == slug))
     movie = result.scalars().first()
     if not movie:
         raise HTTPException(status_code=404)
@@ -155,7 +157,7 @@ async def delete_movie(
     await db.delete(movie)
     await db.commit()
 
-    logger.info("Movie <%s> has been deleted.", movie_id)
+    logger.info("Movie <%s> has been deleted.", slug)
 
     return MovieRead.model_validate(movie)
 
