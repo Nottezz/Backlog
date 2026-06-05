@@ -29,7 +29,7 @@
 
     <!-- Main content -->
     <div class="p-5 flex-1 flex flex-col">
-      <RouterLink :to="`/movies/${movie.id}`" class="flex-1">
+      <RouterLink :to="`/movies/${movie.id}`" class="flex-1 flex flex-col">
         <!-- Title + year -->
         <div class="flex items-start justify-between gap-3 mb-2">
           <h3 class="font-display font-bold text-base-900 group-hover:text-accent transition-colors leading-tight">
@@ -41,9 +41,17 @@
         </div>
 
         <!-- Description -->
-        <p v-if="movie.description" class="font-body text-xs text-base-400 leading-relaxed line-clamp-3 mb-4">
+        <p v-if="movie.description" class="font-body text-xs text-base-400 leading-relaxed line-clamp-3 mb-2">
           {{ movie.description }}
         </p>
+
+        <!-- Note -->
+        <div v-if="movie.note" class="flex items-center gap-1.5 mb-3">
+          <svg class="w-3 h-3 shrink-0 text-base-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h6m-6 4h10M5 4h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" />
+          </svg>
+          <span class="font-body text-xs text-base-400 italic truncate">{{ movie.note }}</span>
+        </div>
 
         <!-- Rating -->
         <div v-if="movie.rating" class="flex items-center gap-1.5 mb-3">
