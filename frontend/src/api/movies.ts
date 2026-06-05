@@ -4,6 +4,7 @@ import type { UserRead } from './auth'
 export interface MovieCreate {
   title: string
   description?: string | null
+  note?: string | null
   year?: number | null
   rating?: number | null
   watchLink?: string | null
@@ -20,6 +21,7 @@ export interface MovieRead {
   id: number
   title: string
   description: string | null
+  note: string | null
   year: number | null
   rating: number | null
   watchLink: string | null

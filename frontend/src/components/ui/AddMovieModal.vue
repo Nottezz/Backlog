@@ -72,6 +72,23 @@
                 placeholder="https://..."
               />
 
+              <div class="flex flex-col gap-1.5">
+                <label class="font-body text-sm font-medium text-base-700">
+                  Заметка
+                </label>
+                <input
+                  v-model="form.note"
+                  type="text"
+                  placeholder="Короткая пометка: «пересмотреть», «с женой» и т.д."
+                  maxlength="50"
+                  class="input-field"
+                  :class="{ 'error': errors.note }"
+                />
+                <div class="flex items-center justify-between">
+                  <p v-if="errors.note" class="text-sm text-accent font-body">{{ errors.note }}</p>
+                </div>
+              </div>
+
               <div class="flex items-center gap-3">
                 <BaseToggle v-model="form.published" label="Сделать публичным" />
               </div>
@@ -123,6 +140,7 @@ const emit = defineEmits<{
   submit: [data: {
     title: string
     description: string | null
+    note: string | null
     year: number | null
     rating: number | null
     watchLink: string | null
@@ -136,19 +154,21 @@ const loading = ref(false)
 const form = reactive({
   title: '',
   description: '',
+  note: '',
   watchLink: '',
   published: false,
   watched: false,
 })
 const yearStr = ref('')
 const ratingStr = ref('')
-const errors = reactive({ title: '', description: '', year: '', rating: '' })
+const errors = reactive({ title: '', description: '', note: '', year: '', rating: '' })
 
 // Populate form when editing
 watch(() => props.editMovie, (movie) => {
   if (movie) {
     form.title = movie.title
     form.description = movie.description || ''
+    form.note = movie.note || ''
     form.watchLink = movie.watchLink || ''
     form.published = movie.published
     form.watched = movie.watched
@@ -162,12 +182,13 @@ watch(() => props.editMovie, (movie) => {
 function resetForm() {
   form.title = ''
   form.description = ''
+  form.note = ''
   form.watchLink = ''
   form.published = false
   form.watched = false
   yearStr.value = ''
   ratingStr.value = ''
-  Object.assign(errors, { title: '', description: '', year: '', rating: '' })
+  Object.assign(errors, { title: '', description: '', note: '', year: '', rating: '' })
 }
 
 function validate(): boolean {
@@ -197,6 +218,16 @@ function validate(): boolean {
     }
   }
 
+  if (form.note && form.note.length > 0 && form.note.length < 2) {
+    errors.note = 'Заметка должна содержать не менее 2 символов'
+    valid = false
+  }
+
+  if (form.note && form.note.length > 50) {
+    errors.note = 'Заметка не может быть длиннее 50 символов'
+    valid = false
+  }
+
   return valid
 }
 
@@ -207,6 +238,7 @@ async function handleSubmit() {
     emit('submit', {
       title: form.title,
       description: form.description || null,
+      note: form.note || null,
       year: yearStr.value ? Number(yearStr.value) : null,
       rating: ratingStr.value ? Number(ratingStr.value) : null,
       watchLink: form.watchLink || null,

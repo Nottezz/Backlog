@@ -11,6 +11,7 @@ from .user import UserRead
 class MovieBase(BaseModel):
     title: Annotated[str, Len(min_length=3, max_length=255)]
     description: Annotated[str, Len(min_length=20, max_length=1000)]
+    note: Annotated[str, Len(min_length=2, max_length=50)]
     year: int
     rating: float
     watch_link: str | None = None
@@ -27,6 +28,7 @@ class MovieBase(BaseModel):
 
 class MovieCreate(MovieBase):
     description: Annotated[str, Len(min_length=20, max_length=1000)] | None = None
+    note: Annotated[str, Len(min_length=2, max_length=50)] | None = None
     year: int | None = None
     rating: float | None = Field(default=None, ge=1.0, le=10.0)
 
@@ -34,6 +36,7 @@ class MovieCreate(MovieBase):
 class MovieUpdate(MovieBase):
     title: Annotated[str, Len(min_length=3, max_length=255)] | None = None
     description: Annotated[str, Len(min_length=20, max_length=1000)] | None = None
+    note: Annotated[str, Len(min_length=2, max_length=50)] | None = None
     year: int | None = None
     watched: bool | None = None
     rating: float | None = Field(default=None, ge=1.0, le=10.0)
@@ -43,6 +46,7 @@ class MovieRead(MovieBase):
     id: int
     user: UserRead
     description: Annotated[str, Len(min_length=20, max_length=1000)] | None
+    note: Annotated[str, Len(min_length=2, max_length=50)] | None = None
     year: int | None
     watched: bool
     rating: float | None

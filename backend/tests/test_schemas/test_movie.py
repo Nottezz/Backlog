@@ -60,6 +60,7 @@ def test_movie_read_fields_contract():
         "id",
         "title",
         "description",
+        "note",
         "year",
         "watch_link",
         "rating",

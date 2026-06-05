@@ -87,6 +87,14 @@
           <p v-if="movie.description" class="font-body text-base-600 leading-relaxed text-lg">
             {{ movie.description }}
           </p>
+
+          <!-- Note -->
+          <div v-if="movie.note" class="flex items-start gap-2 mt-4 px-4 py-3 rounded-xl bg-surface-muted border border-surface-border">
+            <svg class="w-4 h-4 shrink-0 text-base-300 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h6m-6 4h10M5 4h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" />
+            </svg>
+            <span class="font-body text-sm text-base-500 italic">{{ movie.note }}</span>
+          </div>
         </div>
 
         <!-- Meta info -->
