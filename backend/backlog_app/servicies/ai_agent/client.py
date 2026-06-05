@@ -1,4 +1,4 @@
-import httpx
+from openai import OpenAI
 
 from backlog_app.config import settings
 
@@ -6,12 +6,18 @@ from backlog_app.config import settings
 class AIClient:
     def __init__(self, model: str):
         self.model = model
-        self.client = httpx.AsyncClient(timeout=settings.ai_agent.timeout)
+        self.client = OpenAI(
+            base_url=settings.ai_agent.base_url, api_key=settings.ai_agent.token
+        )
 
     async def translate(self, text: str) -> str:
-        payload = {
-            "model": self.model,
-            "messages": [
+        response = self.client.chat.completions.create(
+            model=self.model,
+            max_tokens=2500,
+            temperature=0.5,
+            presence_penalty=0,
+            top_p=0.95,
+            messages=[
                 {
                     "role": "system",
                     "content": (
@@ -26,17 +32,6 @@ class AIClient:
                     "content": f"{text}",
                 },
             ],
-            "temperature": 0.0,
-        }
-
-        response = await self.client.post(
-            f"{settings.ai_agent.base_url}/api/v1/cloud-ai/agents/{settings.ai_agent.access_id}/v1/chat/completions",
-            json=payload,
-            headers={
-                "Authorization": f"Bearer {settings.ai_agent.token}",
-            },
         )
 
-        response.raise_for_status()
-        data = response.json()
-        return data["choices"][0]["message"]["content"]
+        return response.choices[0].message.content
