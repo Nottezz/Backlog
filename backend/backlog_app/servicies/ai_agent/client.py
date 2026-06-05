@@ -13,15 +13,20 @@ class AIClient:
             "model": self.model,
             "messages": [
                 {
-                    "role": "user",
+                    "role": "system",
                     "content": (
-                        "Translate the following text from English into Russian, "
-                        "preserve the meaning and naturalness of the language:\n\n"
-                        f"{text}"
+                        "You are a translation engine. "
+                        "Return ONLY the translated text in Russian. "
+                        "Do NOT add explanations, comments, notes, or formatting. "
+                        "Output must contain only the translation."
                     ),
-                }
+                },
+                {
+                    "role": "user",
+                    "content": f"{text}",
+                },
             ],
-            "temperature": 0.3,
+            "temperature": 0.0,
         }
 
         response = await self.client.post(
