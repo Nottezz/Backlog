@@ -17,6 +17,16 @@ class Movie(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
+    # todo: подумать на тему составного уникального индекса
+    # если фильмы принадлежат разным пользователям, то глобальный unique=True может оказаться лишним.
+    slug: Mapped[str | None] = mapped_column(
+        String(255),
+        unique=True,
+        nullable=False,
+        default="",
+        index=True,
+    )
+
     title: Mapped[str] = mapped_column(
         String(255),
         nullable=False,
