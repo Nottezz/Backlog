@@ -88,7 +88,7 @@
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <MovieCard
           v-for="movie in filteredMovies"
-          :key="movie.id"
+          :key="movie.slug"
           :movie="movie"
           @toggle-watched="handleToggleWatched"
           @delete="confirmDelete($event)"
@@ -110,7 +110,7 @@
       :movie="roulette.pickedMovie.value"
       :loading="roulette.loading.value"
       :exhausted="roulette.exhausted.value"
-      :rejected-count="roulette.excludedIds.value.length"
+      :rejected-count="roulette.excludedSlugs.value.length"
       @close="roulette.close()"
       @reject="roulette.reject()"
       @restart="roulette.restart()"
@@ -199,7 +199,7 @@ function closeModal() {
 async function handleMovieSubmit(data: Parameters<typeof store.addMovie>[0] & { watched?: boolean }) {
   try {
     if (editingMovie.value) {
-      await store.updateMovie(editingMovie.value.id, data)
+      await store.updateMovie(editingMovie.value.slug, data)
     } else {
       await store.addMovie(data)
     }
@@ -229,7 +229,7 @@ function confirmDelete(movie: MovieRead) {
 async function handleDelete() {
   if (!deletingMovie.value) return
   try {
-    await store.deleteMovie(deletingMovie.value.id)
+    await store.deleteMovie(deletingMovie.value.slug)
     deletingMovie.value = null
   } catch (e: unknown) {
     const err = e as { response?: { status?: number } }

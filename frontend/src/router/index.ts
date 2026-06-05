@@ -53,7 +53,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/movies/:id',
+      path: '/movies/:slug',
       name: 'movie-detail',
       component: () => import('@/views/movies/MovieDetailView.vue'),
       meta: { requiresAuth: true },

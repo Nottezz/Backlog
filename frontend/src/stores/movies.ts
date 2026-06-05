@@ -26,20 +26,20 @@ export const useMoviesStore = defineStore('movies', () => {
     return created
   }
 
-  async function updateMovie(id: number, movie: MovieUpdate): Promise<MovieRead> {
-    const updated = await moviesApi.patch(id, movie)
-    const index = movies.value.findIndex((m) => m.id === id)
+  async function updateMovie(slug: string, movie: MovieUpdate): Promise<MovieRead> {
+    const updated = await moviesApi.patch(slug, movie)
+    const index = movies.value.findIndex((m) => m.slug === slug)
     if (index !== -1) movies.value[index] = updated
     return updated
   }
 
-  async function deleteMovie(id: number) {
-    await moviesApi.delete(id)
-    movies.value = movies.value.filter((m) => m.id !== id)
+  async function deleteMovie(slug: string) {
+    await moviesApi.delete(slug)
+    movies.value = movies.value.filter((m) => m.slug !== slug)
   }
 
   async function toggleWatched(movie: MovieRead) {
-    return updateMovie(movie.id, { watched: !movie.watched })
+    return updateMovie(movie.slug, { watched: !movie.watched })
   }
 
   return {
