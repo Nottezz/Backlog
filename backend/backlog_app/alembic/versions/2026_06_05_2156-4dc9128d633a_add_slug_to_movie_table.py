@@ -20,7 +20,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Upgrade schema."""
-    op.add_column("movies", sa.Column("slug", sa.String(length=255), nullable=False))
+    op.add_column("movies", sa.Column("slug", sa.String(length=255), nullable=True))
     op.create_index(op.f("ix_movies_slug"), "movies", ["slug"], unique=True)
 
 

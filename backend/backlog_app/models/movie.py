@@ -22,7 +22,7 @@ class Movie(Base):
     slug: Mapped[str | None] = mapped_column(
         String(255),
         unique=True,
-        nullable=False,
+        nullable=True,
         default="",
         index=True,
     )
