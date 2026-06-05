@@ -59,45 +59,45 @@ async def get_random_movie(
     return chosen
 
 
-@router.get("/{movie_id}", response_model=MovieRead)
-async def get_movie_by_id(
-    movie_id: int,
+@router.get("/{slug}", response_model=MovieRead)
+async def get_movie_by_slug(
+    slug: str,
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
     only_mine: bool = False,
 ):
     user_id = user.id if only_mine else None
-    one_movie = await crud.get_movie_by_id(db, movie_id, user_id)
+    one_movie = await crud.get_movie_by_slug(db, slug, user_id)
     return one_movie
 
 
-@router.put("/{movie_id}", response_model=MovieRead)
+@router.put("/{slug}", response_model=MovieRead)
 async def update_movie(
-    movie_id: int,
+    slug: str,
     movie_update: MovieUpdate,
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await crud.update_movie(db, movie_id, movie_update, user)
+    return await crud.update_movie(db, slug, movie_update, user)
 
 
-@router.patch("/{movie_id}", response_model=MovieRead)
+@router.patch("/{slug}", response_model=MovieRead)
 async def partial_update_movie(
-    movie_id: int,
+    slug: str,
     movie_update: MovieUpdate,
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await crud.partial_update_movie(db, movie_id, movie_update, user)
+    return await crud.partial_update_movie(db, slug, movie_update, user)
 
 
 @router.delete(
-    "/{movie_id}",
+    "/{slug}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
 async def delete_movie(
-    movie_id: int,
+    slug: str,
     db: Annotated[AsyncSession, Depends(get_async_session)],
     user: Annotated[User, Depends(current_active_user)],
 ):
-    return await crud.delete_movie(db, movie_id, user)
+    return await crud.delete_movie(db, slug, user)
