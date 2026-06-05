@@ -1,13 +1,13 @@
 import logging
 from uuid import UUID
 
-from _helpers.slug_helper import generate_unique_slug
 from fastapi import HTTPException
 from sqlalchemy import or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
+from backlog_app._helpers.slug_helper import generate_unique_slug
 from backlog_app.models import User
 from backlog_app.models.movie import Movie
 from backlog_app.schemas.movie import MovieCreate, MovieList, MovieRead, MovieUpdate

@@ -1,7 +1,8 @@
-from models import Movie
 from slugify import slugify
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from backlog_app.models import Movie
 
 
 async def generate_unique_slug(db: AsyncSession, title: str) -> str:
