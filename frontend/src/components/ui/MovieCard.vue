@@ -29,7 +29,7 @@
 
     <!-- Main content -->
     <div class="p-5 flex-1 flex flex-col">
-      <RouterLink :to="`/movies/${movie.id}`" class="flex-1 flex flex-col">
+      <RouterLink :to="`/movies/${movie.slug}`" class="flex-1 flex flex-col">
         <!-- Title + year -->
         <div class="flex items-start justify-between gap-3 mb-2">
           <h3 class="font-display font-bold text-base-900 group-hover:text-accent transition-colors leading-tight">
@@ -117,7 +117,7 @@
             </svg>
           </a>
           <RouterLink
-            :to="`/movies/${movie.id}`"
+            :to="`/movies/${movie.slug}`"
             class="p-1.5 text-base-400 hover:text-base-700 rounded-lg transition-colors"
             title="Открыть"
           >
@@ -157,7 +157,7 @@
             </svg>
           </a>
           <RouterLink
-            :to="`/movies/${movie.id}`"
+            :to="`/movies/${movie.slug}`"
             class="p-1.5 text-base-300 hover:text-base-600 rounded-lg transition-colors"
             title="Открыть"
           >

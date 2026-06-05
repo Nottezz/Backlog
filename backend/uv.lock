@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.13"
 resolution-markers = [
     "python_full_version >= '3.14'",
@@ -279,6 +279,7 @@ dependencies = [
     { name = "fastapi-users", extra = ["sqlalchemy"] },
     { name = "jinja2" },
     { name = "pydantic-settings", extra = ["yaml"] },
+    { name = "python-slugify" },
     { name = "sqlalchemy", extra = ["asyncio"] },
     { name = "taskiq" },
     { name = "taskiq-aio-pika" },
@@ -307,6 +308,7 @@ requires-dist = [
     { name = "fastapi-users", extras = ["sqlalchemy"], specifier = ">=15.0.3" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "pydantic-settings", extras = ["yaml"], specifier = ">=2.12.0" },
+    { name = "python-slugify", specifier = ">=8.0.4" },
     { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0.46" },
     { name = "taskiq", specifier = ">=0.12.1" },
     { name = "taskiq-aio-pika", specifier = ">=0.5.0" },
@@ -1581,6 +1583,18 @@ wheels = [
 ]
 
 [[package]]
+name = "python-slugify"
+version = "8.0.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "text-unidecode" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/87/c7/5e1547c44e31da50a460df93af11a535ace568ef89d7a811069ead340c4a/python-slugify-8.0.4.tar.gz", hash = "sha256:59202371d1d05b54a9e7720c5e038f928f45daaffe41dd10822f3907b937c856", size = 10921, upload-time = "2024-02-08T18:32:45.488Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a4/62/02da182e544a51a5c3ccf4b03ab79df279f9c60c5e82d5e8bec7ca26ac11/python_slugify-8.0.4-py2.py3-none-any.whl", hash = "sha256:276540b79961052b66b7d116620b36518847f52d5fd9e3a70164fc8c50faa6b8", size = 10051, upload-time = "2024-02-08T18:32:43.911Z" },
+]
+
+[[package]]
 name = "pytokens"
 version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1845,6 +1859,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/cf/fe/f9e885a4dd6bd4d4224e3dee05d9b38bf58102a0ef5e553e812d654dfa72/taskiq_fastapi-0.4.0.tar.gz", hash = "sha256:f683ab0aab1ab2db117d1e121e5e534f3ba4a4e5f382177012e29eca986863fb", size = 5819, upload-time = "2025-11-29T15:22:59.191Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/39/58/11eacc48d615703618f93ff44812409dca94cb465ab5cb173a8a90e079b1/taskiq_fastapi-0.4.0-py3-none-any.whl", hash = "sha256:9e7e57fa337b4fad2641c8761cafc7b54a63bf7bf726423a28fc2b15c55fd0bc", size = 5369, upload-time = "2025-11-29T15:23:00.185Z" },
+]
+
+[[package]]
+name = "text-unidecode"
+version = "1.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ab/e2/e9a00f0ccb71718418230718b3d900e71a5d16e701a3dae079a21e9cd8f8/text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93", size = 76885, upload-time = "2019-08-30T21:36:45.405Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a6/a5/c0b6468d3824fe3fde30dbb5e1f687b291608f9473681bbf7dabbf5a87d7/text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8", size = 78154, upload-time = "2019-08-30T21:37:03.543Z" },
 ]
 
 [[package]]

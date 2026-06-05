@@ -18,7 +18,7 @@ export interface MovieUpdate extends Partial<MovieCreate> {
 }
 
 export interface MovieRead {
-  id: number
+  slug: string
   title: string
   description: string | null
   note: string | null
@@ -47,16 +47,16 @@ export const moviesApi = {
     return data
   },
 
-  async getById(id: number, onlyMine = false): Promise<MovieRead> {
-    const { data } = await api.get<MovieRead>(`/movies/${id}`, {
-      params: { only_mine: onlyMine },
-    })
-    return data
-  },
+  async getBySlug(slug: string, onlyMine = false): Promise<MovieRead> {
+  const { data } = await api.get<MovieRead>(`/movies/${slug}`, {
+    params: { only_mine: onlyMine },
+  })
+  return data
+},
 
-  async getRandom(excludeIds: number[] = []): Promise<MovieRead> {
+  async getRandom(excludeSlugs: string[] = []): Promise<MovieRead> {
     const params = new URLSearchParams()
-    excludeIds.forEach((id) => params.append('exclude_ids', String(id)))
+    excludeSlugs.forEach((slug) => params.append('exclude_slugs', slug))
     const { data } = await api.get<MovieRead>('/movies/random', { params })
     return data
   },
@@ -66,17 +66,12 @@ export const moviesApi = {
     return data
   },
 
-  async update(id: number, movie: MovieUpdate): Promise<MovieRead> {
-    const { data } = await api.put<MovieRead>(`/movies/${id}`, movie)
+  async patch(slug: string, movie: MovieUpdate): Promise<MovieRead> {
+    const { data } = await api.patch<MovieRead>(`/movies/${slug}`, movie)
     return data
   },
 
-  async patch(id: number, movie: MovieUpdate): Promise<MovieRead> {
-    const { data } = await api.patch<MovieRead>(`/movies/${id}`, movie)
-    return data
-  },
-
-  async delete(id: number): Promise<void> {
-    await api.delete(`/movies/${id}`)
+  async delete(slug: string): Promise<void> {
+    await api.delete(`/movies/${slug}`)
   },
 }

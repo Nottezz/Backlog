@@ -3,6 +3,7 @@ from uuid import uuid4
 
 import pytest
 from pydantic import ValidationError
+from slugify import slugify
 
 from backlog_app.schemas.movie import MovieCreate, MovieRead, MovieUpdate
 from backlog_app.schemas.user import UserRead
@@ -18,7 +19,7 @@ def test_movie_can_be_create_from_create_schema() -> None:
     user = UserRead(id=uuid4(), email="test@example.com")
     movie = MovieRead(
         **movie_in.model_dump(),
-        id=0,
+        slug="test-movie",
         watched=False,
         created_at=datetime.now(),
         user=user,
@@ -43,7 +44,7 @@ def test_movie_full_shema():
     user = UserRead(id=uuid4(), email="test@example.com")
     movie = MovieRead(
         **movie_in.model_dump(),
-        id=0,
+        slug="test-movie",
         watched=False,
         created_at=datetime.now(),
         user=user,
@@ -57,7 +58,7 @@ def test_movie_full_shema():
 
 def test_movie_read_fields_contract():
     expected_fields = {
-        "id",
+        "slug",
         "title",
         "description",
         "note",
@@ -76,16 +77,20 @@ def test_movie_read_fields_contract():
 
 
 @pytest.mark.parametrize(
-    ("title", "description", "should_raise"),
+    ("title", "slug", "description", "should_raise"),
     [
-        pytest.param("a", "a" * 18, True, id="values-less-than-min"),
-        pytest.param("a" * 3, "a" * 20, False, id="minimum-values"),
-        pytest.param("a" * 255, "a" * 1000, False, id="maximum-values"),
-        pytest.param("a" * 300, "a" * 1500, True, id="values-higher-than-max"),
+        pytest.param("a", slugify("a"), "a" * 18, True, id="values-less-than-min"),
+        pytest.param("a" * 3, slugify("a" * 3), "a" * 20, False, id="minimum-values"),
+        pytest.param(
+            "a" * 255, slugify("a" * 255), "a" * 1000, False, id="maximum-values"
+        ),
+        pytest.param(
+            "a" * 300, slugify("a" * 300), "a" * 1500, True, id="values-higher-than-max"
+        ),
     ],
 )
 def test_movie_create_max_value(
-    title: str, description: str, should_raise: bool
+    title: str, description: str, should_raise: bool, slug: str
 ) -> None:
     if should_raise:
         with pytest.raises(ValidationError):
@@ -101,7 +106,7 @@ def test_movie_create_max_value(
         user = UserRead(id=uuid4(), email="test@example.com")
         movie = MovieRead(
             **movie_in.model_dump(),
-            id=0,
+            slug=slug,
             watched=False,
             created_at=datetime.now(),
             user=user,
@@ -115,7 +120,7 @@ def test_movie_update_from_update_schema() -> None:
     user = UserRead(id=uuid4(), email="test@example.com")
 
     movie = MovieRead(
-        id=0,
+        slug="test-movie",
         user=user,
         title="Test Movie",
         description="Test Movie Description",

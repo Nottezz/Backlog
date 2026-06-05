@@ -162,7 +162,7 @@
             </a>
             <RouterLink
               v-else
-              :to="`/movies/${movie.id}`"
+              :to="`/movies/${movie.slug}`"
               class="btn-primary flex-1 text-center"
               @click="$emit('close')"
             >

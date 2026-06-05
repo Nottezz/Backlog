@@ -3,7 +3,7 @@ import { moviesApi, type MovieRead } from '@/api/movies.ts'
 
 export function useMovieRoulette() {
   const pickedMovie = ref<MovieRead | null>(null)
-  const excludedIds = ref<number[]>([])
+  const excludedSlugs = ref<string[]>([])
   const loading = ref(false)
   const exhausted = ref(false)
   const isOpen = ref(false)
@@ -13,7 +13,7 @@ export function useMovieRoulette() {
     exhausted.value = false
 
     try {
-      const movie = await moviesApi.getRandom(excludedIds.value)
+      const movie = await moviesApi.getRandom(excludedSlugs.value)
       pickedMovie.value = movie
     } catch (e: unknown) {
       const err = e as { response?: { status?: number } }
@@ -29,7 +29,7 @@ export function useMovieRoulette() {
   // Убрать текущий фильм из пула и сразу крутить снова
   async function reject() {
     if (pickedMovie.value) {
-      excludedIds.value.push(pickedMovie.value.id)
+      excludedSlugs.value.push(pickedMovie.value.slug)
       pickedMovie.value = null
       await spin()
     }
@@ -45,14 +45,14 @@ export function useMovieRoulette() {
   function close() {
     isOpen.value = false
     pickedMovie.value = null
-    excludedIds.value = []
+    excludedSlugs.value = []
     exhausted.value = false
     loading.value = false
   }
 
   // Начать заново, не закрывая модалку
   async function restart() {
-    excludedIds.value = []
+    excludedSlugs.value = []
     exhausted.value = false
     pickedMovie.value = null
     await spin()
@@ -60,7 +60,7 @@ export function useMovieRoulette() {
 
   return {
     pickedMovie,
-    excludedIds,
+    excludedSlugs: excludedSlugs,
     loading,
     exhausted,
     isOpen,

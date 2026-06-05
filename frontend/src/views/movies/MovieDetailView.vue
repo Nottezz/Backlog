@@ -224,7 +224,7 @@ const isOwner = computed(() =>
 
 onMounted(async () => {
   try {
-    movie.value = await moviesApi.getById(Number(route.params.id))
+    movie.value = await moviesApi.getBySlug(String(route.params.slug))
   } catch {
     error.value = 'Фильм не найден'
   } finally {
@@ -256,7 +256,7 @@ async function handleEdit(data: Parameters<typeof store.updateMovie>[1]) {
     return
   }
   try {
-    movie.value = await store.updateMovie(movie.value.id, data)
+    movie.value = await store.updateMovie(movie.value.slug, data)
     showEditModal.value = false
   } catch (e: unknown) {
     const err = e as { response?: { status?: number } }
@@ -274,8 +274,8 @@ async function handleDelete() {
     return
   }
   try {
-    await store.deleteMovie(movie.value.id)
-    router.push('/movies')
+    await store.deleteMovie(movie.value.slug)
+    await router.push('/movies')
   } catch (e: unknown) {
     const err = e as { response?: { status?: number } }
     confirmDelete.value = false
