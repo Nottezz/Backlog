@@ -43,7 +43,7 @@ class MovieUpdate(MovieBase):
 
 
 class MovieRead(MovieBase):
-    slug: str | None = None
+    slug: str
     user: UserRead
     description: Annotated[str, Len(min_length=20, max_length=1000)] | None
     note: Annotated[str, Len(min_length=2, max_length=50)] | None = None
