@@ -28,6 +28,11 @@ class Movie(Base):
         nullable=True,
     )
 
+    note: Mapped[str | None] = mapped_column(
+        String(50),
+        nullable=True,
+    )
+
     year: Mapped[int | None] = mapped_column(
         Integer,
         nullable=True,
