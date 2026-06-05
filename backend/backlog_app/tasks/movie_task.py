@@ -17,11 +17,11 @@ translator = TranslationService()
 
 
 async def update_movie_rating(movie: MovieRead, db: AsyncSession, user: User):
-    movie_db = await crud.get_movie_by_id(db, movie.id)
+    movie_db = await crud.get_movie_by_slug(db, movie.slug)
     year = getattr(movie, "year", None)
 
     if year is None:
-        logger.info("Movie <%s> has no year, skipping rating update", movie.id)
+        logger.info("Movie <%s> has no year, skipping rating update", movie.slug)
         return
 
     try:
@@ -29,12 +29,12 @@ async def update_movie_rating(movie: MovieRead, db: AsyncSession, user: User):
             movie_db.title, movie_db.year
         )
     except Exception as e:
-        logger.exception("Failed to fetch rating for movie <%s>: %s", movie.id, e)
+        logger.exception("Failed to fetch rating for movie <%s>: %s", movie.slug, e)
         return
 
     await partial_update_movie(
         db,
-        movie.id,
+        movie.slug,
         MovieUpdate(
             imdb_rating=imdb_rating,
             metacritic_score=metacritic_score,
@@ -42,24 +42,24 @@ async def update_movie_rating(movie: MovieRead, db: AsyncSession, user: User):
         user,
     )
 
-    logger.info("Movie <%s> ratings updated in background", movie.id)
+    logger.info("Movie <%s> ratings updated in background", movie.slug)
 
 
 async def update_movie_description(
     movie: MovieRead, db: AsyncSession, user: User
 ) -> None:
 
-    movie_db = await crud.get_movie_by_id(db, movie.id)
+    movie_db = await crud.get_movie_by_slug(db, movie.slug)
 
     description = getattr(movie_db, "description", None)
     year = getattr(movie_db, "year", None)
 
     if description and description.strip():
-        logger.info("Movie <%s> already has description, skipping", movie.id)
+        logger.info("Movie <%s> already has description, skipping", movie.slug)
         return
 
     if not year:
-        logger.info("Movie <%s> has no year, skipping description update", movie.id)
+        logger.info("Movie <%s> has no year, skipping description update", movie.slug)
         return
 
     try:
@@ -67,22 +67,24 @@ async def update_movie_description(
             movie_db.title, movie_db.year
         )
     except Exception as e:
-        logger.exception("Failed to fetch description for movie <%s>: %s", movie.id, e)
+        logger.exception(
+            "Failed to fetch description for movie <%s>: %s", movie.slug, e
+        )
         return
 
     try:
         ru_description = await translator.translate(en_description)
     except Exception as e:
         logger.exception(
-            "Failed to translate description for movie <%s>: %s", movie.id, e
+            "Failed to translate description for movie <%s>: %s", movie.slug, e
         )
         return
 
     await partial_update_movie(
         db,
-        movie.id,
+        movie.slug,
         MovieUpdate(description=ru_description),
         user,
     )
 
-    logger.info("Movie <%s> description updated in background", movie.id)
+    logger.info("Movie <%s> description updated in background", movie.slug)
