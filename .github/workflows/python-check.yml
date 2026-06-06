@@ -102,3 +102,4 @@ jobs:
           files: coverage.xml
           codecov_yml_path: backend/coverage.yaml
           fail_ci_if_error: 'true'
+          disable_certlytics: true
