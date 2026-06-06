@@ -9,32 +9,38 @@ from backlog_app.servicies.ai_agent import AIClient
 async def test_translate_success():
     client = AIClient(model="gpt-test")
 
-    mock_response = AsyncMock()
-    mock_response.raise_for_status = Mock()
-    mock_response.json = Mock(
-        return_value={"choices": [{"message": {"content": "Привет мир"}}]}
-    )
+    mock_response = Mock()
+    mock_response.choices = [
+        Mock(
+            message=Mock(
+                content="Привет мир",
+            )
+        )
+    ]
 
-    with patch.object(client.client, "post", return_value=mock_response) as mock_post:
+    with patch.object(
+        client.client.chat.completions,
+        "create",
+        return_value=mock_response,
+    ) as mock_create:
         result = await client.translate("Hello world")
+
         assert result == "Привет мир"
 
-        called_payload = mock_post.call_args[1]["json"]
-        assert (
-            "Translate the following text from English into Russian"
-            in called_payload["messages"][0]["content"]
-        )
-        assert "Hello world" in called_payload["messages"][0]["content"]
+        kwargs = mock_create.call_args.kwargs
+
+        assert kwargs["model"] == "gpt-test"
+        assert kwargs["messages"][1]["content"] == "Hello world"
 
 
 @pytest.mark.asyncio
-async def test_translate_http_error():
+async def test_translate_error():
     client = AIClient(model="gpt-test")
 
-    mock_response = AsyncMock()
-    mock_response.raise_for_status = Mock(side_effect=Exception("HTTP Error"))
-    mock_response.json = AsyncMock(return_value={})
-
-    with patch.object(client.client, "post", return_value=mock_response):
-        with pytest.raises(Exception, match="HTTP Error"):
+    with patch.object(
+        client.client.chat.completions,
+        "create",
+        side_effect=Exception("API Error"),
+    ):
+        with pytest.raises(Exception, match="API Error"):
             await client.translate("Hello world")

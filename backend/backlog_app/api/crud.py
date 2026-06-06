@@ -24,7 +24,7 @@ async def create_movie(
     await db.commit()
     await db.refresh(movie)
 
-    logger.info("Movie <%s> has been created.", movie.id)
+    logger.info("Movie <%s> has been created.", movie.slug)
 
     return MovieRead.model_validate(movie)
 

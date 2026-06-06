@@ -77,9 +77,8 @@ class TaskiqConfig(BaseModel):
 
 class AIAgentConfig(BaseModel):
     base_url: str
-    access_id: str
     token: str
-    model: str = "DeepSeek v3.2"
+    model: str = "deepseek-ai/DeepSeek-V3"
     timeout: int = 10
 
 
