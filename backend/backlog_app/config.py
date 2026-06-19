@@ -10,8 +10,9 @@ from pydantic_settings import (
     YamlConfigSettingsSource,
 )
 
-BASE_DIR = Path(__file__).resolve().parent
-ROOT_DIR = BASE_DIR.parent
+APP_DIR = Path(__file__).resolve().parent
+BACKEND_DIR = APP_DIR.parent
+ROOT_DIR = APP_DIR.parent.parent
 
 
 class LoggingConfig(BaseModel):

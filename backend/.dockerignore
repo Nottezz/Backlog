@@ -71,8 +71,8 @@ docs/_build/
 target/
 
 # Virtual environment
-.env
-config.local.yaml
+../.env
+../config.local.yaml
 .venv/
 venv/
 

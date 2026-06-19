@@ -9,7 +9,7 @@ WORKDIR /app
 
 COPY ./pyproject.toml ./
 COPY ./uv.lock ./
-COPY config.default.yaml ./
+COPY ../config.default.yaml ./
 COPY ./backlog_app ./backlog_app
 
 RUN uv sync --locked --no-install-project --no-dev
