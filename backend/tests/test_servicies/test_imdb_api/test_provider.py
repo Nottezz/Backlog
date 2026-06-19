@@ -35,7 +35,7 @@ async def test_get_title_success(monkeypatch):
 
     result = await imdb.get_title("Interstellar", 2014)
 
-    mock_get_id.assert_awaited_once_with("Interstellar", 2014)
+    mock_get_id.assert_awaited_once_with(title="Interstellar", year=2014)
     mock_request.assert_awaited_once_with(
         HTTPMethod.GET,
         endpoint="titles/tt0816692",
@@ -45,7 +45,7 @@ async def test_get_title_success(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_get_title_rating_success(monkeypatch):
+async def test_get_title_with_rating_and_metacritic(monkeypatch):
     imdb = IMDBProvider(base_url="https://mocked-api.com")
 
     mock_title_data = {
@@ -53,45 +53,38 @@ async def test_get_title_rating_success(monkeypatch):
         "metacritic": {"score": 74},
     }
 
-    mock_get_title = AsyncMock(return_value=mock_title_data)
-    monkeypatch.setattr(imdb, "get_title", mock_get_title)
+    monkeypatch.setattr(imdb, "get_title_id", AsyncMock(return_value="tt0816692"))
+    monkeypatch.setattr(imdb, "_request", AsyncMock(return_value=mock_title_data))
 
-    imdb_rating, metacritic_score = await imdb.get_title_rating("Interstellar", 2014)
+    result = await imdb.get_title("Interstellar", 2014)
 
-    mock_get_title.assert_awaited_once_with("Interstellar", 2014)
-    assert imdb_rating == 8.6
-    assert metacritic_score == 74
+    assert result["rating"]["aggregateRating"] == 8.6
+    assert result["metacritic"]["score"] == 74
 
 
 @pytest.mark.asyncio
-async def test_get_title_rating_without_metacritic(monkeypatch):
+async def test_get_title_without_metacritic(monkeypatch):
     imdb = IMDBProvider(base_url="https://mocked-api.com")
 
     mock_title_data = {"rating": {"aggregateRating": 7.1}}
 
-    monkeypatch.setattr(
-        imdb,
-        "get_title",
-        AsyncMock(return_value=mock_title_data),
-    )
+    monkeypatch.setattr(imdb, "get_title_id", AsyncMock(return_value="tt0317219"))
+    monkeypatch.setattr(imdb, "_request", AsyncMock(return_value=mock_title_data))
 
-    imdb_rating, metacritic_score = await imdb.get_title_rating("Cars", 2006)
+    result = await imdb.get_title("Cars", 2006)
 
-    assert imdb_rating == 7.1
-    assert metacritic_score is None
+    assert result["rating"]["aggregateRating"] == 7.1
+    assert result.get("metacritic") is None
 
 
 @pytest.mark.asyncio
-async def test_get_title_rating_empty_data(monkeypatch):
+async def test_get_title_empty_data(monkeypatch):
     imdb = IMDBProvider(base_url="https://mocked-api.com")
 
-    monkeypatch.setattr(
-        imdb,
-        "get_title",
-        AsyncMock(return_value={}),
-    )
+    monkeypatch.setattr(imdb, "get_title_id", AsyncMock(return_value="tt0000000"))
+    monkeypatch.setattr(imdb, "_request", AsyncMock(return_value={}))
 
-    imdb_rating, metacritic_score = await imdb.get_title_rating("Unknown", 0000)
+    result = await imdb.get_title("Unknown", 0)
 
-    assert imdb_rating is None
-    assert metacritic_score is None
+    assert result.get("rating") is None
+    assert result.get("metacritic") is None
