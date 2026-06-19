@@ -6,7 +6,9 @@ services:
       context: backend
       dockerfile: Dockerfile
     env_file:
-      - ./backend/.env
+      - .env
+    volumes:
+      - ./config.default.yaml:/config.default.yaml:ro
     expose:
       - "8000"
     depends_on:
@@ -27,7 +29,10 @@ services:
       context: backend
       dockerfile: Dockerfile
     env_file:
-      - ./backend/.env
+      - .env
+    volumes:
+      - ./config.default.yaml:/config.default.yaml:ro
+      - ./config.local.yaml:/config.local.yaml:ro
     command: uv run taskiq worker backlog_app.taskiq_broker:broker --no-configure-logging
     depends_on:
       rabbitmq:
