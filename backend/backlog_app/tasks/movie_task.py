@@ -1,14 +1,16 @@
 import logging
+from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 from backlog_app.api import crud
 from backlog_app.api.crud import partial_update_movie
 from backlog_app.config import settings
-from backlog_app.models import User
-from backlog_app.schemas.movie import MovieRead, MovieUpdate
+from backlog_app.models.users import User as UserModel
+from backlog_app.schemas.movie import MovieUpdate
 from backlog_app.servicies.ai_agent import TranslationService
 from backlog_app.servicies.imdb_api.provider import IMDBProvider
+from backlog_app.storages.database import AsyncSessionLocal
 
 logger = logging.getLogger(__name__)
 
@@ -16,75 +18,80 @@ provider = IMDBProvider(base_url=settings.imdb_url)
 translator = TranslationService()
 
 
-async def update_movie_rating(movie: MovieRead, db: AsyncSession, user: User):
-    movie_db = await crud.get_movie_by_slug(db, movie.slug)
-    year = getattr(movie, "year", None)
-
-    if year is None:
-        logger.info("Movie <%s> has no year, skipping rating update", movie.slug)
-        return
-
-    try:
-        imdb_rating, metacritic_score = await provider.get_title_rating(
-            movie_db.title, movie_db.year
-        )
-    except Exception as e:
-        logger.exception("Failed to fetch rating for movie <%s>: %s", movie.slug, e)
-        return
-
-    await partial_update_movie(
-        db,
-        movie.slug,
-        MovieUpdate(
-            imdb_rating=imdb_rating,
-            metacritic_score=metacritic_score,
-        ),
-        user,
-    )
-
-    logger.info("Movie <%s> ratings updated in background", movie.slug)
-
-
-async def update_movie_description(
-    movie: MovieRead, db: AsyncSession, user: User
+async def update_movie_metadata(
+    movie_slug: str,
+    user_id: UUID,
 ) -> None:
-
-    movie_db = await crud.get_movie_by_slug(db, movie.slug)
-
-    description = getattr(movie_db, "description", None)
-    year = getattr(movie_db, "year", None)
-
-    if description and description.strip():
-        logger.info("Movie <%s> already has description, skipping", movie.slug)
-        return
-
-    if not year:
-        logger.info("Movie <%s> has no year, skipping description update", movie.slug)
-        return
-
-    try:
-        en_description = await provider.get_title_description(
-            movie_db.title, movie_db.year
+    async with AsyncSessionLocal() as db:
+        movie = await crud.get_movie_by_slug(
+            db,
+            movie_slug,
         )
-    except Exception as e:
-        logger.exception(
-            "Failed to fetch description for movie <%s>: %s", movie.slug, e
+
+        user_result = await db.execute(select(UserModel).where(UserModel.id == user_id))
+        user = user_result.scalars().first()
+
+        if user is None:
+            logger.warning("User <%s> not found", user_id)
+            return
+
+        if movie is None:
+            logger.warning(
+                "Movie <%s> not found",
+                movie_slug,
+            )
+            return
+
+        if not movie.year:
+            logger.info(
+                "Movie <%s> has no year, skipping metadata update",
+                movie_slug,
+            )
+            return
+
+        try:
+            title_data = await provider.get_title(
+                movie.title,
+                movie.year,
+            )
+        except Exception:
+            logger.exception(
+                "Failed to fetch imdb data for movie <%s>",
+                movie_slug,
+            )
+            return
+
+        update_data: dict = {}
+
+        rating = title_data.get("rating", {})
+        metacritic = title_data.get("metacritic", {})
+
+        update_data["imdb_rating"] = rating.get("aggregateRating")
+        update_data["metacritic_score"] = metacritic.get("score")
+
+        if not movie.description:
+            description = title_data.get("plot")
+
+            if description:
+                try:
+                    update_data["description"] = await translator.translate(description)
+                except Exception:
+                    logger.exception(
+                        "Failed to translate description for movie <%s>",
+                        movie_slug,
+                    )
+
+        if not update_data:
+            return
+
+        await partial_update_movie(
+            db,
+            movie_slug,
+            MovieUpdate(**update_data),
+            user,
         )
-        return
 
-    try:
-        ru_description = await translator.translate(en_description)
-    except Exception as e:
-        logger.exception(
-            "Failed to translate description for movie <%s>: %s", movie.slug, e
+        logger.info(
+            "Movie <%s> metadata updated",
+            movie_slug,
         )
-        return
-
-    await partial_update_movie(
-        db,
-        movie.slug,
-        MovieUpdate(description=ru_description),
-        user,
-    )
-
-    logger.info("Movie <%s> description updated in background", movie.slug)
