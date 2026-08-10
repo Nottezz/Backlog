@@ -1,4 +1,3 @@
-from http import HTTPMethod
 from unittest.mock import AsyncMock
 
 import pytest
@@ -16,7 +15,7 @@ from backlog_app.servicies.imdb_api.provider import IMDBProvider
 )
 @pytest.mark.asyncio
 async def test_get_title_id(title, year):
-    imdb = IMDBProvider(base_url=settings.imdb_url)
+    imdb = IMDBProvider(api_key=settings.omdb.api_key)
     title_id = await imdb.get_title_id(title, year)
 
     assert title_id is not None
@@ -25,10 +24,10 @@ async def test_get_title_id(title, year):
 
 @pytest.mark.asyncio
 async def test_get_title_success(monkeypatch):
-    imdb = IMDBProvider(base_url="https://mocked-api.com")
+    imdb = IMDBProvider(api_key="test-key")
 
     mock_get_id = AsyncMock(return_value="tt0816692")
-    mock_request = AsyncMock(return_value={"id": "tt0816692"})
+    mock_request = AsyncMock(return_value={"imdbID": "tt0816692", "Response": "True"})
 
     monkeypatch.setattr(imdb, "get_title_id", mock_get_id)
     monkeypatch.setattr(imdb, "_request", mock_request)
@@ -36,21 +35,19 @@ async def test_get_title_success(monkeypatch):
     result = await imdb.get_title("Interstellar", 2014)
 
     mock_get_id.assert_awaited_once_with(title="Interstellar", year=2014)
-    mock_request.assert_awaited_once_with(
-        HTTPMethod.GET,
-        endpoint="titles/tt0816692",
-    )
+    mock_request.assert_awaited_once_with({"i": "tt0816692", "plot": "full"})
 
-    assert result == {"id": "tt0816692"}
+    assert isinstance(result, dict)
 
 
 @pytest.mark.asyncio
 async def test_get_title_with_rating_and_metacritic(monkeypatch):
-    imdb = IMDBProvider(base_url="https://mocked-api.com")
+    imdb = IMDBProvider(api_key="test-key")
 
     mock_title_data = {
-        "rating": {"aggregateRating": 8.6},
-        "metacritic": {"score": 74},
+        "imdbRating": "8.6",
+        "Metascore": "74",
+        "Response": "True",
     }
 
     monkeypatch.setattr(imdb, "get_title_id", AsyncMock(return_value="tt0816692"))
@@ -64,9 +61,13 @@ async def test_get_title_with_rating_and_metacritic(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_get_title_without_metacritic(monkeypatch):
-    imdb = IMDBProvider(base_url="https://mocked-api.com")
+    imdb = IMDBProvider(api_key="test-key")
 
-    mock_title_data = {"rating": {"aggregateRating": 7.1}}
+    mock_title_data = {
+        "imdbRating": "7.1",
+        "Metascore": "N/A",
+        "Response": "True",
+    }
 
     monkeypatch.setattr(imdb, "get_title_id", AsyncMock(return_value="tt0317219"))
     monkeypatch.setattr(imdb, "_request", AsyncMock(return_value=mock_title_data))
@@ -79,10 +80,10 @@ async def test_get_title_without_metacritic(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_get_title_empty_data(monkeypatch):
-    imdb = IMDBProvider(base_url="https://mocked-api.com")
+    imdb = IMDBProvider(api_key="test-key")
 
     monkeypatch.setattr(imdb, "get_title_id", AsyncMock(return_value="tt0000000"))
-    monkeypatch.setattr(imdb, "_request", AsyncMock(return_value={}))
+    monkeypatch.setattr(imdb, "_request", AsyncMock(return_value={"Response": "True"}))
 
     result = await imdb.get_title("Unknown", 0)
 

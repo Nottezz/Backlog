@@ -1,8 +1,9 @@
 import logging
-from http import HTTPMethod
 from typing import Any
 
 import httpx
+
+from backlog_app.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -18,119 +19,95 @@ class TitleNotFoundError(IMDBProviderError):
 class IMDBProvider:
     def __init__(
         self,
-        base_url: str,
+        api_key: str,
         client: httpx.AsyncClient | None = None,
     ) -> None:
-        self.base_url = base_url.rstrip("/")
+        self.api_key = api_key
         self.client = client or httpx.AsyncClient()
 
-    async def _request(
-        self,
-        method: HTTPMethod,
-        endpoint: str,
-        *,
-        params: dict[str, Any] | None = None,
-        data: dict[str, Any] | list[Any] | None = None,
-    ) -> dict[str, Any]:
+    async def _request(self, params: dict[str, Any]) -> dict[str, Any]:
         try:
-            response = await self.client.request(
-                method=method,
-                url=f"{self.base_url}/{endpoint}",
-                params=params,
-                json=data,
+            response = await self.client.get(
+                settings.omdb.base_url,
+                params={"apikey": self.api_key, **params},
             )
-
             response.raise_for_status()
+            data = response.json()
 
-            return response.json()
+            if data.get("Response") == "False":
+                raise TitleNotFoundError(data.get("Error", "Not found"))
+
+            return data
+
+        except TitleNotFoundError:
+            raise
 
         except httpx.HTTPStatusError as e:
-            logger.exception(
-                "IMDB API returned HTTP %s",
-                e.response.status_code,
-            )
+            logger.exception("OMDb API returned HTTP %s", e.response.status_code)
             raise IMDBProviderError(
-                f"IMDB API returned {e.response.status_code}"
+                f"OMDb API returned {e.response.status_code}"
             ) from e
 
         except httpx.HTTPError as e:
-            logger.exception("IMDB API request failed")
-            raise IMDBProviderError("IMDB API request failed") from e
+            logger.exception("OMDb API request failed")
+            raise IMDBProviderError("OMDb API request failed") from e
 
     async def search_title(
         self,
         title: str,
-        limit: int = 10,
+        year: int | None = None,
     ) -> list[dict[str, Any]]:
-        response = await self._request(
-            HTTPMethod.GET,
-            endpoint="search/titles",
-            params={
-                "query": title,
-                "limit": limit,
-            },
-        )
-
-        return response.get("titles", [])
+        params: dict[str, Any] = {"s": title}
+        if year is not None:
+            params["y"] = year
+        response = await self._request(params)
+        return response.get("Search", [])
 
     async def get_title_id(
         self,
         title: str,
         year: int | None = None,
     ) -> str:
-        titles = await self.search_title(title)
+        results = await self.search_title(title, year)
 
-        if not titles:
+        if not results and year is not None:
+            logger.warning(
+                "No results for '%s' (%s), retrying without year filter",
+                title,
+                year,
+            )
+            results = await self.search_title(title)
+
+        if not results:
             raise TitleNotFoundError(f"Title '{title}' not found")
 
-        if year is not None:
-            for item in titles:
-                if item.get("startYear") == year:
-                    logger.debug(
-                        "Found title '%s' by year %s",
-                        title,
-                        year,
-                    )
-                    return item["id"]
-
-        def popularity_score(item: dict[str, Any]) -> float:
-            rating = item.get("rating", {}).get("aggregateRating", 0)
-
-            votes = item.get("rating", {}).get("voteCount", 0)
-
-            return rating * votes
-
-        best_match = max(
-            titles,
-            key=popularity_score,
-        )
-
-        logger.warning(
-            "No exact year match for '%s' (%s), " "using most popular result '%s'",
-            title,
-            year,
-            best_match.get("primaryTitle"),
-        )
-
-        return best_match["id"]
+        return results[0]["imdbID"]
 
     async def get_title(
         self,
         title: str,
         year: int | None = None,
     ) -> dict[str, Any]:
-        title_id = await self.get_title_id(
-            title=title,
-            year=year,
-        )
+        title_id = await self.get_title_id(title=title, year=year)
 
-        logger.debug(
-            "Fetching imdb title %s for '%s'",
-            title_id,
-            title,
-        )
+        logger.debug("Fetching OMDb title %s for '%s'", title_id, title)
 
-        return await self._request(
-            HTTPMethod.GET,
-            endpoint=f"titles/{title_id}",
-        )
+        raw = await self._request({"i": title_id, "plot": "full"})
+        return self._normalize(raw)
+
+    def _normalize(self, raw: dict[str, Any]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+
+        imdb_rating = raw.get("imdbRating")
+        if imdb_rating and imdb_rating != "N/A":
+            result["rating"] = {"aggregateRating": float(imdb_rating)}
+
+        metascore = raw.get("Metascore")
+        if metascore and metascore != "N/A":
+            result["metacritic"] = {"score": int(metascore)}
+
+        plot = raw.get("Plot")
+        if plot and plot != "N/A":
+            result["plot"] = plot
+
+        return result

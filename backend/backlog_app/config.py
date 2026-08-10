@@ -83,6 +83,11 @@ class AIAgentConfig(BaseModel):
     timeout: int = 10
 
 
+class OmdbConfig(BaseModel):
+    base_url: str
+    api_key: str
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
@@ -137,7 +142,7 @@ class Settings(BaseSettings):
     smtp: SMTPConfig
     ai_agent: AIAgentConfig
     cors_origins: list[str] = ["http://localhost:5173"]
-    imdb_url: str = "https://api.imdbapi.dev"
+    omdb: OmdbConfig
 
 
 settings = Settings()

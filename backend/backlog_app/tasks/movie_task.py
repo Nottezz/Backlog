@@ -14,7 +14,7 @@ from backlog_app.storages.database import AsyncSessionLocal
 
 logger = logging.getLogger(__name__)
 
-provider = IMDBProvider(base_url=settings.imdb_url)
+provider = IMDBProvider(api_key=settings.omdb.api_key)
 translator = TranslationService()
 
 
