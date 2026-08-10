@@ -2,7 +2,8 @@ import logging
 from typing import Any
 
 import httpx
-from config import settings
+
+from backlog_app.config import settings
 
 logger = logging.getLogger(__name__)
 
