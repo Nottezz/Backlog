@@ -16,7 +16,9 @@ if TYPE_CHECKING:
 
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
-    movies: Mapped[list["Movie"]] = relationship("Movie", back_populates="user")
+    movies: Mapped[list["Movie"]] = relationship(
+        "Movie", back_populates="user", cascade="all, delete-orphan"
+    )
     joined_movies: Mapped[list["UserMovie"]] = relationship(
         "UserMovie",
         back_populates="user",
