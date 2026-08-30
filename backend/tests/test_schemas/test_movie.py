@@ -20,7 +20,6 @@ def test_movie_can_be_create_from_create_schema() -> None:
     movie = MovieRead(
         **movie_in.model_dump(),
         slug="test-movie",
-        watched=False,
         created_at=datetime.now(),
         user=user,
     )
@@ -45,7 +44,6 @@ def test_movie_full_shema():
     movie = MovieRead(
         **movie_in.model_dump(),
         slug="test-movie",
-        watched=False,
         created_at=datetime.now(),
         user=user,
     )
@@ -71,6 +69,8 @@ def test_movie_read_fields_contract():
         "created_at",
         "user",
         "published",
+        "is_joined",
+        "joined_by",
     }
 
     assert set(MovieRead.model_fields.keys()) == expected_fields
@@ -107,7 +107,6 @@ def test_movie_create_max_value(
         movie = MovieRead(
             **movie_in.model_dump(),
             slug=slug,
-            watched=False,
             created_at=datetime.now(),
             user=user,
         )
