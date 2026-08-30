@@ -4,7 +4,6 @@ from uuid import UUID
 from sqlalchemy import select
 
 from backlog_app.api import crud
-from backlog_app.api.crud import partial_update_movie
 from backlog_app.config import settings
 from backlog_app.models.users import User as UserModel
 from backlog_app.schemas.movie import MovieUpdate
@@ -26,6 +25,7 @@ async def update_movie_metadata(
         movie = await crud.get_movie_by_slug(
             db,
             movie_slug,
+            user_id,
         )
 
         user_result = await db.execute(select(UserModel).where(UserModel.id == user_id))
@@ -33,13 +33,6 @@ async def update_movie_metadata(
 
         if user is None:
             logger.warning("User <%s> not found", user_id)
-            return
-
-        if movie is None:
-            logger.warning(
-                "Movie <%s> not found",
-                movie_slug,
-            )
             return
 
         if not movie.year:
@@ -84,7 +77,7 @@ async def update_movie_metadata(
         if not update_data:
             return
 
-        await partial_update_movie(
+        await crud.partial_update_movie(
             db,
             movie_slug,
             MovieUpdate(**update_data),

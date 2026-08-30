@@ -133,7 +133,24 @@
           </a>
         </div>
 
-        <!-- Actions — owner only -->
+        <!-- "Смотрят также" section — visible to all when joinedBy is non-empty -->
+        <div v-if="movie.joinedBy && movie.joinedBy.length > 0" class="mb-6 px-4 py-3 rounded-xl bg-surface-muted border border-surface-border">
+          <p class="text-xs font-mono text-base-400 mb-2">Смотрят также</p>
+          <div class="flex flex-wrap gap-2">
+            <span
+              v-for="u in movie.joinedBy"
+              :key="u.id"
+              class="inline-flex items-center gap-1 font-mono text-xs text-base-600 bg-white border border-surface-border rounded-lg px-2 py-1"
+            >
+              <svg class="w-3 h-3 text-base-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              {{ u.username || u.email }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Actions -->
         <div class="flex flex-wrap gap-3 pt-6 border-t border-surface-border">
           <template v-if="isOwner">
             <button
@@ -153,9 +170,61 @@
             </button>
           </template>
 
-          <!-- Non-owner: read-only hint -->
+          <!-- Non-owner: join/leave + personal actions when joined -->
           <template v-else>
-            <div class="flex items-center gap-2 text-sm text-base-400 font-body bg-surface-muted border border-surface-border rounded-xl px-4 py-2.5">
+            <!-- Personal actions: available only when joined -->
+            <template v-if="movie.isJoined">
+              <button
+                :class="[
+                  'btn-secondary',
+                  movie.watched ? 'text-emerald-700 border-emerald-200 hover:bg-emerald-50' : '',
+                ]"
+                @click="handleToggleWatched"
+              >
+                {{ movie.watched ? '✓ Снять отметку' : 'Отметить как просмотренный' }}
+              </button>
+
+              <div class="flex items-center gap-2">
+                <input
+                  v-model="personalNote"
+                  type="text"
+                  maxlength="50"
+                  placeholder="Моя заметка..."
+                  class="font-body text-sm border border-surface-border rounded-xl px-3 py-2 bg-white text-base-700 placeholder-base-300 focus:outline-none focus:border-accent w-48"
+                />
+                <button
+                  :disabled="noteLoading"
+                  class="btn-secondary"
+                  :class="noteLoading ? 'opacity-60 cursor-not-allowed' : ''"
+                  @click="handleSaveNote"
+                >
+                  Сохранить
+                </button>
+              </div>
+            </template>
+
+            <!-- Join / Leave button (only for published movies) -->
+            <button
+              v-if="movie.published"
+              :disabled="joinLoading"
+              :class="[
+                'btn-secondary',
+                movie.isJoined
+                  ? 'text-base-500 border-base-200'
+                  : 'text-accent border-accent hover:bg-accent hover:text-white',
+                joinLoading ? 'opacity-60 cursor-not-allowed' : '',
+              ]"
+              @click="handleJoinToggle"
+            >
+              <svg v-if="joinLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              {{ movie.isJoined ? 'Убрать из списка' : 'Добавить в мой список' }}
+            </button>
+
+            <!-- Read-only hint: only when not joined -->
+            <div v-if="!movie.isJoined" class="flex items-center gap-2 text-sm text-base-400 font-body bg-surface-muted border border-surface-border rounded-xl px-4 py-2.5">
               <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
@@ -217,6 +286,9 @@ const loading = ref(true)
 const error = ref('')
 const showEditModal = ref(false)
 const confirmDelete = ref(false)
+const joinLoading = ref(false)
+const personalNote = ref('')
+const noteLoading = ref(false)
 
 const isOwner = computed(() =>
   movie.value ? authStore.user?.id === movie.value.user.id : false
@@ -225,6 +297,7 @@ const isOwner = computed(() =>
 onMounted(async () => {
   try {
     movie.value = await moviesApi.getBySlug(String(route.params.slug))
+    personalNote.value = movie.value?.note || ''
   } catch {
     error.value = 'Фильм не найден'
   } finally {
@@ -232,9 +305,34 @@ onMounted(async () => {
   }
 })
 
+async function handleJoinToggle() {
+  if (!movie.value || joinLoading.value) return
+  joinLoading.value = true
+  try {
+    if (movie.value.isJoined) {
+      await store.leaveMovie(movie.value.slug)
+      movie.value = { ...movie.value, isJoined: false }
+    } else {
+      const updated = await store.joinMovie(movie.value.slug)
+      movie.value = updated
+    }
+  } catch (e: unknown) {
+    const err = e as { response?: { status?: number } }
+    if (err.response?.status === 409) {
+      toast.error('Вы уже добавили этот фильм')
+    } else if (err.response?.status === 400) {
+      toast.error('Нельзя присоединиться к собственному фильму')
+    } else {
+      toast.error('Не удалось обновить список')
+    }
+  } finally {
+    joinLoading.value = false
+  }
+}
+
 async function handleToggleWatched() {
   if (!movie.value) return
-  if (!isOwner.value) {
+  if (!isOwner.value && !movie.value.isJoined) {
     toast.error('Вы не можете изменять чужие записи')
     return
   }
@@ -245,6 +343,20 @@ async function handleToggleWatched() {
     toast.error(err.response?.status === 403
       ? 'Вы не можете изменять чужие записи'
       : 'Не удалось обновить статус')
+  }
+}
+
+async function handleSaveNote() {
+  if (!movie.value) return
+  noteLoading.value = true
+  try {
+    movie.value = await store.updateMovie(movie.value.slug, { note: personalNote.value || null })
+    personalNote.value = ''
+    toast.success('Заметка сохранена')
+  } catch {
+    toast.error('Не удалось сохранить заметку')
+  } finally {
+    noteLoading.value = false
   }
 }
 
