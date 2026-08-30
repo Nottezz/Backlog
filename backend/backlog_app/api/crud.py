@@ -234,7 +234,7 @@ async def get_movie_by_slug(
     joined_by: list[UserRead] = [
         UserRead.model_validate(um.user)
         for um in movie.joined_by_users
-        if um.user_id != movie.user_id
+        if um.user_id != movie.user_id and um.user is not None
     ]
 
     return build_movie_read(movie, user_movie, joined_by=joined_by)

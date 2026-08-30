@@ -25,6 +25,7 @@ if TYPE_CHECKING:
 class UserMovie(Base):
     __tablename__ = "user_movies"
     __table_args__ = (UniqueConstraint("user_id", "movie_id", name="uq_user_movie"),)
+    __mapper_args__ = {"confirm_deleted_rows": False}
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[uuid.UUID] = mapped_column(

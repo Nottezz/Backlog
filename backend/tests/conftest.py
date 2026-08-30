@@ -3,6 +3,7 @@ import os
 from typing import AsyncGenerator
 
 import pytest
+from sqlalchemy import event
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.future import select
 
@@ -18,6 +19,15 @@ DB_PATH = "test.db"
 DATABASE_URL = f"sqlite+aiosqlite:///{DB_PATH}"
 
 engine_test = create_async_engine(DATABASE_URL, echo=False)
+
+
+@event.listens_for(engine_test.sync_engine, "connect")
+def _set_sqlite_foreign_keys(dbapi_connection, _connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
+
+
 AsyncSessionTest = async_sessionmaker(
     engine_test,
     expire_on_commit=False,
