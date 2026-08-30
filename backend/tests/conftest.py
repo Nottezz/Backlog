@@ -1,9 +1,11 @@
 import contextlib
 import os
-from typing import Any, AsyncGenerator, Generator
+from typing import AsyncGenerator
 
 import pytest
+from sqlalchemy import event
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.future import select
 
 from backlog_app._helpers.create_super_user import create_user
 from backlog_app.api.crud import create_movie, delete_movie
@@ -17,6 +19,15 @@ DB_PATH = "test.db"
 DATABASE_URL = f"sqlite+aiosqlite:///{DB_PATH}"
 
 engine_test = create_async_engine(DATABASE_URL, echo=False)
+
+
+@event.listens_for(engine_test.sync_engine, "connect")
+def _set_sqlite_foreign_keys(dbapi_connection, _connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
+
+
 AsyncSessionTest = async_sessionmaker(
     engine_test,
     expire_on_commit=False,
@@ -78,12 +89,52 @@ def build_movie_create(
 
 @pytest.fixture
 async def movie(session, user_test) -> AsyncGenerator[MovieRead, None]:
-    title = "Interstellar"
-    description = "Interstellar" * 20
-    rating = 9.5
-    watch_link = "https://example.com"
-    movie_in = build_movie_create(title, rating, watch_link, description)
-
+    movie_in = build_movie_create(
+        "Interstellar", 9.5, "https://example.com", "Interstellar" * 20
+    )
     movie = await create_movie(session, movie_in, user_test)
     yield movie
-    await delete_movie(session, movie.id, user_test)
+    try:
+        await delete_movie(session, movie.slug, user_test)
+    except Exception:
+        pass
+
+
+async def _make_user(session, email: str) -> AsyncGenerator[User, None]:
+    get_user_db_context = contextlib.asynccontextmanager(lambda: get_user_db(session))
+    get_user_manager_context = contextlib.asynccontextmanager(get_user_manager)
+    user_create = UserCreate(
+        email=email,
+        password="testpassword",
+        is_active=True,
+        is_superuser=False,
+        is_verified=True,
+    )
+    async with get_user_db_context() as user_db:
+        async with get_user_manager_context(user_db) as user_manager:
+            user = await create_user(user_manager=user_manager, user_create=user_create)
+            yield user
+            await user_manager.delete(user)
+
+
+@pytest.fixture
+async def user_other(session) -> AsyncGenerator[User, None]:
+    async for user in _make_user(session, "other_user@test.com"):
+        yield user
+
+
+@pytest.fixture
+async def published_movie(session, user_test) -> AsyncGenerator[Movie, None]:
+    movie_in = MovieCreate(
+        title="Published Test Movie",
+        description="A movie for testing many-to-many features.",
+        published=True,
+    )
+    movie_read = await create_movie(session, movie_in, user_test)
+    result = await session.execute(select(Movie).where(Movie.slug == movie_read.slug))
+    movie = result.scalars().first()
+    yield movie
+    try:
+        await delete_movie(session, movie.slug, user_test)
+    except Exception:
+        pass

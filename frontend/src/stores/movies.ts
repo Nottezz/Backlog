@@ -42,6 +42,27 @@ export const useMoviesStore = defineStore('movies', () => {
     return updateMovie(movie.slug, { watched: !movie.watched })
   }
 
+  async function joinMovie(slug: string): Promise<MovieRead> {
+    const updated = await moviesApi.joinMovie(slug)
+    const index = movies.value.findIndex((m) => m.slug === slug)
+    if (index !== -1) movies.value[index] = updated
+    return updated
+  }
+
+  async function leaveMovie(slug: string): Promise<void> {
+    await moviesApi.leaveMovie(slug)
+    const index = movies.value.findIndex((m) => m.slug === slug)
+    if (index !== -1) {
+      movies.value[index] = {
+        ...movies.value[index],
+        isJoined: false,
+        watched: false,
+        note: null,
+        rating: null,
+      }
+    }
+  }
+
   return {
     movies,
     loading,
@@ -51,5 +72,7 @@ export const useMoviesStore = defineStore('movies', () => {
     updateMovie,
     deleteMovie,
     toggleWatched,
+    joinMovie,
+    leaveMovie,
   }
 })

@@ -2,13 +2,14 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
+from fastapi_users_db_sqlalchemy.generics import GUID
 from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, func
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
 
 if TYPE_CHECKING:
+    from .user_movie import UserMovie
     from .users import User
 
 
@@ -38,31 +39,16 @@ class Movie(Base):
         nullable=True,
     )
 
-    note: Mapped[str | None] = mapped_column(
-        String(50),
-        nullable=True,
-    )
-
     year: Mapped[int | None] = mapped_column(
         Integer,
         nullable=True,
     )
 
-    watched: Mapped[bool] = mapped_column(
-        Boolean,
-        default=False,
-        server_default="false",
-        nullable=False,
-    )
     published: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
         server_default="false",
         nullable=False,
-    )
-    rating: Mapped[float | None] = mapped_column(
-        Float,
-        nullable=True,
     )
 
     imdb_rating: Mapped[float | None] = mapped_column(
@@ -87,6 +73,12 @@ class Movie(Base):
     )
 
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("user.id"), nullable=False
+        GUID, ForeignKey("user.id"), nullable=False
     )
     user: Mapped["User"] = relationship("User", back_populates="movies", lazy="joined")
+    joined_by_users: Mapped[list["UserMovie"]] = relationship(
+        "UserMovie",
+        back_populates="movie",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )

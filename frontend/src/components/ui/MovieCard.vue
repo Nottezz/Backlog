@@ -7,12 +7,12 @@
           'flex items-center gap-1.5 text-xs font-mono transition-all duration-150',
           movie.watched
             ? 'text-emerald-600'
-            : isOwner
+            : (isOwner || movie.isJoined)
               ? 'text-base-300 hover:text-base-600 cursor-pointer'
               : 'text-base-200 cursor-not-allowed opacity-60',
         ]"
-        :disabled="!isOwner"
-        :title="!isOwner ? 'Только автор может изменять статус' : movie.watched ? 'Снять отметку' : 'Отметить как просмотренный'"
+        :disabled="!isOwner && !movie.isJoined"
+        :title="(!isOwner && !movie.isJoined) ? 'Только автор или участник может изменять статус' : movie.watched ? 'Снять отметку' : 'Отметить как просмотренный'"
         @click.stop="handleToggleWatched"
       >
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -193,7 +193,7 @@ const isOwner = computed(() =>
 )
 
 function handleToggleWatched() {
-  if (!isOwner.value) {
+  if (!isOwner.value && !props.movie.isJoined) {
     toast.error('Вы не можете изменять чужие записи')
     return
   }

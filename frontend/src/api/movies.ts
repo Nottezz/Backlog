@@ -33,6 +33,8 @@ export interface MovieRead {
   user: UserRead
   watched: boolean
   createdAt: string
+  isJoined: boolean
+  joinedBy: UserRead[]
 }
 
 export interface MovieList {
@@ -47,12 +49,10 @@ export const moviesApi = {
     return data
   },
 
-  async getBySlug(slug: string, onlyMine = false): Promise<MovieRead> {
-  const { data } = await api.get<MovieRead>(`/movies/${slug}`, {
-    params: { only_mine: onlyMine },
-  })
-  return data
-},
+  async getBySlug(slug: string): Promise<MovieRead> {
+    const { data } = await api.get<MovieRead>(`/movies/${slug}`)
+    return data
+  },
 
   async getRandom(excludeSlugs: string[] = []): Promise<MovieRead> {
     const params = new URLSearchParams()
@@ -73,5 +73,14 @@ export const moviesApi = {
 
   async delete(slug: string): Promise<void> {
     await api.delete(`/movies/${slug}`)
+  },
+
+  async joinMovie(slug: string): Promise<MovieRead> {
+    const { data } = await api.post<MovieRead>(`/movies/${slug}/join`)
+    return data
+  },
+
+  async leaveMovie(slug: string): Promise<void> {
+    await api.delete(`/movies/${slug}/join`)
   },
 }

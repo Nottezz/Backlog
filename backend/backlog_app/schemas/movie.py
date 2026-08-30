@@ -11,9 +11,7 @@ from .user import UserRead
 class MovieBase(BaseModel):
     title: Annotated[str, Len(min_length=3, max_length=255)]
     description: Annotated[str, Len(min_length=20, max_length=1000)]
-    note: Annotated[str, Len(min_length=2, max_length=50)]
     year: int
-    rating: float
     watch_link: str | None = None
     imdb_rating: float | None = None
     metacritic_score: float | None = None
@@ -28,17 +26,18 @@ class MovieBase(BaseModel):
 
 class MovieCreate(MovieBase):
     description: Annotated[str, Len(min_length=20, max_length=1000)] | None = None
-    note: Annotated[str, Len(min_length=2, max_length=50)] | None = None
     year: int | None = None
+    watched: bool = False
+    note: Annotated[str, Len(min_length=2, max_length=50)] | None = None
     rating: float | None = Field(default=None, ge=1.0, le=10.0)
 
 
 class MovieUpdate(MovieBase):
     title: Annotated[str, Len(min_length=3, max_length=255)] | None = None
     description: Annotated[str, Len(min_length=20, max_length=1000)] | None = None
-    note: Annotated[str, Len(min_length=2, max_length=50)] | None = None
     year: int | None = None
     watched: bool | None = None
+    note: Annotated[str, Len(min_length=2, max_length=50)] | None = None
     rating: float | None = Field(default=None, ge=1.0, le=10.0)
 
 
@@ -46,11 +45,13 @@ class MovieRead(MovieBase):
     slug: str
     user: UserRead
     description: Annotated[str, Len(min_length=20, max_length=1000)] | None
-    note: Annotated[str, Len(min_length=2, max_length=50)] | None = None
     year: int | None
-    watched: bool
-    rating: float | None
+    watched: bool = False
+    note: str | None = None
+    rating: float | None = None
     created_at: datetime
+    is_joined: bool = False
+    joined_by: list[UserRead] = []
 
 
 class MovieList(BaseModel):
