@@ -123,17 +123,7 @@ async def get_movies(
     query = select(Movie).options(joinedload(Movie.user))
 
     if filter_user_id is not None:
-        # Return movies where user is creator OR has joined via UserMovie
-        query = query.where(
-            or_(
-                Movie.user_id == filter_user_id,
-                Movie.id.in_(
-                    select(UserMovie.movie_id).where(
-                        UserMovie.user_id == filter_user_id
-                    )
-                ),
-            )
-        )
+        query = query.where(Movie.user_id == filter_user_id)
     else:
         query = query.where(
             or_(Movie.published.is_(True), Movie.user_id == current_user_id)

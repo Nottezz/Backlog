@@ -279,7 +279,7 @@ async def test_get_movies_is_joined_true_for_joined_user(
 
     movie_list = await crud.get_movies(
         session,
-        filter_user_id=user_other.id,
+        filter_user_id=None,
         current_user_id=user_other.id,
     )
 
