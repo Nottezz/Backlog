@@ -80,3 +80,10 @@ Authorization: Bearer <access_token>
 
 ## Локальная разработка
 Подробные инструкции по локальной установке, Docker и тестированию см. в DEVELOPMENT.md
+
+## Production deployment
+
+Production Backlog uses a separately deployed Nginx/Certbot proxy Stack for ports 80/443. The proxy
+connects to backend and frontend through the external `edge-proxy` network. See
+[deployment and certificate-volume migration notes](DEVELOPMENT.md#production-deployment-and-independent-proxy-stack)
+before updating an existing deployment.
