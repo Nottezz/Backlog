@@ -21,7 +21,10 @@ services:
       retries: 5
     restart: unless-stopped
     networks:
-      - app-network
+      app-network: {}
+      edge-proxy:
+        aliases:
+          - backlog-backend
 
   worker:
     container_name: worker
@@ -55,7 +58,10 @@ services:
         condition: service_healthy
     restart: unless-stopped
     networks:
-      - app-network
+      app-network: {}
+      edge-proxy:
+        aliases:
+          - backlog-frontend
 
   pg:
     container_name: pg
@@ -77,42 +83,6 @@ services:
     networks:
       - app-network
 
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - certbot-www:/var/www/certbot:ro
-      - certbot-certs:/etc/letsencrypt:ro
-    depends_on:
-      backend:
-        condition: service_started
-      frontend:
-        condition: service_started
-    restart: unless-stopped
-    networks:
-      - app-network
-
-  certbot:
-    image: certbot/certbot:latest
-    container_name: certbot
-    volumes:
-      - certbot-www:/var/www/certbot
-      - certbot-certs:/etc/letsencrypt
-    entrypoint: >
-      sh -c "trap exit TERM;
-             while :; do
-               certbot renew --webroot --webroot-path=/var/www/certbot --quiet;
-               sleep 12h & wait $${!};
-             done"
-    depends_on:
-      - nginx
-    networks:
-      - app-network
-
   rabbitmq:
     image: rabbitmq:4.2-alpine
     hostname: rabbitmq
@@ -130,9 +100,10 @@ services:
 volumes:
   pgdata:
   rabbitmq-data:
-  certbot-www:
-  certbot-certs:
 
 networks:
   app-network:
     driver: bridge
+  edge-proxy:
+    external: true
+    name: edge-proxy
